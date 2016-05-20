@@ -1,0 +1,17 @@
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  sha: master
+  hooks:
+  - id: trailing-whitespace
+    exclude: SMSFlyCRM/SMSApp/migrations/
+  - id: check-merge-conflict
+  - id: double-quote-string-fixer
+    exclude: SMSFlyCRM/SMSApp/migrations/
+  - id: end-of-file-fixer
+    exclude: SMSFlyCRM/SMSApp/migrations/
+  - id: name-tests-test
+  #include: src/tests
+  #exclude: src/tests/mocks.py
+  - id: flake8
+    exclude: SMSFlyCRM/SMSApp/migrations/
+  - id: debug-statements
+    exclude: SMSFlyCRM/SMSApp/migrations/

@@ -14,6 +14,7 @@ containers:
       - 'pylibmc >=1.5,<1.6'
       - 'django-cache-url >=1.0,<1.1'
       - 'psycopg2 >=2.6,<2.7'
+      - 'git+https://github.com/wk-tech/python-smsfly@v0.1#egg=smsfly'
     - !Sh pip freeze > requirements.txt
   django:
     setup:

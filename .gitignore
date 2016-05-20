@@ -62,3 +62,4 @@ target/
 .ipynb_checkpoints
 
 .vagga/
+db.sqlite3

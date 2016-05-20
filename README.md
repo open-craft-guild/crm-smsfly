@@ -1,2 +1,3 @@
+[![Stories in Ready](https://badge.waffle.io/wk-tech/crm-smsfly.png?label=ready&title=Ready)](https://waffle.io/wk-tech/crm-smsfly) [![Build Status](https://travis-ci.org/wk-tech/crm-smsfly.svg?branch=master)](https://travis-ci.org/wk-tech/crm-smsfly) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/eeaedf06e82a4bceaf8a75423885a796)](https://www.codacy.com/app/webknjaz/crm-smsfly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wk-tech/crm-smsfly&amp;utm_campaign=Badge_Grade) [![Requirements Status](https://requires.io/github/wk-tech/crm-smsfly/requirements.svg?branch=master)](https://requires.io/github/wk-tech/crm-smsfly/requirements/?branch=master)
 # crm-smsfly
 Embedded integration of some CRM with SMS-Fly gateway via iframe

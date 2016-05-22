@@ -20,6 +20,6 @@ import SMSFlyCRM.SMSApp.urls
 
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^app/', include(SMSFlyCRM.SMSApp.urls)),
+    url(r'^admin/', admin.site.urls, name='admin-root'),
+    url(r'^app/', include(SMSFlyCRM.SMSApp.urls), name='app-root'),
 ]

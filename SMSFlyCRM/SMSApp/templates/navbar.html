@@ -1,8 +1,8 @@
 <div class="sidebar">
   <ul class="nav nav-sidebar">
-    <a href="aplhanames"><li>Справочник альфаимен</li></a>
-    <a href="campaign-templates"><li>Шаблоны рассылки</li></a>
-    <a href="sent-messages"><li>Отправленные сообщения</li></a>
-    <a href="stats"><li>Статистика</li></a>
+    <a href="{% url 'alphanames-root' %}"><li>Справочник альфаимен</li></a>
+    <a href="{% url 'campaigns-root' %}"><li>Шаблоны рассылки</li></a>
+    <a href="{% url 'campaigns-messages' %}"><li>Отправленные сообщения</li></a>
+    <a href="{% url 'campaigns-stats' %}"><li>Статистика</li></a>
   </ul>
 </div>

@@ -63,3 +63,4 @@ target/
 
 .vagga/
 db.sqlite3
+.DS_Store

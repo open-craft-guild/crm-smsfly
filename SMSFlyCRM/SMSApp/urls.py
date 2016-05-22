@@ -18,4 +18,8 @@ urlpatterns = (
     url('sms-campaigns/edit', views.CampaignEditView.as_view(), name='edit-campaign'),
     # Archive of inactive/sent campaigns:
     url('sms-campaigns/archive', views.CampaignArchiveView.as_view(), name='campaigns-archive'),
+    # List of all sent messages:
+    url('sms-campaigns/messages', views.CampaignMessagesView.as_view(), name='campaigns-messages'),
+    # Stats on campaigns:
+    url('sms-campaigns/stats', views.CampaignStatsView.as_view(), name='campaigns-stats'),
 )

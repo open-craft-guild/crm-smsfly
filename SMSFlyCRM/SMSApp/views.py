@@ -52,4 +52,14 @@ class CampaignEditView(FormView):
 
 class CampaignArchiveView(ListView):
     """Keeps a history of campaigns, which are inactive"""
+    template_name = 'campaigns-list.html'
+
+
+class CampaignMessagesView(ListView):
+    """Keeps a history of messages"""
     template_name = 'sent-messages.html'
+
+
+class CampaignStatsView(ListView):
+    """Shows stats on campaigns"""
+    template_name = 'campaigns-stats.html'

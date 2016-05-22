@@ -14,9 +14,11 @@ containers:
       - 'pylibmc >=1.5,<1.6'
       - 'django-cache-url >=1.0,<1.1'
       - 'psycopg2 >=2.6,<2.7'
-      - 'git+https://github.com/wk-tech/python-smsfly@v0.1#egg=smsfly'
-      - 'django-bootstrap3==7.0.1'
+      - 'django-bootstrap3 >=7.0.1,<7.2'
+      - 'django-rq >=0.9.1,<1.0'
+      - 'rq-scheduler >=0.6.1,<0.7'
     - !Sh pip freeze > requirements.txt
+    - !Sh echo 'git+https://github.com/wk-tech/python-smsfly@v0.1#egg=smsfly' >> requirements.txt
   django:
     setup:
     - !Alpine v3.3

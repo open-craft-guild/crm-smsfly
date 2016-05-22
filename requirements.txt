@@ -2,6 +2,8 @@ dj-database-url==0.4.1
 Django==1.9.6
 django-bootstrap3==7.0.1
 django-cache-url==1.0.0
+django-rq==0.9.1
 psycopg2==2.6.1
 pylibmc==1.5.1
+rq-scheduler==0.6.1
 git+https://github.com/wk-tech/python-smsfly@v0.1#egg=smsfly

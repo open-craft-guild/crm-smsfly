@@ -5,5 +5,7 @@ django-cache-url==1.0.0
 django-rq==0.9.1
 psycopg2==2.6.1
 pylibmc==1.5.1
+redis==2.10.5
+rq==0.6.0
 rq-scheduler==0.6.1
 git+https://github.com/wk-tech/python-smsfly@v0.1#egg=smsfly

@@ -83,6 +83,23 @@ DATABASES = {
     }
 }
 
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+
+RQ_QUEUES = {
+    'default': {
+        'URL': REDIS_URL,
+        'DEFAULT_TIMEOUT': 500,
+    },
+    'high': {
+        'URL': REDIS_URL,
+        'DEFAULT_TIMEOUT': 500,
+    },
+    'low': {
+        'URL': REDIS_URL,
+        'DEFAULT_TIMEOUT': 500,
+    },
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

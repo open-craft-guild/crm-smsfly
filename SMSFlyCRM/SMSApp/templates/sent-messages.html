@@ -1,0 +1,38 @@
+{% load i18n %}
+
+<section id="sent-messages" class="panel panel-default">
+  <form>
+    <input type="text" id="full-name" placeholder="{% trans 'Поиск по ФИО' %}" />
+    <input type="text" id="" placeholder="{% trans 'Поиск по номеру' %}" />
+    <button type="button" id="filters-button">{% trans 'Расширенные фильтры' %}</button>
+  </form>
+  <table class="table">
+    <thead>
+      <tr>
+        <td>{% trans 'Шаблон' %}</td>
+        <td>{% trans 'Фильтры' %}</td>
+        <td>{% trans 'Дата отправки' %}</td>
+        <td>{% trans 'Время отправки' %}</td>
+        <td>{% trans 'Получатель' %}</td>
+        <td>{% trans 'Номер телефона' %}</td>
+        <td>{% trans 'Статус' %}</td>
+        <td>{% trans 'Стоимость' %}</td>
+        <td>{% trans 'Ошибка' %}</td>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>Шаблон1</td>
+        <td>ABC</td>
+        <td>10.10.10</td>
+        <td>11:11:11</td>
+        <td>Иванов Иван Иванович</td>
+        <td>050 111 11 11</td>
+        <td>Доставлено</td>
+        <td>0.25</td>
+        <td> </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

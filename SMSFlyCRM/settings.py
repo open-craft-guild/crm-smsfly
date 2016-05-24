@@ -10,20 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
-import os
+import environ
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Build paths inside the project like this: BASE_DIR(...)
+BASE_DIR = environ.Path(__file__) - 2  # three folder back (/a/b/c/ - 3 = /)
+env = environ.Env(
+    DEBUG=(bool, False),
+)  # set default values and casting
+environ.Env.read_env()  # reading .env file
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&#bo9#p#5jbn16!@$tb99hg6sx_ki5yf0)w)s+$ggi#h*wk*=5'
+SECRET_KEY = env('SECRET_KEY',
+                 default='&#bo9#p#5jbn16!@$tb99hg6sx_ki5yf0)w)s+$ggi#h*wk*=5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
@@ -77,13 +83,16 @@ WSGI_APPLICATION = 'SMSFlyCRM.wsgi.application'
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': env.db(),  # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
+    'crm': env.db('CRM_DB_URL', default='sqlite:///{}'.format(BASE_DIR('db.sqlite3'))),
 }
 
-REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+DATABASE_ROUTERS = ['SMSFlyCRM.SMSApp.db_routers.DatabaseAppsRouter']
+DATABASE_APPS_MAPPING = {'internal_app': 'default',
+                         'external_app': 'crm'}
+
+
+REDIS_URL = env('REDIS_URL', default='redis://localhost:6379/0')
 
 RQ_QUEUES = {
     'default': {

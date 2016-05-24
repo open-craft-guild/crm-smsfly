@@ -9,6 +9,7 @@ containers:
     - !Py3Install
       - setuptools
       - pip
+      - six
       - 'Django >=1.9,<1.10'
       - 'django-environ >=0.4,<0.5'
       - 'pylibmc >=1.5,<1.6'

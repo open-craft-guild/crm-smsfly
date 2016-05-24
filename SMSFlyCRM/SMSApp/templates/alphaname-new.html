@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+<section id="new-alphaname">
+  <form action="index.html" method="post">
+    <div class="form-group">
+      <label for="alphaname">{% trans 'Альфаимя' %}</label>
+      <input type="text" class="form-control" id="aplhaname">
+    </div>
+    <button type="submit" class="btn btn-primary" name="submit">Создать альфаимя</button>
+  </form>
+</section>

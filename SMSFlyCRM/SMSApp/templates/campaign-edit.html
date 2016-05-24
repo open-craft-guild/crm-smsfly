@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+<section id="campaign-edit">
+  <form class="" action="" method="post">
+    <input type="text" name="campaign-name" value="" placeholder="{% trans 'Название шаблона' %}">
+    <select class="" name="aplhaname">
+      <option value="option">option</option>
+    </select>
+    <textarea name="name" rows="8" cols="40"></textarea>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Фамилия' %}</button>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Имя' %}</button>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Отчество' %}</button>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Номер' %}</button>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Адрес' %}</button>
+
+    {% block datepicker %}
+    {% endblock datepicker %}
+
+    {% block campaign-filters %}
+    {% endblock campaign-filters %}
+
+
+  </form>
+</section>

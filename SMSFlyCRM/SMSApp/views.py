@@ -1,8 +1,8 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import FormView
 
 
-class IndexView(ListView):
+class IndexView(TemplateView):
     """Shows all menu entries of an app"""
     template_name = 'main.html'
 

@@ -1,0 +1,74 @@
+{% load i18n %}
+
+{% block campaign-filters %}
+<!-- TODO: adjust layout to grid -->
+<section id="campaign-filters">
+  <form id="filters">
+
+    <input type="checkbox" name="send-to-all" />
+    <p>
+      {% trans 'Возраст'%}
+    </p>
+    <label for="age-from">{% trans 'От' %}</label>
+    <input type="number" name="age-from" id="age-from"/>
+    <label for="age-to">{% trans 'До' %}</label>
+    <input type="number" name="age-to" id="age-to"/>
+
+    <fieldset>
+      <p>
+        {% trans 'Адрес прописки' %}
+      </p>
+      <input type="text" class="form-control" name="reg-region" placeholder="{% trans 'Область' %}">
+      <input type="text" class="form-control" name="reg-district" placeholder="{% trans 'Район' %}">
+      <input type="text" class="form-control" name="reg-locality" placeholder="{% trans 'Населенный пункт' %}">
+      <input type="text" class="form-control" name="reg-street" placeholder="{% trans 'Улица' %}">
+      <input type="text" class="form-control" name="reg-building" placeholder="{% trans 'Дом' %}">
+    </fieldset>
+
+    <select class="form-control" name="sex">
+      <option value="a">A</option>
+      <option value="b">B</option>
+    </select>
+    <select class="form-control" name="marriage">
+      <option value="a">A</option>
+      <option value="b">B</option>
+    </select>
+    <select class="form-control" name="education">
+      <option value="a">A</option>
+      <option value="b">B</option>
+    </select>
+    <select class="form-control" name="social-category">
+      <option value="a">A</option>
+      <option value="b">B</option>
+    </select>
+
+    <fieldset>
+      <p>
+        {% trans 'Адрес проживания' %}
+      </p>
+      <input type="text" class="form-control" name="actual-region" placeholder="{% trans 'Область' %}">
+      <input type="text" class="form-control" name="actual-district" placeholder="{% trans 'Район' %}">
+      <input type="text" class="form-control" name="actual-locality" placeholder="{% trans 'Населенный пункт' %}">
+      <input type="text" class="form-control" name="actual-street" placeholder="{% trans 'Улица' %}">
+      <input type="text" class="form-control" name="actual-building" placeholder="{% trans 'Дом' %}">
+
+      <select class="form-control" name="precinct">
+        <option value="a">A</option>
+        <option value="b">B</option>
+      </select>
+      <select class="form-control" name="contacted">
+        <option value="a">A</option>
+        <option value="b">B</option>
+      </select>
+      <select class="form-control" name="candidate">
+        <option value="a">A</option>
+        <option value="b">B</option>
+      </select>
+      <select class="form-control" name="status">
+        <option value="a">A</option>
+        <option value="b">B</option>
+      </select>
+    </fieldset>
+  </form>
+</section>
+{% endblock %}

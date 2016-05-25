@@ -9,13 +9,14 @@ class IndexView(TemplateView):
 
 class AlphanameIndexView(ListView):
     """Shows all alphaname list available along with registrar and registration date"""
-    template_name = 'aplhanames-list.html'
+    template_name = 'alphanames-list.html'
+    queryset = []  # TODO: replace fake queryset with an existing model
 
 
 class AlphanameRegisterView(FormView):
     """Sends new alphaname register request"""
     template_name = 'alphaname-new.html'
-    form_class = None
+    form_class = dict  # TODO: replace fake form with an existing one
     success_url = ''
 
     def form_valid(self, form):
@@ -26,12 +27,13 @@ class AlphanameRegisterView(FormView):
 class CampaignIndexView(ListView):
     """Lists all active campaigns currently in progress (scheduled)"""
     template_name = 'campaigns-list.html'
+    queryset = []  # TODO: replace fake queryset with an existing model
 
 
 class CampaignNewView(FormView):
     """Helps schedule a new campaign or send new one instantly"""
     template_name = 'campaign-edit.html'
-    form_class = None
+    form_class = dict  # TODO: replace fake form with an existing one
     success_url = ''
 
     def form_valid(self, form):
@@ -42,7 +44,7 @@ class CampaignNewView(FormView):
 class CampaignEditView(FormView):
     """Makes modifications on an active campaign"""
     template_name = 'campaign-edit.html'
-    form_class = None
+    form_class = dict  # TODO: replace fake form with an existing one
     success_url = ''
 
     def form_valid(self, form):
@@ -53,13 +55,16 @@ class CampaignEditView(FormView):
 class CampaignArchiveView(ListView):
     """Keeps a history of campaigns, which are inactive"""
     template_name = 'campaigns-list.html'
+    queryset = []  # TODO: replace fake queryset with an existing model
 
 
 class CampaignMessagesView(ListView):
     """Keeps a history of messages"""
     template_name = 'sent-messages.html'
+    queryset = []  # TODO: replace fake queryset with an existing model
 
 
 class CampaignStatsView(ListView):
     """Shows stats on campaigns"""
     template_name = 'campaigns-stats.html'
+    queryset = []  # TODO: replace fake queryset with an existing model

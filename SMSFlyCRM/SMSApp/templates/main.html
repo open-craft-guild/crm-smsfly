@@ -1,9 +1,12 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
 <section id="main-links" class="panel panel-default">
   <div class="panel-heading">Меню</div>
   <div class="list-group">
-    <a href="aplhanames"><button type="button" class="list-group-item">Справочник альфаимен</button></a>
-    <a href="campaign-templates"><button type="button" class="list-group-item">Шаблоны рассылки</button></a>
-    <a href="sent-messages"><button type="button" class="list-group-item">Отправленные сообщения</button></a>
-    <a href="stats"><button type="button" class="list-group-item">Статистика</button></a>
+    <a href="aplhanames" class="list-group-item">{% trans 'Справочник альфаимен' %}</a>
+    <a href="campaign-templates" class="list-group-item">{% trans 'Шаблоны рассылки' %}</a>
+    <a href="sent-messages" class="list-group-item">{% trans 'Отправленные сообщения' %}</a>
+    <a href="stats" class="list-group-item">{% trans 'Статистика' %}</a>
   </div>
 </section>

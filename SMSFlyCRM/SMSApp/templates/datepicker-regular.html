@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<section id="datepicker-regular">
+  <label>
+    {% trans 'Дата:' %}
+    <input type="date" name="date" value="{% now 'd.m.Y' %}">
+  </label>
+  <label>
+    {% trans 'Время:' %}
+    <input type="time" name="start" value="">
+  </label>
+
+</section>

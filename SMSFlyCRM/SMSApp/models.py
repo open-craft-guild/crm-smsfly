@@ -119,7 +119,7 @@ class FollowerCandidate(models.Model):
         db_table = 'sms_view_follower_candidates'
 
 
-class Polplace(models.Model):
+class PollPlace(models.Model):
     """Describes the poll location"""
     polplace_id = models.IntegerField(null=False, unique=True)
     polplace_number = models.CharField(null=False, max_length=14)

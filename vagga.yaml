@@ -6,7 +6,7 @@ containers:
       - libmemcached-dev
       - zlib-dev
       - postgresql-dev
-      - mysql-client
+      - mariadb-dev
     - !Py3Install
       - setuptools
       - pip
@@ -32,7 +32,7 @@ containers:
       - zlib
       - libsasl
       - libpq
-      - mysql-client
+      - mariadb-dev
     - !Py3Requirements requirements.txt
     environ:
       DATABASE_URL: sqlite:///db.sqlite3

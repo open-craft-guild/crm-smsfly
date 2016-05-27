@@ -237,3 +237,90 @@ class Follower(models.Model):
         db_route = 'external_app'
         managed = False
         db_table = 'sms_view_family_status'
+
+
+class Campaign(models.Model):
+    task = models.ForeignKey('Task')
+    code = models.CharField(max_length=20)
+    datetime_sent = models.DateTimeField()
+    state = models.CharField()
+
+    class Meta:
+        db_route = 'internal_app'
+
+
+class Task(models.Model):
+    TYPE_LIST = (
+        (0, 'one-time'),
+        (1, 'recurring'),
+        (2, 'event-driven'),
+    )
+
+    TRIGGERS_LIST = (
+        (0, 'onElectorBirthday'),
+        (1, 'onElectorAdded'),
+        (2, 'onElectorTouched'),
+        (3, 'onElectorStatusChanged'),
+    )
+
+    STATE_LIST = (
+        (0, 'active'),
+        (1, 'paused'),
+        (2, 'complete'),
+    )
+
+    alphaname = models.ForeignKey('Alphaname')
+    title = models.CharField(max_length=255)
+    code = models.CharField(max_length=20)
+    start_date = models.DateField()
+    type = models.IntegerField(choices=TYPE_LIST)
+    end_date = models.DateField()
+    created_by_crm_user_id = models.IntegerField
+    triggered_by = models.IntegerField(null=True, choices=TRIGGERS_LIST)
+    target_filter = models.TextField()
+    state = models.IntegerField(choices=STATE_LIST)
+
+    class Meta:
+        db_route = 'internal_app'
+
+
+class Alphaname(models.Model):
+    STATUS_LIST = (
+        (0, 'ACTIVE'),
+        (1, 'BLOCKED'),
+        (2, 'MODERATE'),
+        (3, 'LIMITED'),
+    )
+
+    name = models.CharField(null=False, max_length=11)
+    status = models.IntegerField(null=False, choices=STATUS_LIST)
+
+    class Meta:
+        db_route = 'internal_app'
+
+
+class Message(models.Model):
+    STATUS_LIST = (
+        (0, 'PENDING'),
+        (1, 'SENT'),
+        (2, 'DELIVERED'),
+        (3, 'EXPIRED'),
+        (4, 'UNDELIV'),
+        (5, 'STOPED'),
+        (6, 'ERROR'),
+        (7, 'USERSTOPED'),
+        (8, 'ALFANAMELIMITED'),
+        (9, 'STOPFLAG'),
+        (10, 'NEW'),
+    )
+
+    crm_elector_id = models.ForeignKey('Follower', on_delete=models.DO_NOTHING)
+    phone_number = models.CharField(max_length=12)
+    message_text = models.CharField(max_length=402)
+    datetime_scheduled = models.DateTimeField()
+    datetime_sent = models.DateTimeField()
+    status = models.IntegerField(choices=STATUS_LIST)
+    campaign = models.ForeignKey('Campaign')
+
+    class Meta:
+        db_route = 'internal_app'

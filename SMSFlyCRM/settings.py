@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'SMSFlyCRM.wsgi.application'
 
 DATABASES = {
     'default': env.db(),  # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-    'crm': env.db('CRM_DB_URL', default='sqlite:///{}'.format(BASE_DIR('db.sqlite3'))),
+    'crm': env.db('CRM_DB_URL', default='sqlite:///db.sqlite3'),
 }
 
 DATABASE_ROUTERS = ['SMSFlyCRM.SMSApp.db_routers.DatabaseAppsRouter']

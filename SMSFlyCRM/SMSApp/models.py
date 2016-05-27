@@ -8,6 +8,7 @@ class Area(models.Model):
     region_id = models.ForeignKey('Region', to_field='region_id', on_delete=models.DO_NOTHING)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_areas'
 
@@ -19,6 +20,7 @@ class Building(models.Model):
     street_id = models.ForeignKey('Street', to_field='street_id', on_delete=models.DO_NOTHING)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_buildings'
 
@@ -29,6 +31,7 @@ class Region(models.Model):
     region_name = models.CharField(null=False, max_length=250)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_regions'
 
@@ -40,6 +43,7 @@ class Locality(models.Model):
     area_id = models.ForeignKey('Area', to_field='area_id', on_delete=models.DO_NOTHING)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_localities'
 
@@ -51,6 +55,7 @@ class Street(models.Model):
     locality_id = models.ForeignKey('Locality', to_field='locality_id', on_delete=models.DO_NOTHING)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_streets'
 
@@ -61,6 +66,7 @@ class Project(models.Model):
     project_name = models.CharField(null=False, max_length=255)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_projects'
 
@@ -72,6 +78,7 @@ class ProjectContact(models.Model):
     project_id = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_project_contacts'
 
@@ -85,6 +92,7 @@ class FollowerContact(models.Model):
     follower_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_follower_contacts'
 
@@ -95,6 +103,7 @@ class Candidate(models.Model):
     candidate_name = models.CharField(null=False, max_length=250)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_candidates'
 
@@ -105,6 +114,7 @@ class FollowerCandidate(models.Model):
     candidate_id = models.ForeignKey('Candidate', null=False, to_field='candidate_id', on_delete=models.DO_NOTHING)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_follower_candidates'
 
@@ -118,6 +128,7 @@ class Polplace(models.Model):
     locality_id = models.ForeignKey('Locality', to_field='locality_id', on_delete=models.DO_NOTHING)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_polplaces'
 
@@ -128,6 +139,7 @@ class FamilyStatus(models.Model):
     family_status_name = models.CharField(null=False, max_length=250)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_family_status'
 
@@ -138,6 +150,7 @@ class Education(models.Model):
     education_name = models.CharField(null=False, max_length=250)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_education'
 
@@ -148,6 +161,7 @@ class SocialCategory(models.Model):
     social_category_name = models.CharField(null=False, max_length=255)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_social_category'
 
@@ -158,6 +172,7 @@ class Sex(models.Model):
     sex_name = models.CharField(null=False, max_length=225)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_sex'
 
@@ -168,6 +183,7 @@ class FollowerStatus(models.Model):
     follower_status_name = models.CharField(null=False, max_length=255)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_follower_status'
 
@@ -213,5 +229,6 @@ class Follower(models.Model):
     last_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING)
 
     class Meta:
+        app_label = 'external_app'
         managed = False
         db_table = 'sms_view_family_status'

@@ -223,7 +223,7 @@ class Follower(models.Model):
                                              on_delete=models.DO_NOTHING)
     regaddress_builing_id = models.ForeignKey('Building', to_field='building_id', related_name='registered_followers',
                                               on_delete=models.DO_NOTHING)
-    polplace_id = models.ForeignKey('Polplace', to_field='polplace_id', related_name='followers',
+    polplace_id = models.ForeignKey('PollPlace', to_field='polplace_id', related_name='followers',
                                     on_delete=models.DO_NOTHING)
     last_contact_id = models.ForeignKey('FollowerContact', to_field='id', on_delete=models.DO_NOTHING)
     last_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING)

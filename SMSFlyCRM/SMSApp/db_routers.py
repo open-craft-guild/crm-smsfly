@@ -25,17 +25,17 @@ class DatabaseAppsRouter(object):
 
     def db_for_read(self, model, **hints):
         """"Point all read operations to the specific database."""
-        return settings.DATABASE_APPS_MAPPING.get(model._meta.app_label)
+        return settings.DATABASE_APPS_MAPPING.get(model._meta.db_route)
 
     def db_for_write(self, model, **hints):
         """Point all write operations to the specific database."""
-        return settings.DATABASE_APPS_MAPPING.get(model._meta.app_label)
+        return settings.DATABASE_APPS_MAPPING.get(model._meta.db_route)
 
     def allow_relation(self, obj1, obj2, **hints):
         """Allow any relation between apps that use the same database."""
         try:
-            db_obj1 = settings.DATABASE_APPS_MAPPING[obj1._meta.app_label]
-            db_obj2 = settings.DATABASE_APPS_MAPPING[obj2._meta.app_label]
+            db_obj1 = settings.DATABASE_APPS_MAPPING[obj1._meta.db_route]
+            db_obj2 = settings.DATABASE_APPS_MAPPING[obj2._meta.db_route]
         except KeyError:
             return None
         else:
@@ -44,7 +44,7 @@ class DatabaseAppsRouter(object):
     def allow_syncdb(self, db, model):
         """Make sure that apps only appear in the related database."""
         if db in settings.DATABASE_APPS_MAPPING.values():
-            return settings.DATABASE_APPS_MAPPING.get(model._meta.app_label) == db
-        elif model._meta.app_label in settings.DATABASE_APPS_MAPPING:
+            return settings.DATABASE_APPS_MAPPING.get(model._meta.db_route) == db
+        elif model._meta.db_route in settings.DATABASE_APPS_MAPPING:
             return False
         return None

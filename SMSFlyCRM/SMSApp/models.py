@@ -6,7 +6,6 @@ import django.db.models.options as options
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('db_route',)
 
 
-
 class Area(models.Model):
     """Describes the area where electors live"""
     area_id = models.IntegerField(null=False, unique=True)

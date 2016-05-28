@@ -6,11 +6,27 @@ import django.db.models.options as options
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('db_route',)
 
 
+class ExternalCRMManager(models.Manager):
+    """Lets one query remote views on behalf of CRM user
+
+    The inspiration has been gained from:
+    :seealso: http://stackoverflow.com/a/28222392
+    """
+
+    def for_user(self, crm_user_id):
+        """Hacks setting @user SQL variable needed for user-personalized queries"""
+        assert isinstance(crm_user_id, int)
+        return self.get_queryset().extra(where=('{user_id} = (select @user := {user_id})'.
+                                                format(user_id=crm_user_id), ))
+
+
 class Area(models.Model):
     """Describes the area where electors live"""
     area_id = models.IntegerField(unique=True)
     area_name = models.CharField(null=True, max_length=250)
     region_id = models.ForeignKey('Region', to_field='region_id', on_delete=models.DO_NOTHING, null=True)
+
+    objects = ExternalCRMManager()
 
     class Meta:
         db_route = 'external_app'
@@ -24,6 +40,8 @@ class Building(models.Model):
     building_number = models.CharField(null=True, max_length=20)
     street_id = models.ForeignKey('Street', to_field='street_id', on_delete=models.DO_NOTHING)
 
+    objects = ExternalCRMManager()
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -34,6 +52,8 @@ class Region(models.Model):
     """Describes the region where electors live"""
     region_id = models.IntegerField(unique=True)
     region_name = models.CharField(max_length=250)
+
+    objects = ExternalCRMManager()
 
     class Meta:
         db_route = 'external_app'
@@ -47,6 +67,8 @@ class Locality(models.Model):
     locality_name = models.CharField(max_length=56)
     area_id = models.ForeignKey('Area', to_field='area_id', on_delete=models.DO_NOTHING)
 
+    objects = ExternalCRMManager()
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -59,6 +81,8 @@ class Street(models.Model):
     street_name = models.CharField(max_length=500)
     locality_id = models.ForeignKey('Locality', to_field='locality_id', on_delete=models.DO_NOTHING)
 
+    objects = ExternalCRMManager()
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -69,6 +93,8 @@ class Project(models.Model):
     """Describes the project in terms of which the elector is contacted"""
     project_id = models.IntegerField(unique=True)
     project_name = models.CharField(max_length=255)
+
+    objects = ExternalCRMManager()
 
     class Meta:
         db_route = 'external_app'
@@ -81,6 +107,8 @@ class ProjectContact(models.Model):
     contact_id = models.IntegerField(unique=True)
     area_name = models.CharField(max_length=255)
     project_id = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING)
+
+    objects = ExternalCRMManager()
 
     class Meta:
         db_route = 'external_app'
@@ -97,6 +125,8 @@ class FollowerContact(models.Model):
     follower_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
                                            null=True)
 
+    objects = ExternalCRMManager()
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -108,6 +138,8 @@ class Candidate(models.Model):
     candidate_id = models.IntegerField(unique=True)
     candidate_name = models.CharField(max_length=250)
 
+    objects = ExternalCRMManager()
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -118,6 +150,8 @@ class FollowerCandidate(models.Model):
     """Describes the relation between candidate and elector"""
     follower_id = models.IntegerField(unique=True)
     candidate_id = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING)
+
+    objects = ExternalCRMManager()
 
     class Meta:
         db_route = 'external_app'
@@ -133,6 +167,8 @@ class PollPlace(models.Model):
     area_id = models.ForeignKey('Area', to_field='area_id', null=True,  on_delete=models.DO_NOTHING)
     locality_id = models.ForeignKey('Locality', to_field='locality_id', null=True, on_delete=models.DO_NOTHING)
 
+    objects = ExternalCRMManager()
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -143,6 +179,8 @@ class FamilyStatus(models.Model):
     """Describes family status"""
     family_status_id = models.IntegerField(unique=True)
     family_status_name = models.CharField(null=True, max_length=250)
+
+    objects = ExternalCRMManager()
 
     class Meta:
         db_route = 'external_app'
@@ -155,6 +193,8 @@ class Education(models.Model):
     education_id = models.IntegerField(unique=True)
     education_name = models.CharField(null=True, max_length=250)
 
+    objects = ExternalCRMManager()
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -165,6 +205,8 @@ class SocialCategory(models.Model):
     """Describes social category"""
     social_category_id = models.IntegerField(unique=True)
     social_category_name = models.CharField(null=True, max_length=255)
+
+    objects = ExternalCRMManager()
 
     class Meta:
         db_route = 'external_app'
@@ -177,6 +219,8 @@ class Sex(models.Model):
     sex_id = models.IntegerField(unique=True)
     sex_name = models.CharField(max_length=225)
 
+    objects = ExternalCRMManager()
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -187,6 +231,8 @@ class FollowerStatus(models.Model):
     """Describes family status"""
     follower_status_id = models.IntegerField(unique=True)
     follower_status_name = models.CharField(max_length=255)
+
+    objects = ExternalCRMManager()
 
     class Meta:
         db_route = 'external_app'
@@ -234,6 +280,8 @@ class Follower(models.Model):
     last_contact_id = models.ForeignKey('FollowerContact', to_field='id', on_delete=models.DO_NOTHING, null=True)
     last_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
                                        null=True)
+
+    objects = ExternalCRMManager()
 
     class Meta:
         db_route = 'external_app'

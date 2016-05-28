@@ -8,9 +8,9 @@ options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('db_route',)
 
 class Area(models.Model):
     """Describes the area where electors live"""
-    area_id = models.IntegerField(null=False, unique=True)
-    area_name = models.CharField(null=False, max_length=250)
-    region_id = models.ForeignKey('Region', to_field='region_id', on_delete=models.DO_NOTHING)
+    area_id = models.IntegerField(unique=True)
+    area_name = models.CharField(null=True, max_length=250)
+    region_id = models.ForeignKey('Region', to_field='region_id', on_delete=models.DO_NOTHING, null=True)
 
     class Meta:
         db_route = 'external_app'
@@ -20,8 +20,8 @@ class Area(models.Model):
 
 class Building(models.Model):
     """Describes the building"""
-    building_id = models.IntegerField(null=False, unique=True)
-    building_number = models.CharField(null=False, max_length=20)
+    building_id = models.IntegerField(unique=True)
+    building_number = models.CharField(null=True, max_length=20)
     street_id = models.ForeignKey('Street', to_field='street_id', on_delete=models.DO_NOTHING)
 
     class Meta:
@@ -32,8 +32,8 @@ class Building(models.Model):
 
 class Region(models.Model):
     """Describes the region where electors live"""
-    region_id = models.IntegerField(null=False, unique=True)
-    region_name = models.CharField(null=False, max_length=250)
+    region_id = models.IntegerField(unique=True)
+    region_name = models.CharField(max_length=250)
 
     class Meta:
         db_route = 'external_app'
@@ -43,8 +43,8 @@ class Region(models.Model):
 
 class Locality(models.Model):
     """Describes the locality where electors live"""
-    locality_id = models.IntegerField(null=False, unique=True)
-    locality_name = models.CharField(null=False, max_length=56)
+    locality_id = models.IntegerField(unique=True)
+    locality_name = models.CharField(max_length=56)
     area_id = models.ForeignKey('Area', to_field='area_id', on_delete=models.DO_NOTHING)
 
     class Meta:
@@ -55,8 +55,8 @@ class Locality(models.Model):
 
 class Street(models.Model):
     """Describes the area where electors live"""
-    street_id = models.IntegerField(null=False, unique=True)
-    street_name = models.CharField(null=False, max_length=500)
+    street_id = models.IntegerField(unique=True)
+    street_name = models.CharField(max_length=500)
     locality_id = models.ForeignKey('Locality', to_field='locality_id', on_delete=models.DO_NOTHING)
 
     class Meta:
@@ -67,8 +67,8 @@ class Street(models.Model):
 
 class Project(models.Model):
     """Describes the project in terms of which the elector is contacted"""
-    project_id = models.IntegerField(null=False, unique=True)
-    project_name = models.CharField(null=False, max_length=255)
+    project_id = models.IntegerField(unique=True)
+    project_name = models.CharField(max_length=255)
 
     class Meta:
         db_route = 'external_app'
@@ -78,8 +78,8 @@ class Project(models.Model):
 
 class ProjectContact(models.Model):
     """Describes the contacts in project"""
-    contact_id = models.IntegerField(null=False, unique=True)
-    area_name = models.CharField(null=False, max_length=255)
+    contact_id = models.IntegerField(unique=True)
+    area_name = models.CharField(max_length=255)
     project_id = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING)
 
     class Meta:
@@ -90,11 +90,12 @@ class ProjectContact(models.Model):
 
 class FollowerContact(models.Model):
     """Describes the contact with elector"""
-    id = models.IntegerField(null=False, unique=True, primary_key=True)
-    contact_date = models.DateField(null=False)
+    id = models.IntegerField(unique=True, primary_key=True)
+    contact_date = models.DateField(null=True)
     follower_id = models.ForeignKey('Follower', to_field='follower_id', on_delete=models.DO_NOTHING)
-    contact_id = models.ForeignKey('ProjectContact', to_field='contact_id', on_delete=models.DO_NOTHING)
-    follower_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING)
+    contact_id = models.ForeignKey('ProjectContact', to_field='contact_id', on_delete=models.DO_NOTHING, null=True)
+    follower_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
+                                           null=True)
 
     class Meta:
         db_route = 'external_app'
@@ -104,8 +105,8 @@ class FollowerContact(models.Model):
 
 class Candidate(models.Model):
     """Describes the elections candidate"""
-    candidate_id = models.IntegerField(null=False, unique=True)
-    candidate_name = models.CharField(null=False, max_length=250)
+    candidate_id = models.IntegerField(unique=True)
+    candidate_name = models.CharField(max_length=250)
 
     class Meta:
         db_route = 'external_app'
@@ -115,8 +116,8 @@ class Candidate(models.Model):
 
 class FollowerCandidate(models.Model):
     """Describes the relation between candidate and elector"""
-    follower_id = models.IntegerField(null=False, unique=True)
-    candidate_id = models.ForeignKey('Candidate', null=False, to_field='candidate_id', on_delete=models.DO_NOTHING)
+    follower_id = models.IntegerField(unique=True)
+    candidate_id = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING)
 
     class Meta:
         db_route = 'external_app'
@@ -126,11 +127,11 @@ class FollowerCandidate(models.Model):
 
 class PollPlace(models.Model):
     """Describes the poll location"""
-    polplace_id = models.IntegerField(null=False, unique=True)
-    polplace_number = models.CharField(null=False, max_length=14)
-    region_id = models.ForeignKey('Region', to_field='region_id', on_delete=models.DO_NOTHING)
-    area_id = models.ForeignKey('Area', to_field='area_id', on_delete=models.DO_NOTHING)
-    locality_id = models.ForeignKey('Locality', to_field='locality_id', on_delete=models.DO_NOTHING)
+    polplace_id = models.IntegerField(nunique=True)
+    polplace_number = models.CharField(null=True, max_length=14)
+    region_id = models.ForeignKey('Region', to_field='region_id', null=True, on_delete=models.DO_NOTHING)
+    area_id = models.ForeignKey('Area', to_field='area_id', null=True,  on_delete=models.DO_NOTHING)
+    locality_id = models.ForeignKey('Locality', to_field='locality_id', null=True, on_delete=models.DO_NOTHING)
 
     class Meta:
         db_route = 'external_app'
@@ -140,8 +141,8 @@ class PollPlace(models.Model):
 
 class FamilyStatus(models.Model):
     """Describes family status"""
-    family_status_id = models.IntegerField(null=False, unique=True)
-    family_status_name = models.CharField(null=False, max_length=250)
+    family_status_id = models.IntegerField(unique=True)
+    family_status_name = models.CharField(null=True, max_length=250)
 
     class Meta:
         db_route = 'external_app'
@@ -151,8 +152,8 @@ class FamilyStatus(models.Model):
 
 class Education(models.Model):
     """Describes elector's education"""
-    education_id = models.IntegerField(null=False, unique=True)
-    education_name = models.CharField(null=False, max_length=250)
+    education_id = models.IntegerField(unique=True)
+    education_name = models.CharField(null=True, max_length=250)
 
     class Meta:
         db_route = 'external_app'
@@ -162,8 +163,8 @@ class Education(models.Model):
 
 class SocialCategory(models.Model):
     """Describes social category"""
-    social_category_id = models.IntegerField(null=False, unique=True)
-    social_category_name = models.CharField(null=False, max_length=255)
+    social_category_id = models.IntegerField(unique=True)
+    social_category_name = models.CharField(null=True, max_length=255)
 
     class Meta:
         db_route = 'external_app'
@@ -173,8 +174,8 @@ class SocialCategory(models.Model):
 
 class Sex(models.Model):
     """Describes elector's gender"""
-    sex_id = models.IntegerField(null=False, unique=True)
-    sex_name = models.CharField(null=False, max_length=225)
+    sex_id = models.IntegerField(unique=True)
+    sex_name = models.CharField(max_length=225)
 
     class Meta:
         db_route = 'external_app'
@@ -184,8 +185,8 @@ class Sex(models.Model):
 
 class FollowerStatus(models.Model):
     """Describes family status"""
-    follower_status_id = models.IntegerField(null=False, unique=True)
-    follower_status_name = models.CharField(null=False, max_length=255)
+    follower_status_id = models.IntegerField(unique=True)
+    follower_status_name = models.CharField(max_length=255)
 
     class Meta:
         db_route = 'external_app'
@@ -195,43 +196,44 @@ class FollowerStatus(models.Model):
 
 class Follower(models.Model):
     """Describes candidate's follower"""
-    follower_id = models.IntegerField(null=False, unique=True)
-    lastname = models.CharField(null=False, max_length=255)
-    firstname = models.CharField(null=False, max_length=255)
-    middlename = models.CharField(null=False, max_length=255)
-    sex_id = models.ForeignKey('Sex', to_field='sex_id', on_delete=models.DO_NOTHING)
-    datebirth = models.DateField(null=False)
+    follower_id = models.IntegerField(unique=True)
+    lastname = models.CharField(null=True, max_length=255)
+    firstname = models.CharField(null=True, max_length=255)
+    middlename = models.CharField(null=True, max_length=255)
+    sex_id = models.ForeignKey('Sex', to_field='sex_id', null=True,  on_delete=models.DO_NOTHING)
+    datebirth = models.DateField(null=True)
     social_category_id = models.ForeignKey('SocialCategory', to_field='social_category_id', related_name='followers',
-                                           on_delete=models.DO_NOTHING)
+                                           on_delete=models.DO_NOTHING, null=True)
     family_status_id = models.ForeignKey('FamilyStatus', to_field='family_status_id', related_name='followers',
-                                         on_delete=models.DO_NOTHING)
+                                         on_delete=models.DO_NOTHING, null=True)
     education_id = models.ForeignKey('Education', related_name='followers', to_field='education_id',
-                                     on_delete=models.DO_NOTHING)
-    cellphone = models.CharField(max_length=255)
+                                     on_delete=models.DO_NOTHING, null=True)
+    cellphone = models.CharField(null=True, max_length=255)
     address_region_id = models.ForeignKey('Region', to_field='region_id', related_name='living_followers',
-                                          on_delete=models.DO_NOTHING)
+                                          on_delete=models.DO_NOTHING, null=True)
     address_area_id = models.ForeignKey('Area', to_field='area_id', related_name='living_followers',
-                                        on_delete=models.DO_NOTHING)
+                                        on_delete=models.DO_NOTHING, null=True)
     address_locality_id = models.ForeignKey('Locality', to_field='locality_id', related_name='living_followers',
-                                            on_delete=models.DO_NOTHING)
+                                            on_delete=models.DO_NOTHING, null=True)
     address_street_id = models.ForeignKey('Street', to_field='street_id', related_name='living_followers',
-                                          on_delete=models.DO_NOTHING)
+                                          on_delete=models.DO_NOTHING, null=True)
     address_builing_id = models.ForeignKey('Building', to_field='building_id', related_name='living_followers',
-                                           on_delete=models.DO_NOTHING)
+                                           on_delete=models.DO_NOTHING, null=True)
     regaddress_region_id = models.ForeignKey('Region', to_field='region_id', related_name='registered_followers',
-                                             on_delete=models.DO_NOTHING)
+                                             on_delete=models.DO_NOTHING, null=True)
     regaddress_area_id = models.ForeignKey('Area', to_field='area_id', related_name='registered_followers',
-                                           on_delete=models.DO_NOTHING)
+                                           on_delete=models.DO_NOTHING, null=True)
     regaddress_locality_id = models.ForeignKey('Locality', to_field='locality_id', related_name='registered_followers',
-                                               on_delete=models.DO_NOTHING)
+                                               on_delete=models.DO_NOTHING, null=True)
     regaddress_street_id = models.ForeignKey('Street', to_field='street_id', related_name='registered_followers',
-                                             on_delete=models.DO_NOTHING)
+                                             on_delete=models.DO_NOTHING, null=True)
     regaddress_builing_id = models.ForeignKey('Building', to_field='building_id', related_name='registered_followers',
-                                              on_delete=models.DO_NOTHING)
+                                              on_delete=models.DO_NOTHING, null=True)
     polplace_id = models.ForeignKey('PollPlace', to_field='polplace_id', related_name='followers',
-                                    on_delete=models.DO_NOTHING)
-    last_contact_id = models.ForeignKey('FollowerContact', to_field='id', on_delete=models.DO_NOTHING)
-    last_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING)
+                                    on_delete=models.DO_NOTHING, null=True)
+    last_contact_id = models.ForeignKey('FollowerContact', to_field='id', on_delete=models.DO_NOTHING, null=True)
+    last_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
+                                       null=True)
 
     class Meta:
         db_route = 'external_app'
@@ -292,8 +294,8 @@ class Alphaname(models.Model):
         (3, 'LIMITED'),
     )
 
-    name = models.CharField(null=False, max_length=11)
-    status = models.IntegerField(null=False, choices=STATUS_LIST)
+    name = models.CharField(max_length=11)
+    status = models.IntegerField(choices=STATUS_LIST)
 
     class Meta:
         db_route = 'internal_app'
@@ -314,7 +316,7 @@ class Message(models.Model):
         (10, 'NEW'),
     )
 
-    crm_elector_id = models.ForeignKey('Follower', on_delete=models.DO_NOTHING)
+    crm_elector_id = models.ForeignKey('Follower', to_field='follower_id', on_delete=models.DO_NOTHING)
     phone_number = models.CharField(max_length=12)
     message_text = models.CharField(max_length=402)
     datetime_scheduled = models.DateTimeField()

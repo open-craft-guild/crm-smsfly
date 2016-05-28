@@ -161,7 +161,7 @@ class FollowerCandidate(models.Model):
 
 class PollPlace(models.Model):
     """Describes the poll location"""
-    polplace_id = models.IntegerField(nunique=True)
+    polplace_id = models.IntegerField(unique=True)
     polplace_number = models.CharField(null=True, max_length=14)
     region_id = models.ForeignKey('Region', to_field='region_id', null=True, on_delete=models.DO_NOTHING)
     area_id = models.ForeignKey('Area', to_field='area_id', null=True,  on_delete=models.DO_NOTHING)
@@ -246,7 +246,7 @@ class Follower(models.Model):
     lastname = models.CharField(null=True, max_length=255)
     firstname = models.CharField(null=True, max_length=255)
     middlename = models.CharField(null=True, max_length=255)
-    sex_id = models.ForeignKey('Sex', to_field='sex_id', null=True,  on_delete=models.DO_NOTHING)
+    sex_id = models.ForeignKey('Sex', to_field='sex_id', null=True, on_delete=models.DO_NOTHING)
     datebirth = models.DateField(null=True)
     social_category_id = models.ForeignKey('SocialCategory', to_field='social_category_id', related_name='followers',
                                            on_delete=models.DO_NOTHING, null=True)
@@ -293,7 +293,7 @@ class Campaign(models.Model):
     task = models.ForeignKey('Task')
     code = models.CharField(max_length=20)
     datetime_sent = models.DateTimeField()
-    state = models.CharField()
+    state = models.TextField()
 
     class Meta:
         db_route = 'internal_app'

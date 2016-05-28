@@ -1,6 +1,8 @@
 from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import FormView
 
+from .models import Alphaname
+
 
 class IndexView(TemplateView):
     """Shows all menu entries of an app"""
@@ -10,7 +12,10 @@ class IndexView(TemplateView):
 class AlphanameIndexView(ListView):
     """Shows all alphaname list available along with registrar and registration date"""
     template_name = 'alphanames-list.html'
-    queryset = []  # TODO: replace fake queryset with an existing model
+    model = Alphaname
+
+    def get_queryset(self):
+        return self.model.objects.for_user(crm_user_id=self.request.session['crm_user_id']).all()
 
 
 class AlphanameRegisterView(FormView):

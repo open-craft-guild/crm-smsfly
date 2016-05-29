@@ -36,8 +36,22 @@ class CampaignIndexView(ListView):
 class CampaignNewView(FormView):
     """Helps schedule a new campaign or send new one instantly"""
     template_name = 'campaign-edit.html'
-    form_class = dict  # TODO: replace fake form with an existing one
+    form_class = TaskForm
     success_url = ''
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['range30'] = range(1, 31)
+        context['weekdays'] = (
+            (1, 'пн'),
+            (2, 'вт'),
+            (3, 'ср'),
+            (4, 'чт'),
+            (5, 'пт'),
+            (6, 'сб'),
+            (7, 'нд'),
+        )
+        return context
 
     def form_valid(self, form):
         # Save new campaign and notify everyone about it, add job into queue if needed

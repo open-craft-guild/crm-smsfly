@@ -13,8 +13,8 @@
   <label>
     {% trans 'Повторять с интервалом:' %}
     <select class="form-control" name="repeat-interval">
-      {% for num in range(1,30) %}
-        <option value="{% num %}">{% num %}</option>
+      {% for num in range30 %}
+        <option value="{{ num }}">{{ num }}</option>
       {% endfor %}
     </select>
     <span id="repeat-weeks">{% trans 'нед.' %}</span>
@@ -24,17 +24,10 @@
 
   <label id="repeat-weekdays">
     {% trans 'Дни повторения:' %}
-    {% for day in (
-        (1, 'пн'),
-        (2, 'вт'),
-        (3, 'ср'),
-        (4, 'чт'),
-        (5, 'пт'),
-        (6, 'сб'),
-    ) %}
+    {% for day in weekdays %}
       <label>
-        <input type="checkbox" name="repeat-day" value="{% day[0] %}">
-        {% trans day[1] %}
+        <input type="checkbox" name="repeat-day" value="{{ day.0 }}">
+        {% trans day.1 %}
       </label>
     {% endfor %}
 

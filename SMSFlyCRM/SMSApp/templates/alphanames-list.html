@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
-
+{% block content %}
 <section id="aplhanames">
   <a href="new-alphaname" class="btn btn-primary btn-lg">
-      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      {% bootstrap_icon 'plus' %}
       {% trans 'Новое альфаимя' %}
   </a>
 
   <div class="panel panel-default">
-  <div class="panel-heading">{% trans 'Panel heading' %}</div>
 
   <table class="table">
     <thead>
@@ -40,3 +39,4 @@
   </table>
 </div>
 </section>
+{% endblock content %}

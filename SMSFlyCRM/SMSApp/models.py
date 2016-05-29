@@ -325,7 +325,7 @@ class Task(models.Model):
     start_date = models.DateField()
     type = models.IntegerField(choices=TYPE_LIST)
     end_date = models.DateField()
-    created_by_crm_user_id = models.IntegerField
+    created_by_crm_user_id = models.IntegerField()
     triggered_by = models.IntegerField(null=True, choices=TRIGGERS_LIST)
     target_filter = models.TextField()
     state = models.IntegerField(choices=STATE_LIST)
@@ -344,6 +344,8 @@ class Alphaname(models.Model):
 
     name = models.CharField(max_length=11)
     status = models.IntegerField(choices=STATUS_LIST)
+    registration_date = models.DateField()
+    created_by_crm_user_id = models.IntegerField()
 
     class Meta:
         db_route = 'internal_app'

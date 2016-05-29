@@ -15,9 +15,6 @@ class AlphanameIndexView(ListView):
     template_name = 'alphanames-list.html'
     model = Alphaname
 
-    def get_queryset(self):
-        return self.model.objects.for_user(crm_user_id=self.request.session['crm_user_id']).all()
-
 
 class AlphanameRegisterView(FormView):
     """Sends new alphaname register request"""

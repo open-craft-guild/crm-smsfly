@@ -2,6 +2,7 @@ from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import FormView
 
 from .models import Alphaname
+from .forms import AlphanameForm, TaskForm
 
 
 class IndexView(TemplateView):
@@ -21,8 +22,8 @@ class AlphanameIndexView(ListView):
 class AlphanameRegisterView(FormView):
     """Sends new alphaname register request"""
     template_name = 'alphaname-new.html'
-    form_class = dict  # TODO: replace fake form with an existing one
-    success_url = ''
+    form_class = AlphanameForm
+    success_url = '/'
 
     def form_valid(self, form):
         # Add job for sending request to register a new alphanumeric name
@@ -49,7 +50,7 @@ class CampaignNewView(FormView):
 class CampaignEditView(FormView):
     """Makes modifications on an active campaign"""
     template_name = 'campaign-edit.html'
-    form_class = dict  # TODO: replace fake form with an existing one
+    form_class = TaskForm
     success_url = ''
 
     def form_valid(self, form):

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
+{% block bootstrap3_content %}
 <section id="main-links" class="panel panel-default">
   <div class="panel-heading">Меню</div>
   <div class="list-group">
@@ -10,3 +11,4 @@
     <a href="stats" class="list-group-item">{% trans 'Статистика' %}</a>
   </div>
 </section>
+{% endblock bootstrap3_content %}

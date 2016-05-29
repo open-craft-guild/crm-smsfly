@@ -1,12 +1,15 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
+{% block content %}
 <section id="new-alphaname">
-  <form action="index.html" method="post">
+  <form action="" method="post">
     <div class="form-group">
-      <label for="alphaname">{% trans 'Альфаимя' %}</label>
-      <input type="text" class="form-control" id="aplhaname">
+      {% bootstrap_field form.name %}
     </div>
-    <button type="submit" class="btn btn-primary" name="submit">Создать альфаимя</button>
+    {% trans 'Создать альфаимя' as create_alphaname_btn %}
+    {% bootstrap_button create_alphaname_btn button_type="submit" button_class="btn-primary" %}
+
   </form>
 </section>
+{% endblock content %}

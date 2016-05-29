@@ -1,8 +1,8 @@
-<div class="sidebar">
-  <ul class="nav nav-sidebar">
-    <a href="{% url 'alphanames-root' %}"><li>Справочник альфаимен</li></a>
-    <a href="{% url 'campaigns-root' %}"><li>Шаблоны рассылки</li></a>
-    <a href="{% url 'campaigns-messages' %}"><li>Отправленные сообщения</li></a>
-    <a href="{% url 'campaigns-stats' %}"><li>Статистика</li></a>
-  </ul>
-</div>
+{% load i18n %}
+
+<ul class="nav nav-sidebar">
+  <a href="{% url 'alphanames-root' %}"><li>{% trans 'Справочник альфаимен' %}</li></a>
+  <a href="{% url 'campaigns-root' %}"><li>{% trans 'Шаблоны рассылки' %}</li></a>
+  <a href="{% url 'campaigns-messages' %}"><li>{% trans 'Отправленные сообщения' %}</li></a>
+  <a href="{% url 'campaigns-stats' %}"><li>{% trans 'Статистика' %}</li></a>
+</ul>

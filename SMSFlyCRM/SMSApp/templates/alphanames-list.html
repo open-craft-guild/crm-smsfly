@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="aplhanames">
-  <a href="new-alphaname" class="btn btn-primary btn-lg">
+  <a href="{% url 'add-alphaname' %}" class="btn btn-primary btn-lg">
       {% bootstrap_icon 'plus' %}
       {% trans 'Новое альфаимя' %}
   </a>

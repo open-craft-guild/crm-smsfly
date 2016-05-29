@@ -5,10 +5,10 @@
 <section id="main-links" class="panel panel-default">
   <div class="panel-heading">Меню</div>
   <div class="list-group">
-    <a href="aplhanames" class="list-group-item">{% trans 'Справочник альфаимен' %}</a>
-    <a href="campaign-templates" class="list-group-item">{% trans 'Шаблоны рассылки' %}</a>
-    <a href="sent-messages" class="list-group-item">{% trans 'Отправленные сообщения' %}</a>
-    <a href="stats" class="list-group-item">{% trans 'Статистика' %}</a>
+    <a href={% url 'alphanames-root' %} class="list-group-item">{% trans 'Справочник альфаимен' %}</a>
+    <a href="{% url 'campaigns-root' %}" class="list-group-item">{% trans 'Шаблоны рассылки' %}</a>
+    <a href="{% url 'campaigns-archive' %}" class="list-group-item">{% trans 'Отправленные сообщения' %}</a>
+    <a href="{% url 'campaigns-stats' %}" class="list-group-item">{% trans 'Статистика' %}</a>
   </div>
 </section>
 {% endblock bootstrap3_content %}

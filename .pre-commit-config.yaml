@@ -12,6 +12,5 @@
   #include: src/tests
   #exclude: src/tests/mocks.py
   - id: flake8
-    exclude: SMSFlyCRM/SMSApp/migrations/
+    exclude: SMSFlyCRM/SMSApp/(migrations/|tests.py$)
   - id: debug-statements
-    exclude: SMSFlyCRM/SMSApp/migrations/

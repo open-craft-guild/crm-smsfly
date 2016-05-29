@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'SMSFlyCRM.SMSApp',
+    'SMSFlyCRM.SMSApp',  # <-- our app
+    # third-party apps:
     'bootstrap3',
     'django_rq',
+    'django_rq_jobs',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -110,6 +112,8 @@ RQ_QUEUES = {
         'DEFAULT_TIMEOUT': 500,
     },
 }
+
+RQ_JOBS_MODULE = 'SMSFlyCRM.SMSApp.tasks'
 
 
 # Password validation

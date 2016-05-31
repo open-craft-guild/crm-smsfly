@@ -22,7 +22,7 @@ class ExternalCRMManager(models.Manager):
 
 class Area(models.Model):
     """Describes the area where electors live"""
-    area_id = models.IntegerField(unique=True)
+    area_id = models.IntegerField(unique=True, primary_key=True)
     area_name = models.CharField(null=True, max_length=250)
     region_id = models.ForeignKey('Region', to_field='region_id', on_delete=models.DO_NOTHING, null=True)
 
@@ -36,7 +36,7 @@ class Area(models.Model):
 
 class Building(models.Model):
     """Describes the building"""
-    building_id = models.IntegerField(unique=True)
+    building_id = models.IntegerField(unique=True, primary_key=True)
     building_number = models.CharField(null=True, max_length=20)
     street_id = models.ForeignKey('Street', to_field='street_id', on_delete=models.DO_NOTHING)
 
@@ -50,7 +50,7 @@ class Building(models.Model):
 
 class Region(models.Model):
     """Describes the region where electors live"""
-    region_id = models.IntegerField(unique=True)
+    region_id = models.IntegerField(unique=True, primary_key=True)
     region_name = models.CharField(max_length=250)
 
     objects = ExternalCRMManager()
@@ -63,7 +63,7 @@ class Region(models.Model):
 
 class Locality(models.Model):
     """Describes the locality where electors live"""
-    locality_id = models.IntegerField(unique=True)
+    locality_id = models.IntegerField(unique=True, primary_key=True)
     locality_name = models.CharField(max_length=56)
     area_id = models.ForeignKey('Area', to_field='area_id', on_delete=models.DO_NOTHING)
 
@@ -73,11 +73,12 @@ class Locality(models.Model):
         db_route = 'external_app'
         managed = False
         db_table = 'sms_view_localities'
+        # unique_together = ('area_id', 'locality_id')
 
 
 class Street(models.Model):
     """Describes the area where electors live"""
-    street_id = models.IntegerField(unique=True)
+    street_id = models.IntegerField(unique=True, primary_key=True)
     street_name = models.CharField(max_length=500)
     locality_id = models.ForeignKey('Locality', to_field='locality_id', on_delete=models.DO_NOTHING)
 
@@ -87,11 +88,12 @@ class Street(models.Model):
         db_route = 'external_app'
         managed = False
         db_table = 'sms_view_streets'
+        # unique_together = ('street_id', 'locality_id')
 
 
 class Project(models.Model):
     """Describes the project in terms of which the elector is contacted"""
-    project_id = models.IntegerField(unique=True)
+    project_id = models.IntegerField(unique=True, primary_key=True)
     project_name = models.CharField(max_length=255)
 
     objects = ExternalCRMManager()
@@ -104,9 +106,9 @@ class Project(models.Model):
 
 class ProjectContact(models.Model):
     """Describes the contacts in project"""
-    contact_id = models.IntegerField(unique=True)
-    area_name = models.CharField(max_length=255)
-    project_id = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING)
+    contact_id = models.IntegerField(unique=True, primary_key=True)
+    contact_name = models.CharField(max_length=255)
+    project = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING)
 
     objects = ExternalCRMManager()
 
@@ -114,6 +116,7 @@ class ProjectContact(models.Model):
         db_route = 'external_app'
         managed = False
         db_table = 'sms_view_project_contacts'
+        # unique_together = ('contact_id', 'project_id')
 
 
 class FollowerContact(models.Model):
@@ -131,11 +134,12 @@ class FollowerContact(models.Model):
         db_route = 'external_app'
         managed = False
         db_table = 'sms_view_follower_contacts'
+        # unique_together = ('id', 'contact_date', 'follower_id', 'contact_id')
 
 
 class Candidate(models.Model):
     """Describes the elections candidate"""
-    candidate_id = models.IntegerField(unique=True)
+    candidate_id = models.IntegerField(unique=True, primary_key=True)
     candidate_name = models.CharField(max_length=250)
 
     objects = ExternalCRMManager()
@@ -148,7 +152,7 @@ class Candidate(models.Model):
 
 class FollowerCandidate(models.Model):
     """Describes the relation between candidate and elector"""
-    follower_id = models.IntegerField(unique=True)
+    follower_id = models.IntegerField(unique=True, primary_key=True)
     candidate_id = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING)
 
     objects = ExternalCRMManager()
@@ -161,7 +165,7 @@ class FollowerCandidate(models.Model):
 
 class PollPlace(models.Model):
     """Describes the poll location"""
-    polplace_id = models.IntegerField(unique=True)
+    polplace_id = models.IntegerField(unique=True, primary_key=True)
     polplace_number = models.CharField(null=True, max_length=14)
     region_id = models.ForeignKey('Region', to_field='region_id', null=True, on_delete=models.DO_NOTHING)
     area_id = models.ForeignKey('Area', to_field='area_id', null=True,  on_delete=models.DO_NOTHING)
@@ -177,7 +181,7 @@ class PollPlace(models.Model):
 
 class FamilyStatus(models.Model):
     """Describes family status"""
-    family_status_id = models.IntegerField(unique=True)
+    family_status_id = models.IntegerField(unique=True, primary_key=True)
     family_status_name = models.CharField(null=True, max_length=250)
 
     objects = ExternalCRMManager()
@@ -190,7 +194,7 @@ class FamilyStatus(models.Model):
 
 class Education(models.Model):
     """Describes elector's education"""
-    education_id = models.IntegerField(unique=True)
+    education_id = models.IntegerField(unique=True, primary_key=True)
     education_name = models.CharField(null=True, max_length=250)
 
     objects = ExternalCRMManager()
@@ -203,7 +207,7 @@ class Education(models.Model):
 
 class SocialCategory(models.Model):
     """Describes social category"""
-    social_category_id = models.IntegerField(unique=True)
+    social_category_id = models.IntegerField(unique=True, primary_key=True)
     social_category_name = models.CharField(null=True, max_length=255)
 
     objects = ExternalCRMManager()
@@ -216,7 +220,7 @@ class SocialCategory(models.Model):
 
 class Sex(models.Model):
     """Describes elector's gender"""
-    sex_id = models.IntegerField(unique=True)
+    sex_id = models.IntegerField(unique=True, primary_key=True)
     sex_name = models.CharField(max_length=225)
 
     objects = ExternalCRMManager()
@@ -229,7 +233,7 @@ class Sex(models.Model):
 
 class FollowerStatus(models.Model):
     """Describes family status"""
-    follower_status_id = models.IntegerField(unique=True)
+    follower_status_id = models.IntegerField(unique=True, primary_key=True)
     follower_status_name = models.CharField(max_length=255)
 
     objects = ExternalCRMManager()
@@ -242,7 +246,7 @@ class FollowerStatus(models.Model):
 
 class Follower(models.Model):
     """Describes candidate's follower"""
-    follower_id = models.IntegerField(unique=True)
+    follower_id = models.IntegerField(unique=True, primary_key=True)
     lastname = models.CharField(null=True, max_length=255)
     firstname = models.CharField(null=True, max_length=255)
     middlename = models.CharField(null=True, max_length=255)
@@ -321,14 +325,23 @@ class Task(models.Model):
 
     alphaname = models.ForeignKey('Alphaname')
     title = models.CharField(max_length=255)
+    message_text = models.TextField(max_length=402)
+    recipients_filter = models.TextField()
     code = models.CharField(max_length=20)
     start_date = models.DateField()
     type = models.IntegerField(choices=TYPE_LIST)
     end_date = models.DateField()
     created_by_crm_user_id = models.IntegerField()
+    recurrence_rule = models.TextField()
     triggered_by = models.IntegerField(null=True, choices=TRIGGERS_LIST)
-    target_filter = models.TextField()
     state = models.IntegerField(choices=STATE_LIST)
+    touch_project = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING, null=True)
+    touch_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', related_name='+',
+                                     on_delete=models.DO_NOTHING, null=True)
+    touch_contact = models.ForeignKey('ProjectContact', to_field='contact_id', on_delete=models.DO_NOTHING, null=True)
+    touch_candidate = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING, null=True)
+    trigger_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', related_name='+',
+                                       on_delete=models.DO_NOTHING, null=True)
 
     class Meta:
         db_route = 'internal_app'

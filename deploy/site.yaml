@@ -1,0 +1,14 @@
+---
+# Deploy SMSFlyCRM app
+
+- hosts: all
+  gather_facts: False
+  tasks:
+    - raw: apt-get install python-minimal -y
+  tags:
+    - always
+
+- hosts: all
+  roles:
+  - role: nginx
+  - role: smsapp

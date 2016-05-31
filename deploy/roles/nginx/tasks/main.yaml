@@ -1,0 +1,11 @@
+- name: Install NGINX
+  apt: name=nginx state=present
+
+- name: Nginx config for smsapp
+  template: 'src=smsapp.nginx dest=/etc/nginx/sites-available/smsapp mode=0644'
+
+- file: 'src="/etc/nginx/sites-available/smsapp" dest="/etc/nginx/sites-enabled/smsapp" state=link force=yes'
+
+- file: 'dest="/etc/nginx/sites-enabled/default" state=absent'
+
+- service: 'name=nginx state=restarted'

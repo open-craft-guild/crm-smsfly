@@ -1,0 +1,16 @@
+# SMS App
+
+server {
+  listen 80 default;
+  server_name sms.itarget.info;
+
+  location /static {
+    alias /home/smsapp/static;
+  }
+
+  location ^~ / {
+    proxy_pass http://127.0.0.1:8000/;
+    proxy_set_header Host $host;
+    add_header Access-Control-Allow-Origin *;
+  }
+}

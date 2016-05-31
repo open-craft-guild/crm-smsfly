@@ -1,0 +1,17 @@
+[Unit]
+Description=Job that runs the smsapp daemon
+
+[Service]
+#ExecStartPre=/home/smsapp/venv/bin/python manage.py collectstatic --noinput
+ExecStartPre=/home/smsapp/venv/bin/python manage.py migrate
+ExecStart=/home/smsapp/venv/bin/gunicorn SMSFlyCRM.wsgi -b 127.0.0.1:8000 -w 1 --log-level=info
+User=smsapp
+Group=smsapp
+WorkingDirectory=/home/smsapp/repo
+Restart=always
+KillMode=process
+RestartSec=5s
+EnvironmentFile=/home/smsapp/smsapp.env
+
+[Install]
+WantedBy=multi-user.target

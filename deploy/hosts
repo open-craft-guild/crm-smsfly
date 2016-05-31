@@ -1,0 +1,2 @@
+[all]
+host1 ansible_ssh_host=sms.itarget.info ansible_ssh_user=root

@@ -16,4 +16,4 @@ class AlphanameForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['alphaname', 'title', 'code', 'start_date', 'type', 'end_date', 'triggered_by', 'target_filter']
+        fields = ['alphaname', 'title', 'code', 'start_date', 'type', 'end_date', 'triggered_by']

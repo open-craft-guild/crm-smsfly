@@ -116,7 +116,8 @@ def webhook_crm_event(request, crm_event, crm_user_id):
             'result': 'OK',
             'status': 200,
             'message': 'The trigger processing has been queued',
-            'data': Project.objects.for_user(crm_user_id).filter(project_id=json_req['project_id']).all(),
+            'data': Project.objects.for_user(crm_user_id).filter(project_id=json_req['project_id']).all()[0].
+            project_name,
         }
     finally:
         return JsonResponse(json_res)

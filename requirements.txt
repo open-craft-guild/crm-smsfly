@@ -13,4 +13,4 @@ redis==2.10.5
 rq==0.6.0
 rq-scheduler==0.6.1
 six==1.10.0
-git+https://github.com/wk-tech/python-smsfly@v0.1#egg=smsfly
+-e git+https://github.com/wk-tech/python-smsfly@v0.1#egg=smsfly

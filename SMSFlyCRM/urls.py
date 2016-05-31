@@ -17,10 +17,13 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 import SMSFlyCRM.SMSApp.urls
+from SMSFlyCRM.SMSApp.views import webhook_crm_event, webhook_smsfly_status
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls, name='admin-root'),
     url(r'^app/', include(SMSFlyCRM.SMSApp.urls), name='app-root'),
     url(r'^django-rq/', include('django_rq.urls')),
+    url(r'^webhooks/on(?P<crm_event>\w+)/(?P<crm_user_id>\d+)', webhook_crm_event, name='webhook-crm'),
+    url(r'^webhooks/onSMSFlyStatus', webhook_smsfly_status, name='webhook-smsfly'),
 ]

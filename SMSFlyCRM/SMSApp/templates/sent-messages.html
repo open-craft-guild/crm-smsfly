@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
+{% block content %}
+{% include 'under-construction.html' %}
 <section id="sent-messages" class="panel panel-default">
   <form>
     <input type="text" id="full-name" placeholder="{% trans 'Поиск по ФИО' %}" />
@@ -37,3 +39,4 @@
     </tbody>
   </table>
 </section>
+{% endblock content %}

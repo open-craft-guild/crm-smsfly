@@ -6,9 +6,7 @@
   {% bootstrap_form_errors form %}
   <form action="" method="post">
     {% csrf_token %}
-    <div class="form-group">
-      {% bootstrap_field form.name %}
-    </div>
+    {% bootstrap_form form %}
     {% trans 'Создать альфаимя' as create_alphaname_btn %}
     {% bootstrap_button create_alphaname_btn button_type="submit" button_class="btn-primary" %}
 

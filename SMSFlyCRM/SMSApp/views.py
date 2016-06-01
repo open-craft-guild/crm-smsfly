@@ -1,5 +1,4 @@
 import json
-from datetime import date
 
 from django.core.urlresolvers import reverse_lazy
 
@@ -9,7 +8,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
 from django.views.generic import ListView, TemplateView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView
 
 from .models import Alphaname, Project
 from .forms import AlphanameForm, OneTimeTaskForm
@@ -27,28 +26,18 @@ class AlphanameIndexView(ListView):
     model = Alphaname
 
 
-class AlphanameRegisterView(TemplateView):
+class AlphanameRegisterView(CreateView):
     """Sends new alphaname register request"""
     template_name = 'alphaname-new.html'
     form_class = AlphanameForm
     success_url = reverse_lazy('alphanames-root')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class(self.request)
-        return context
+    def get_form(self, form_class):
+        return form_class(self.request, **self.get_form_kwargs())
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request, self.request.POST)
-        form.status = 2
-        form.registration_date = date.today()
-        form.created_by_crm_user_id = self.request.session['crm_user_id']
-        if form.is_valid():
-            form.save()
-        else:
-            return JsonResponse({})
-
+    def form_valid(self, form):
         # Add job for sending request to register a new alphanumeric name
+        super().form_valid(form)
 
 
 class CampaignIndexView(ListView):

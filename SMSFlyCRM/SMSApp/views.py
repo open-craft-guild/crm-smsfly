@@ -23,6 +23,7 @@ class IndexView(TemplateView):
 class AlphanameIndexView(ListView):
     """Shows all alphaname list available along with registrar and registration date"""
     template_name = 'alphanames-list.html'
+    context_object_name = 'alphanames'
     model = Alphaname
 
 

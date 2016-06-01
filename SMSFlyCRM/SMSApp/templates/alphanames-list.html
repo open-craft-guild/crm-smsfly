@@ -20,21 +20,13 @@
     </thead>
 
     <tbody>
+      {% for alphaname in alphanames %}
       <tr>
-        <td>{% trans 'Альфаимя1' %}</td>
-        <td>{% trans 'Дата регистрации' %}</td>
-        <td>{% trans 'Кем зарегистрировано' %}</td>
+        <td>{{ alphaname.name }}</td>
+        <td>{{ alphaname.registration_date }}</td>
+        <td>{{ alphaname.created_by_crm_user_id }}</td>
       </tr>
-      <tr>
-        <td>{% trans 'Альфаимя2' %}</td>
-        <td>{% trans 'Дата регистрации' %}</td>
-        <td>{% trans 'Кем зарегистрировано' %}</td>
-      </tr>
-      <tr>
-        <td>{% trans 'Альфаимя3' %}</td>
-        <td>{% trans 'Дата регистрации' %}</td>
-        <td>{% trans 'Кем зарегистрировано' %}</td>
-      </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>

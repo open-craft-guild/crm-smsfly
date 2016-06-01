@@ -37,7 +37,7 @@ class AlphanameRegisterView(CreateView):
 
     def form_valid(self, form):
         # Add job for sending request to register a new alphanumeric name
-        super().form_valid(form)
+        return super().form_valid(form)
 
 
 class CampaignIndexView(ListView):

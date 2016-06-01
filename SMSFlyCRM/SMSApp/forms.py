@@ -1,4 +1,5 @@
 import json
+from datetime import date
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -14,12 +15,37 @@ class AlphanameForm(forms.ModelForm):
         self.fields['created_by_crm_user_id'] = forms.IntegerField(
             label='CRM User Id', initial=request.session['crm_user_id'],
             widget=forms.HiddenInput())
+        self.fields['registration_date'] = forms.DateField(
+            initial=date.today(), widget=forms.HiddenInput())
+
+    # created_by_crm_user_id = forms.IntegerField(
+    #     initial=0,widget=forms.HiddenInput())
+    # registration_date = forms.DateField(initial=date.today(),widget=forms.HiddenInput())
+
+    def clean_created_by_crm_user_id(self):
+        data = self.cleaned_data['created_by_crm_user_id']
+        data = self.request.session['crm_user_id']
+        return data
+
+    def clean_registration_date(self):
+        data = self.cleaned_data['registration_date']
+        data = date.today()
+        return data
+
+    def save(self, commit=True):
+        alphaname = super().save(commit=False)
+        if commit:
+            self.save()
 
     class Meta:
         model = Alphaname
-        fields = ['name', 'created_by_crm_user_id']
+        fields = ['name', 'created_by_crm_user_id', 'registration_date']
         labels = {
             'name': _('Альфаимя'),
+        }
+        widgets = {
+            'created_by_crm_user_id': forms.HiddenInput(),
+            'registration_date': forms.HiddenInput()
         }
 
 

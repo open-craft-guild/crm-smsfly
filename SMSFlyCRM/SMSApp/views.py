@@ -1,4 +1,7 @@
 import json
+from datetime import date
+
+from django.core.urlresolvers import reverse_lazy
 
 from django.http import JsonResponse
 
@@ -27,9 +30,13 @@ class AlphanameRegisterView(FormView):
     """Sends new alphaname register request"""
     template_name = 'alphaname-new.html'
     form_class = AlphanameForm
-    success_url = '/'
+    success_url = reverse_lazy('alphanames-root')
 
     def form_valid(self, form):
+        form.status = 2
+        form.registration_date = date.today()
+        form.created_by_crm_user_id = self.request.session['crm_user_id']
+        form.save()
         # Add job for sending request to register a new alphanumeric name
         return super().form_valid(form)
 

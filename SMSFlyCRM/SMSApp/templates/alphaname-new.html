@@ -3,7 +3,9 @@
 
 {% block content %}
 <section id="new-alphaname">
+  {% bootstrap_form_errors form %}
   <form action="" method="post">
+    {% csrf_token %}
     <div class="form-group">
       {% bootstrap_field form.name %}
     </div>

@@ -45,6 +45,7 @@ containers:
       - libsasl
       - libpq
       - mariadb-dev
+      - git
     - !Py3Requirements requirements.txt
     environ:
       DATABASE_URL: sqlite:///db.sqlite3

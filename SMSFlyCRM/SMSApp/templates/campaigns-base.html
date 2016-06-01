@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-
+{% block content %}
+{% include 'under-construction.html' %}
 <nav id="campaigns-nav">
   <a href="/new-campaign" class="btn btn-primary btn-lg">{% trans 'Новый шаблон' %}</a>
   <ul class="nav nav-pills nav-justified">
@@ -11,3 +12,4 @@
 </nav>
 {% block campaign-content %}
 {% endblock campaign-content %}
+{% endblock content %}

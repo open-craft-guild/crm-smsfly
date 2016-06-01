@@ -415,7 +415,7 @@ class Alphaname(models.Model):
     )
 
     name = models.CharField(max_length=11)
-    status = models.IntegerField(choices=STATUS_LIST)
+    status = models.IntegerField(choices=STATUS_LIST, null=True)
     registration_date = models.DateField()
     created_by_crm_user_id = models.IntegerField()
 

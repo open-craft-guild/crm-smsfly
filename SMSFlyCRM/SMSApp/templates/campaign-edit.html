@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="campaign-edit">
-  <form class="" action="" method="post">
+  <form method="post">
     {% bootstrap_form_errors form %}
     {% csrf_token %}
     {% bootstrap_form form layout='inline' show_label=True %}
@@ -26,7 +26,8 @@
     {% block campaign-filters %}
     {% endblock campaign-filters %}
 
-
+    {% trans 'Отправить рассылку' as create_task_btn %}
+    {% bootstrap_button create_task_btn button_type="submit" button_class="btn-primary" %}
   </form>
 </section>
 {% endblock content %}

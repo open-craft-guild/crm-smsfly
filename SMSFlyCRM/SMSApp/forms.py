@@ -10,10 +10,11 @@ from .models import (Alphaname, Task, ProjectContact, FollowerStatus,
 
 
 class AlphanameForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['created_by_crm_user_id'] = forms.IntegerField(
-            label='CRM User Id', initial=0, widget=forms.HiddenInput())
+            label='CRM User Id', initial=request.session['crm_user_id'],
+            widget=forms.HiddenInput())
         self.fields['registration_date'] = forms.DateField(
             initial=date.today(), widget=forms.HiddenInput())
         self.fields['status'] = forms.IntegerField(

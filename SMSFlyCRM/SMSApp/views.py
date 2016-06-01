@@ -12,7 +12,7 @@ from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import FormView
 
 from .models import Alphaname, Project
-from .forms import AlphanameForm, TaskForm
+from .forms import AlphanameForm, OneTimeTaskForm
 
 
 class IndexView(TemplateView):

@@ -13,7 +13,7 @@ class AlphanameForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['created_by_crm_user_id'] = forms.IntegerField(
             label='CRM User Id', initial=request.session['crm_user_id'],
-            widgets=forms.HiddenInput())
+            widget=forms.HiddenInput())
 
     class Meta:
         model = Alphaname

@@ -24,9 +24,12 @@ class Area(models.Model):
     """Describes the area where electors live"""
     area_id = models.IntegerField(unique=True, primary_key=True)
     area_name = models.CharField(null=True, max_length=250)
-    region_id = models.ForeignKey('Region', to_field='region_id', on_delete=models.DO_NOTHING, null=True)
+    region = models.ForeignKey('Region', to_field='region_id', on_delete=models.DO_NOTHING, null=True)
 
     objects = ExternalCRMManager()
+
+    def __str__(self):
+        return '{}'.format(self.area_name)
 
     class Meta:
         db_route = 'external_app'
@@ -38,9 +41,12 @@ class Building(models.Model):
     """Describes the building"""
     building_id = models.IntegerField(unique=True, primary_key=True)
     building_number = models.CharField(null=True, max_length=20)
-    street_id = models.ForeignKey('Street', to_field='street_id', on_delete=models.DO_NOTHING)
+    street = models.ForeignKey('Street', to_field='street_id', on_delete=models.DO_NOTHING)
 
     objects = ExternalCRMManager()
+
+    def __str__(self):
+        return '{}'.format(self.building_number)
 
     class Meta:
         db_route = 'external_app'
@@ -55,6 +61,9 @@ class Region(models.Model):
 
     objects = ExternalCRMManager()
 
+    def __str__(self):
+        return '{}'.format(self.region_name)
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -65,9 +74,12 @@ class Locality(models.Model):
     """Describes the locality where electors live"""
     locality_id = models.IntegerField(unique=True, primary_key=True)
     locality_name = models.CharField(max_length=56)
-    area_id = models.ForeignKey('Area', to_field='area_id', on_delete=models.DO_NOTHING)
+    area = models.ForeignKey('Area', to_field='area_id', on_delete=models.DO_NOTHING)
 
     objects = ExternalCRMManager()
+
+    def __str__(self):
+        return '{}'.format(self.locality_name)
 
     class Meta:
         db_route = 'external_app'
@@ -80,9 +92,12 @@ class Street(models.Model):
     """Describes the area where electors live"""
     street_id = models.IntegerField(unique=True, primary_key=True)
     street_name = models.CharField(max_length=500)
-    locality_id = models.ForeignKey('Locality', to_field='locality_id', on_delete=models.DO_NOTHING)
+    locality = models.ForeignKey('Locality', to_field='locality_id', on_delete=models.DO_NOTHING)
 
     objects = ExternalCRMManager()
+
+    def __str__(self):
+        return '{}'.format(self.street_name)
 
     class Meta:
         db_route = 'external_app'
@@ -98,6 +113,9 @@ class Project(models.Model):
 
     objects = ExternalCRMManager()
 
+    def __str__(self):
+        return '{}'.format(self.project_name)
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -112,6 +130,9 @@ class ProjectContact(models.Model):
 
     objects = ExternalCRMManager()
 
+    def __str__(self):
+        return '{}'.format(self.contact_name)
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -123,10 +144,14 @@ class FollowerContact(models.Model):
     """Describes the contact with elector"""
     id = models.IntegerField(unique=True, primary_key=True)
     contact_date = models.DateField(null=True)
-    follower_id = models.ForeignKey('Follower', to_field='follower_id', on_delete=models.DO_NOTHING)
-    contact_id = models.ForeignKey('ProjectContact', to_field='contact_id', on_delete=models.DO_NOTHING, null=True)
-    follower_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
-                                           null=True)
+    follower = models.ForeignKey('Follower', to_field='follower_id', on_delete=models.DO_NOTHING)
+    contact = models.ForeignKey('ProjectContact', to_field='contact_id', on_delete=models.DO_NOTHING, null=True)
+    follower_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
+                                        null=True)
+
+    def __str__(self):
+        return '{} {}, контакт {} {}'.format(self.follower.lastname, self.follower.firstname, self.contact_date,
+                                             self.contact.contact_name)
 
     objects = ExternalCRMManager()
 
@@ -144,6 +169,9 @@ class Candidate(models.Model):
 
     objects = ExternalCRMManager()
 
+    def __str__(self):
+        return '{}'.format(self.candidate_name)
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -153,9 +181,12 @@ class Candidate(models.Model):
 class FollowerCandidate(models.Model):
     """Describes the relation between candidate and elector"""
     follower_id = models.IntegerField(unique=True, primary_key=True)
-    candidate_id = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING)
+    candidate = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING)
 
     objects = ExternalCRMManager()
+
+    def __str__(self):
+        return '{}'.format(self.candidate.candidate_name)
 
     class Meta:
         db_route = 'external_app'
@@ -167,11 +198,14 @@ class PollPlace(models.Model):
     """Describes the poll location"""
     polplace_id = models.IntegerField(unique=True, primary_key=True)
     polplace_number = models.CharField(null=True, max_length=14)
-    region_id = models.ForeignKey('Region', to_field='region_id', null=True, on_delete=models.DO_NOTHING)
-    area_id = models.ForeignKey('Area', to_field='area_id', null=True,  on_delete=models.DO_NOTHING)
-    locality_id = models.ForeignKey('Locality', to_field='locality_id', null=True, on_delete=models.DO_NOTHING)
+    region = models.ForeignKey('Region', to_field='region_id', null=True, on_delete=models.DO_NOTHING)
+    area = models.ForeignKey('Area', to_field='area_id', null=True,  on_delete=models.DO_NOTHING)
+    locality = models.ForeignKey('Locality', to_field='locality_id', null=True, on_delete=models.DO_NOTHING)
 
     objects = ExternalCRMManager()
+
+    def __str__(self):
+        return 'Участок {}'.format(self.polplace_number)
 
     class Meta:
         db_route = 'external_app'
@@ -186,6 +220,9 @@ class FamilyStatus(models.Model):
 
     objects = ExternalCRMManager()
 
+    def __str__(self):
+        return '{}'.format(self.family_status_name)
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -198,6 +235,9 @@ class Education(models.Model):
     education_name = models.CharField(null=True, max_length=250)
 
     objects = ExternalCRMManager()
+
+    def __str__(self):
+        return '{}'.format(self.education_name)
 
     class Meta:
         db_route = 'external_app'
@@ -212,6 +252,9 @@ class SocialCategory(models.Model):
 
     objects = ExternalCRMManager()
 
+    def __str__(self):
+        return '{}'.format(self.social_category_name)
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -224,6 +267,9 @@ class Sex(models.Model):
     sex_name = models.CharField(max_length=225)
 
     objects = ExternalCRMManager()
+
+    def __str__(self):
+        return '{}'.format(self.sex_name)
 
     class Meta:
         db_route = 'external_app'
@@ -238,6 +284,9 @@ class FollowerStatus(models.Model):
 
     objects = ExternalCRMManager()
 
+    def __str__(self):
+        return '{}'.format(self.follower_status_name)
+
     class Meta:
         db_route = 'external_app'
         managed = False
@@ -250,42 +299,46 @@ class Follower(models.Model):
     lastname = models.CharField(null=True, max_length=255)
     firstname = models.CharField(null=True, max_length=255)
     middlename = models.CharField(null=True, max_length=255)
-    sex_id = models.ForeignKey('Sex', to_field='sex_id', null=True, on_delete=models.DO_NOTHING)
+    sex = models.ForeignKey('Sex', to_field='sex_id', null=True, on_delete=models.DO_NOTHING)
     datebirth = models.DateField(null=True)
-    social_category_id = models.ForeignKey('SocialCategory', to_field='social_category_id', related_name='followers',
-                                           on_delete=models.DO_NOTHING, null=True)
-    family_status_id = models.ForeignKey('FamilyStatus', to_field='family_status_id', related_name='followers',
-                                         on_delete=models.DO_NOTHING, null=True)
-    education_id = models.ForeignKey('Education', related_name='followers', to_field='education_id',
-                                     on_delete=models.DO_NOTHING, null=True)
-    cellphone = models.CharField(null=True, max_length=255)
-    address_region_id = models.ForeignKey('Region', to_field='region_id', related_name='living_followers',
-                                          on_delete=models.DO_NOTHING, null=True)
-    address_area_id = models.ForeignKey('Area', to_field='area_id', related_name='living_followers',
+    social_category = models.ForeignKey('SocialCategory', to_field='social_category_id', related_name='followers',
                                         on_delete=models.DO_NOTHING, null=True)
-    address_locality_id = models.ForeignKey('Locality', to_field='locality_id', related_name='living_followers',
-                                            on_delete=models.DO_NOTHING, null=True)
-    address_street_id = models.ForeignKey('Street', to_field='street_id', related_name='living_followers',
+    family_status = models.ForeignKey('FamilyStatus', to_field='family_status_id', related_name='followers',
+                                      on_delete=models.DO_NOTHING, null=True)
+    education = models.ForeignKey('Education', related_name='followers', to_field='education_id',
+                                  on_delete=models.DO_NOTHING, null=True)
+    cellphone = models.CharField(null=True, max_length=255)
+    address_region = models.ForeignKey('Region', to_field='region_id', related_name='living_followers',
+                                       on_delete=models.DO_NOTHING, null=True)
+    address_area = models.ForeignKey('Area', to_field='area_id', related_name='living_followers',
+                                     on_delete=models.DO_NOTHING, null=True)
+    address_locality = models.ForeignKey('Locality', to_field='locality_id', related_name='living_followers',
+                                         on_delete=models.DO_NOTHING, null=True)
+    address_street = models.ForeignKey('Street', to_field='street_id', related_name='living_followers',
+                                       on_delete=models.DO_NOTHING, null=True)
+    address_builing = models.ForeignKey('Building', to_field='building_id', related_name='living_followers',
+                                        on_delete=models.DO_NOTHING, null=True)
+    regaddress_region = models.ForeignKey('Region', to_field='region_id', related_name='registered_followers',
                                           on_delete=models.DO_NOTHING, null=True)
-    address_builing_id = models.ForeignKey('Building', to_field='building_id', related_name='living_followers',
+    regaddress_area = models.ForeignKey('Area', to_field='area_id', related_name='registered_followers',
+                                        on_delete=models.DO_NOTHING, null=True)
+    regaddress_locality = models.ForeignKey('Locality', to_field='locality_id', related_name='registered_followers',
+                                            on_delete=models.DO_NOTHING, null=True)
+    regaddress_street = models.ForeignKey('Street', to_field='street_id', related_name='registered_followers',
+                                          on_delete=models.DO_NOTHING, null=True)
+    regaddress_builing = models.ForeignKey('Building', to_field='building_id', related_name='registered_followers',
                                            on_delete=models.DO_NOTHING, null=True)
-    regaddress_region_id = models.ForeignKey('Region', to_field='region_id', related_name='registered_followers',
-                                             on_delete=models.DO_NOTHING, null=True)
-    regaddress_area_id = models.ForeignKey('Area', to_field='area_id', related_name='registered_followers',
-                                           on_delete=models.DO_NOTHING, null=True)
-    regaddress_locality_id = models.ForeignKey('Locality', to_field='locality_id', related_name='registered_followers',
-                                               on_delete=models.DO_NOTHING, null=True)
-    regaddress_street_id = models.ForeignKey('Street', to_field='street_id', related_name='registered_followers',
-                                             on_delete=models.DO_NOTHING, null=True)
-    regaddress_builing_id = models.ForeignKey('Building', to_field='building_id', related_name='registered_followers',
-                                              on_delete=models.DO_NOTHING, null=True)
-    polplace_id = models.ForeignKey('PollPlace', to_field='polplace_id', related_name='followers',
-                                    on_delete=models.DO_NOTHING, null=True)
-    last_contact_id = models.ForeignKey('FollowerContact', to_field='id', on_delete=models.DO_NOTHING, null=True)
-    last_status_id = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
-                                       null=True)
+    polplace = models.ForeignKey('PollPlace', to_field='polplace_id', related_name='followers',
+                                 on_delete=models.DO_NOTHING, null=True)
+    last_contact = models.ForeignKey('FollowerContact', to_field='id', on_delete=models.DO_NOTHING, null=True,
+                                     related_name='last_contact')
+    last_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
+                                    null=True)
 
     objects = ExternalCRMManager()
+
+    def __str__(self):
+        return '{} {} {}'.format(self.lastname, self.firstname, self.middlename)
 
     class Meta:
         db_route = 'external_app'
@@ -298,6 +351,9 @@ class Campaign(models.Model):
     code = models.CharField(max_length=20)
     datetime_sent = models.DateTimeField()
     state = models.TextField()
+
+    def __str__(self):
+        return '{}, {}'.format(self.task.title, self.datetime_sent)
 
     class Meta:
         db_route = 'internal_app'
@@ -323,18 +379,18 @@ class Task(models.Model):
         (2, 'complete'),
     )
 
+    created_by_crm_user_id = models.IntegerField()
     alphaname = models.ForeignKey('Alphaname')
     title = models.CharField(max_length=255)
     message_text = models.TextField(max_length=402)
     recipients_filter = models.TextField()
+    state = models.IntegerField(choices=STATE_LIST)
     code = models.CharField(max_length=20)
     start_date = models.DateField()
     type = models.IntegerField(choices=TYPE_LIST)
     end_date = models.DateField()
-    created_by_crm_user_id = models.IntegerField()
     recurrence_rule = models.TextField()
     triggered_by = models.IntegerField(null=True, choices=TRIGGERS_LIST)
-    state = models.IntegerField(choices=STATE_LIST)
     touch_project = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING, null=True)
     touch_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', related_name='+',
                                      on_delete=models.DO_NOTHING, null=True)
@@ -342,6 +398,9 @@ class Task(models.Model):
     touch_candidate = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING, null=True)
     trigger_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', related_name='+',
                                        on_delete=models.DO_NOTHING, null=True)
+
+    def __str__(self):
+        return '{} ({}). {}'.format(self.title, self.aplhaname, self.state[1])
 
     class Meta:
         db_route = 'internal_app'
@@ -359,6 +418,10 @@ class Alphaname(models.Model):
     status = models.IntegerField(choices=STATUS_LIST)
     registration_date = models.DateField()
     created_by_crm_user_id = models.IntegerField()
+
+    def __str__(self):
+        return '{} ({}). Зарегистрировано {} пользователем {}'.format(
+            self.name, self.status, self.registration_date, self.created_by_crm_user_id)
 
     class Meta:
         db_route = 'internal_app'
@@ -379,13 +442,16 @@ class Message(models.Model):
         (10, 'NEW'),
     )
 
-    crm_elector_id = models.ForeignKey('Follower', to_field='follower_id', on_delete=models.DO_NOTHING)
+    crm_elector = models.ForeignKey('Follower', to_field='follower_id', on_delete=models.DO_NOTHING)
     phone_number = models.CharField(max_length=12)
     message_text = models.CharField(max_length=402)
     datetime_scheduled = models.DateTimeField()
     datetime_sent = models.DateTimeField()
     status = models.IntegerField(choices=STATUS_LIST)
     campaign = models.ForeignKey('Campaign')
+
+    def __str__(self):
+        return '{} к {}  ({})'.format(self.message_text, self.phone_number, self.status[1])
 
     class Meta:
         db_route = 'internal_app'

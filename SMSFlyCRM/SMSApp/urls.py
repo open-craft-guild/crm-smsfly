@@ -11,7 +11,7 @@ urlpatterns = (
     # Active campaigns list:
     url('^sms-campaigns$', views.CampaignIndexView.as_view(), name='campaigns-root'),
     # Campaign adding/scheduling form:
-    url('^sms-campaigns/new$', views.CampaignNewView.as_view(), name='add-campaign'),
+    url('^sms-campaigns/new/one-time$', views.CampaignNewView.as_view(), name='add-campaign'),
     # Campaign editing form:
     url('^sms-campaigns/edit$', views.CampaignEditView.as_view(), name='edit-campaign'),
     # Archive of inactive/sent campaigns:

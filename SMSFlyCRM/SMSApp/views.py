@@ -48,14 +48,14 @@ class CampaignIndexView(ListView):
     queryset = []  # TODO: replace fake queryset with an existing model
 
 
-class CampaignNewView(FormView):
+class CampaignNewView(TemplateView):
     """Helps schedule a new campaign or send new one instantly"""
     template_name = 'campaign-edit.html'
-    form_class = TaskForm
     success_url = ''
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = OneTimeTaskForm(self.request)
         context['range30'] = range(1, 31)
         context['weekdays'] = (
             (1, 'пн'),
@@ -76,7 +76,7 @@ class CampaignNewView(FormView):
 class CampaignEditView(FormView):
     """Makes modifications on an active campaign"""
     template_name = 'campaign-edit.html'
-    form_class = TaskForm
+    form_class = OneTimeTaskForm
     success_url = ''
 
     def form_valid(self, form):

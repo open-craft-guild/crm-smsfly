@@ -49,7 +49,7 @@ class CampaignIndexView(ListView):
 class CampaignNewView(TemplateView):
     """Helps schedule a new campaign or send new one instantly"""
     template_name = 'campaign-edit.html'
-    success_url = ''
+    success_url = reverse_lazy('campaigns-root')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -10,36 +10,18 @@ from .models import (Alphaname, Task, ProjectContact, FollowerStatus,
 
 
 class AlphanameForm(forms.ModelForm):
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['created_by_crm_user_id'] = forms.IntegerField(
-            label='CRM User Id', initial=request.session['crm_user_id'],
-            widget=forms.HiddenInput())
+            label='CRM User Id', initial=0, widget=forms.HiddenInput())
         self.fields['registration_date'] = forms.DateField(
             initial=date.today(), widget=forms.HiddenInput())
-
-    # created_by_crm_user_id = forms.IntegerField(
-    #     initial=0,widget=forms.HiddenInput())
-    # registration_date = forms.DateField(initial=date.today(),widget=forms.HiddenInput())
-
-    def clean_created_by_crm_user_id(self):
-        data = self.cleaned_data['created_by_crm_user_id']
-        data = self.request.session['crm_user_id']
-        return data
-
-    def clean_registration_date(self):
-        data = self.cleaned_data['registration_date']
-        data = date.today()
-        return data
-
-    def save(self, commit=True):
-        alphaname = super().save(commit=False)
-        if commit:
-            self.save()
+        self.fields['status'] = forms.IntegerField(
+            initial=2, widget=forms.HiddenInput())
 
     class Meta:
         model = Alphaname
-        fields = ['name', 'created_by_crm_user_id', 'registration_date']
+        fields = ['name', 'created_by_crm_user_id', 'registration_date', 'status']
         labels = {
             'name': _('Альфаимя'),
         }

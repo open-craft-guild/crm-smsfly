@@ -122,12 +122,12 @@ class TaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ['alphaname', 'title', 'message_text', 'start_date', 'recipients_filter', 'type']
+        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'recipients_filter', 'type']
         labels = {
             'alphaname': _('Альфаимя'),
             'title': _('Название шаблона'),
             'message_text': _('Текст сообщения'),
-            'start_date': _('Дата начала'),
+            'start_datetime': _('Дата начала'),
         }
 
 
@@ -164,7 +164,7 @@ class RecurringTaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ['alphaname', 'title', 'message_text', 'start_date', 'type', 'end_date',
+        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
                   'recurrence_rule', 'recipients_filter', ]
         labels = {
             'alphaname': _('Альфаимя'),
@@ -197,7 +197,7 @@ class EventDrivenTaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ['alphaname', 'title', 'message_text', 'start_date', 'type', 'end_date',
+        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
                   'touch_project', 'triggered_by', 'touch_status', 'touch_contact',
                   'touch_candidate', 'trigger_status', 'recipients_filter', ]
         labels = {

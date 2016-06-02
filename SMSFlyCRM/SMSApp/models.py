@@ -386,7 +386,7 @@ class Task(models.Model):
     recipients_filter = models.TextField()
     state = models.IntegerField(choices=STATE_LIST)
     code = models.CharField(max_length=20)
-    start_date = models.DateField()
+    start_datetime = models.DateTimeField()
     type = models.IntegerField(choices=TYPE_LIST)
     end_date = models.DateField()
     recurrence_rule = models.TextField()

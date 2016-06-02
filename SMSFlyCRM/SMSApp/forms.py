@@ -48,7 +48,9 @@ class TaskForm(forms.ModelForm):
             label='CRM User Id', initial=user_id,
             widget=forms.HiddenInput())
         self.fields['type'].widget = forms.HiddenInput()
+        self.initial['type'] = 0
         self.fields['recipients_filter'].widget = forms.HiddenInput()
+        self.initial['recipients_filter'] = 0
         self.fields['to-everyone'] = forms.BooleanField(
             label=_('Отправить всем избирателям'), required=False)
         self.fields['age-from'] = forms.IntegerField(
@@ -101,28 +103,28 @@ class TaskForm(forms.ModelForm):
 
     def save(self, commit=True):
         form_model = super().save(commit=False)
-        form_model.fields['type'] = 0
-        self.fields['recipients_filter'] = json.dumps({
-            'to-everyone': self.fields['to-everyone'],
-            'age-from': self.fields['age-from'],
-            'age-to': self.fields['age-to'],
-            'reg-region': self.fields['reg-region'],
-            'reg-locality': self.fields['reg-locality'],
-            'reg-street': self.fields['reg-street'],
-            'reg-building': self.fields['reg-building'],
-            'actual-region': self.fields['actual-region'],
-            'actual-area': self.fields['actual-area'],
-            'actual-locality': self.fields['actual-locality'],
-            'actual-street': self.fields['actual-street'],
-            'actual-building': self.fields['actual-building'],
-            'sex': self.fields['sex'],
-            'family-status': self.fields['family-status'],
-            'education': self.fields['education'],
-            'social-category': self.fields['social-category'],
-            'poll-place': self.fields['poll-place'],
-            'contact': self.fields['contact'],
-            'candidate': self.fields['candidate'],
-            'status': self.fields['status']
+        form_model.type = 0
+        form_model.recipients_filter = json.dumps({
+            'to-everyone': self.cleaned_data['to-everyone'],
+            'age-from': self.cleaned_data['age-from'],
+            'age-to': self.cleaned_data['age-to'],
+            'reg-region': self.cleaned_data['reg-region'],
+            'reg-locality': self.cleaned_data['reg-locality'],
+            'reg-street': self.cleaned_data['reg-street'],
+            'reg-building': self.cleaned_data['reg-building'],
+            'actual-region': self.cleaned_data['actual-region'],
+            'actual-area': self.cleaned_data['actual-area'],
+            'actual-locality': self.cleaned_data['actual-locality'],
+            'actual-street': self.cleaned_data['actual-street'],
+            'actual-building': self.cleaned_data['actual-building'],
+            'sex': self.cleaned_data['sex'],
+            'family-status': self.cleaned_data['family-status'],
+            'education': self.cleaned_data['education'],
+            'social-category': self.cleaned_data['social-category'],
+            'poll-place': self.cleaned_data['poll-place'],
+            'contact': self.cleaned_data['contact'],
+            'candidate': self.cleaned_data['candidate'],
+            'status': self.cleaned_data['status']
         })
         if commit:
             form_model.save()

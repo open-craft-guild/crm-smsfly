@@ -11,7 +11,7 @@ from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import FormView, CreateView
 
 from .models import Alphaname, Project
-from .forms import AlphanameForm, OneTimeTaskForm
+from .forms import AlphanameForm, OneTimeTaskForm, TaskForm
 
 
 class IndexView(TemplateView):
@@ -33,7 +33,7 @@ class AlphanameRegisterView(CreateView):
     success_url = reverse_lazy('alphanames-root')
 
     def get_form(self, form_class=None):
-        return form_class(self.request, **self.get_form_kwargs())
+        return (form_class or self.form_class)(self.request, **self.get_form_kwargs())
 
     def form_valid(self, form):
         # Add job for sending request to register a new alphanumeric name
@@ -46,14 +46,17 @@ class CampaignIndexView(ListView):
     queryset = []  # TODO: replace fake queryset with an existing model
 
 
-class CampaignNewView(TemplateView):
+class CampaignNewView(CreateView):
     """Helps schedule a new campaign or send new one instantly"""
     template_name = 'campaign-edit.html'
+    form_class = TaskForm
     success_url = reverse_lazy('campaigns-root')
+
+    def get_form(self, form_class=None):
+        return (form_class or self.form_class)(self.request, **self.get_form_kwargs())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = OneTimeTaskForm(self.request)
         context['range30'] = range(1, 31)
         context['weekdays'] = (
             (1, 'пн'),

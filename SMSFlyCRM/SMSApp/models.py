@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Add recognized model option to django
 # :seealso: https://djangosnippets.org/snippets/2687/
@@ -386,7 +387,7 @@ class Task(models.Model):
     recipients_filter = models.TextField()
     state = models.IntegerField(choices=STATE_LIST)
     code = models.CharField(max_length=20)
-    start_datetime = models.DateTimeField()
+    start_datetime = models.DateTimeField(default=datetime.datetime.now)
     type = models.IntegerField(choices=TYPE_LIST)
     end_date = models.DateField()
     recurrence_rule = models.TextField()

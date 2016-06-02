@@ -32,7 +32,7 @@ class AlphanameRegisterView(CreateView):
     form_class = AlphanameForm
     success_url = reverse_lazy('alphanames-root')
 
-    def get_form(self, form_class=None):
+    def get_form(self, form_class=AlphanameForm):
         return (form_class or self.form_class)(self.request, **self.get_form_kwargs())
 
     def form_valid(self, form):
@@ -52,7 +52,7 @@ class CampaignNewView(CreateView):
     form_class = TaskForm
     success_url = reverse_lazy('campaigns-root')
 
-    def get_form(self, form_class=None):
+    def get_form(self, form_class=TaskForm):
         return (form_class or self.form_class)(self.request, **self.get_form_kwargs())
 
     def get_context_data(self, **kwargs):

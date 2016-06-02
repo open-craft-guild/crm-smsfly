@@ -49,6 +49,8 @@ class TaskForm(forms.ModelForm):
             widget=forms.HiddenInput())
         self.fields['type'].widget = forms.HiddenInput()
         self.initial['type'] = 0
+        self.fields['state'].widget = forms.HiddenInput()
+        self.initial['state'] = 0
         self.fields['recipients_filter'].widget = forms.HiddenInput()
         self.initial['recipients_filter'] = 0
         self.fields['to-everyone'] = forms.BooleanField(
@@ -102,9 +104,8 @@ class TaskForm(forms.ModelForm):
             label=_('Статус'), queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
 
     def save(self, commit=True):
-        form_model = super().save(commit=False)
-        form_model.type = 0
-        form_model.recipients_filter = json.dumps({
+        self.cleaned_data['type'] = 0
+        self.cleaned_data['recipients_filter'] = json.dumps({
             'to-everyone': self.cleaned_data['to-everyone'],
             'age-from': self.cleaned_data['age-from'],
             'age-to': self.cleaned_data['age-to'],
@@ -126,13 +127,12 @@ class TaskForm(forms.ModelForm):
             'candidate': self.cleaned_data['candidate'],
             'status': self.cleaned_data['status']
         })
-        if commit:
-            form_model.save()
-        return form_model
+        return super().save(commit=commit)
 
     class Meta:
         model = Task
-        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'recipients_filter', 'type']
+        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'recipients_filter', 'type',
+                  'created_by_crm_user_id', 'state']
         labels = {
             'alphaname': _('Альфаимя'),
             'title': _('Название шаблона'),

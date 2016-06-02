@@ -352,6 +352,7 @@ class Campaign(models.Model):
     code = models.CharField(max_length=20)
     datetime_sent = models.DateTimeField()
     state = models.TextField()
+    smsfly_campaign_id = models.IntegerField(default=0, null=True)  # campaign id given by smsfly
 
     def __str__(self):
         return '{}, {}'.format(self.task.title, self.datetime_sent)

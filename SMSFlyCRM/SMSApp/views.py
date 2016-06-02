@@ -32,7 +32,7 @@ class AlphanameRegisterView(CreateView):
     form_class = AlphanameForm
     success_url = reverse_lazy('alphanames-root')
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=None):
         return form_class(self.request, **self.get_form_kwargs())
 
     def form_valid(self, form):

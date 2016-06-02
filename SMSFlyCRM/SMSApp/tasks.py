@@ -4,7 +4,7 @@ from django_rq import job
 from time import sleep
 from datetime import datetime
 
-#from smsfly import SMSFlyAPI
+from smsfly import SMSFlyAPI
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
@@ -19,8 +19,8 @@ def addNewCampaignTask(task_id):
 def sendMessagesInstantly():
     api = SMSFlyAPI(account_id=settings.SMS_FLY['login'],
                     account_pass=settings.SMS_FLY['password'])
-    #api.send_sms_to_recipients(start_time=datetime.now().strftime(DATETIME_FORMAT), end_time=,
-    #                           lifetime=, rate=, desc=,
-    #                           source=, body=, recipients=)
+    api.send_sms_to_recipients(start_time=datetime.now().strftime(DATETIME_FORMAT), end_time='AUTO',
+                               lifetime=24, rate='AUTO', desc='Test task',
+                               source='Alpha', body='Hi man!', recipients=('380971234567',))
 
     pass

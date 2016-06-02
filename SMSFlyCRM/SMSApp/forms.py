@@ -3,6 +3,8 @@ from datetime import date
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from datetimewidget.widgets import DateTimeWidget
+
 
 from .models import (Alphaname, Task, ProjectContact, FollowerStatus,
                      Candidate, Area, Building, Region, Locality, Street,
@@ -30,6 +32,12 @@ class AlphanameForm(forms.ModelForm):
             'created_by_crm_user_id': forms.HiddenInput(),
             'registration_date': forms.HiddenInput()
         }
+
+    class Media:
+            js = ['js/bootstrap-datetimepicker.js']
+            css = {
+                'all': ('css/datetimepicker.css',)
+                }
 
 
 class TaskForm(forms.ModelForm):
@@ -130,6 +138,14 @@ class TaskForm(forms.ModelForm):
             'start_datetime': _('Дата начала'),
         }
 
+        dateTimeOptions = {
+            'format': 'DD.MM.YYYY hh:mm'
+        }
+
+        widgets = {
+            'start_datetime': DateTimeWidget(usel10n=True, options=dateTimeOptions, bootstrap_version=3)
+        }
+
 
 class OneTimeTaskForm(TaskForm):
     pass
@@ -145,7 +161,7 @@ class RecurringTaskForm(forms.ModelForm):
     def save(self, commit=True):
         form_model = super().save(commit=False)
         form_model.fields['recurrence_rule'] = json.dumps({
-            'start_date': '11111',  # TODO: replace with fields
+            'start_datetime': '11111',  # TODO: replace with fields
             'end_date': '11111',
             ####
             'type': 'EVERY_YEAR',
@@ -204,7 +220,7 @@ class EventDrivenTaskForm(forms.ModelForm):
             'alphaname': _('Альфаимя'),
             'title': _('Название шаблона'),
             'message_text': _('Текст сообщения'),
-            'start_date': _('Дата начала'),
+            'start_datetime': _('Дата начала'),
             'type': _('Тип'),
             'end_date': _('Дата окончания'),
             'triggered_by': _('Тип даты отправки'),

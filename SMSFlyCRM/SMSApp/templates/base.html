@@ -1,6 +1,10 @@
 {% extends 'bootstrap3/bootstrap3.html' %}
 {% load bootstrap3 %}
-
+{% block bootstrap3_extra_head %}
+{% if form %}
+{{ form.media }}
+{% endif %}
+{% endblock %}
 {% block bootstrap3_title %}{% block title %}SMSFlyCRM{% endblock %}{% endblock %}
 
 

@@ -16,11 +16,13 @@ def addNewCampaignTask(task_id):
 
 
 @job('high')
-def sendMessagesInstantly():
+def sendMessagesInstantly(message='Hi man!', send_as='Alpha',
+                          description='Test task', to=('380971234567',),
+                          task_id=100500):
     api = SMSFlyAPI(account_id=settings.SMS_FLY['login'],
                     account_pass=settings.SMS_FLY['password'])
-    api.send_sms_to_recipients(start_time=datetime.now().strftime(DATETIME_FORMAT), end_time='AUTO',
-                               lifetime=24, rate='AUTO', desc='Test task',
-                               source='Alpha', body='Hi man!', recipients=('380971234567',))
-
-    pass
+    return api.send_sms_to_recipients(
+        start_time=datetime.now().strftime(DATETIME_FORMAT), end_time='AUTO',
+        lifetime=24, rate='AUTO', desc=description,
+        source=send_as, body=message, recipients=to
+    )

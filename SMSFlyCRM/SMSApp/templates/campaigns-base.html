@@ -6,8 +6,9 @@
 <nav id="campaigns-nav">
   <a href="{% url 'add-campaign' %}" class="btn btn-primary btn-lg">{% trans 'Новый шаблон' %}</a>
   <ul class="nav nav-pills nav-justified">
-    <li role="presentation" class="active"><a href="{% url 'campaigns-root' %}">{% trans 'Актуальные' %}</a></li>
-    <li role="presentation"><a href="{% url 'campaigns-archive' %}">{% trans 'Архив' %}</a></li>
+    {% for item in tab_menu %}
+    <li role="presentation" class="{{ item.class }}"><a href="{{ item.url }}">{{ item.title }}</a></li>
+    {% endfor %}
   </ul>
 </nav>
 

@@ -2,6 +2,8 @@ import json
 
 from django.core.urlresolvers import reverse_lazy
 
+from django.db.models import Q
+
 from django.http import JsonResponse
 
 from django.views.decorators.http import require_POST
@@ -10,7 +12,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import FormView, CreateView
 
-from .models import Alphaname, Project
+from django.utils.translation import ugettext_lazy as _
+
+from .models import Alphaname, Project, Task
 from .forms import AlphanameForm, OneTimeTaskForm, TaskForm
 
 
@@ -40,10 +44,50 @@ class AlphanameRegisterView(CreateView):
         return super().form_valid(form)
 
 
-class CampaignIndexView(ListView):
+class CampaignBaseView(ListView):
+    """Base for tabbed list views"""
+
+    active_menu_item = None
+
+    def get_tab_menu(self, active_item=None):
+        menu = (
+            {
+                'url': reverse_lazy('campaigns-root'),
+                'title': _('Актуальные'),
+            },
+            {
+                'url': reverse_lazy('campaigns-archive'),
+                'title': _('Архив'),
+            },
+        )
+
+        try:
+            menu[active_item or self.active_menu_item]['class'] = 'active'
+        except KeyError:
+            pass
+
+        return menu
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['tab_menu'] = self.get_tab_menu()
+        return context
+
+
+class CampaignIndexView(CampaignBaseView):
     """Lists all active campaigns currently in progress (scheduled)"""
     template_name = 'campaigns-list.html'
-    queryset = []  # TODO: replace fake queryset with an existing model
+    active_menu_item = 0
+    context_object_name = 'tasks'
+    queryset = Task.objects.filter(state=0)
+
+
+class CampaignArchiveView(CampaignBaseView):
+    """Keeps a history of campaigns, which are inactive"""
+    template_name = 'campaigns-list.html'
+    active_menu_item = 1
+    context_object_name = 'tasks'
+    queryset = Task.objects.filter(Q(state=2) | Q(state=1))
 
 
 class CampaignNewView(CreateView):
@@ -83,12 +127,6 @@ class CampaignEditView(FormView):
     def form_valid(self, form):
         # Change campaign settings and notify everyone about its change, which involves changing DB and rescheduling job
         return super().form_valid(form)
-
-
-class CampaignArchiveView(ListView):
-    """Keeps a history of campaigns, which are inactive"""
-    template_name = 'campaigns-list.html'
-    queryset = []  # TODO: replace fake queryset with an existing model
 
 
 class CampaignMessagesView(ListView):

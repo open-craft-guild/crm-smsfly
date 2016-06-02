@@ -3,9 +3,8 @@
 
 {% block campaign-content %}
 <section id="campaigns-list" class="list-group">
-  <a href="#" class="list-group-item">Campaign1</a>
-  <a href="#" class="list-group-item">Campaign2</a>
-  <a href="#" class="list-group-item">Campaign3</a>
-  <a href="#" class="list-group-item">Campaign4</a>
+  {% for task in tasks %}
+  <a href="#" class="list-group-item">{{ task.title }}</a>
+  {% endfor %}
 </section>
 {% endblock campaign-content %}

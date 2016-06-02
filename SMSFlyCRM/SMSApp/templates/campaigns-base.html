@@ -4,12 +4,13 @@
 {% block content %}
 {% include 'under-construction.html' %}
 <nav id="campaigns-nav">
-  <a href="/new-campaign" class="btn btn-primary btn-lg">{% trans 'Новый шаблон' %}</a>
+  <a href="{% url 'add-campaign' %}" class="btn btn-primary btn-lg">{% trans 'Новый шаблон' %}</a>
   <ul class="nav nav-pills nav-justified">
-    <li role="presentation" class="active"><a href="">{% trans 'Актуальные' %}</a></li>
-    <li role="presentation"><a href="#">{% trans 'Архив' %}</a></li>
+    <li role="presentation" class="active"><a href="{% url 'campaigns-root' %}">{% trans 'Актуальные' %}</a></li>
+    <li role="presentation"><a href="{% url 'campaigns-archive' %}">{% trans 'Архив' %}</a></li>
   </ul>
 </nav>
+
 {% block campaign-content %}
 {% endblock campaign-content %}
 {% endblock content %}

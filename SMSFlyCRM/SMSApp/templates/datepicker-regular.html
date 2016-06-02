@@ -2,12 +2,8 @@
 
 <section id="datepicker-regular">
   <label>
-    {% trans 'Дата:' %}
-    <input type="date" name="date" value="{% now 'd.m.Y' %}">
-  </label>
-  <label>
-    {% trans 'Время:' %}
-    <input type="time" name="start" value="">
+    {% trans 'Дата рассылки:' %}
+    <input type="datetime-local" name="start_date" value="{% now 'd.m.Y' %}">
   </label>
 
 </section>

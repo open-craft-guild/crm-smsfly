@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'django_rq',
     'django_rq_jobs',
+    'datetimewidget',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -157,4 +158,9 @@ STATIC_URL = '/static/'
 SMS_FLY = {
     'login': env('SMSFLY_ID'),
     'password': env('SMSFLY_PASS'),
+}
+
+BOOTSTRAP3 = {
+    'javascript_in_head': True,
+    'include_jquery': True,
 }

@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Add recognized model option to django
 # :seealso: https://djangosnippets.org/snippets/2687/
@@ -386,9 +387,9 @@ class Task(models.Model):
     recipients_filter = models.TextField()
     state = models.IntegerField(choices=STATE_LIST)
     code = models.CharField(max_length=20)
-    start_date = models.DateField()
+    start_datetime = models.DateTimeField(default=datetime.datetime.now)
     type = models.IntegerField(choices=TYPE_LIST)
-    end_date = models.DateField()
+    end_date = models.DateField(null=True)
     recurrence_rule = models.TextField()
     triggered_by = models.IntegerField(null=True, choices=TRIGGERS_LIST)
     touch_project = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING, null=True)
@@ -400,7 +401,7 @@ class Task(models.Model):
                                        on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
-        return '{} ({}). {}'.format(self.title, self.aplhaname, self.state[1])
+        return '{} ({}). {}'.format(self.title, self.alphaname, self.state)
 
     class Meta:
         db_route = 'internal_app'

@@ -3,6 +3,8 @@ from datetime import date
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from datetimewidget.widgets import DateTimeWidget
+
 
 from .models import (Alphaname, Task, ProjectContact, FollowerStatus,
                      Candidate, Area, Building, Region, Locality, Street,
@@ -31,6 +33,12 @@ class AlphanameForm(forms.ModelForm):
             'registration_date': forms.HiddenInput()
         }
 
+    class Media:
+            js = ['js/bootstrap-datetimepicker.js']
+            css = {
+                'all': ('css/datetimepicker.css',)
+                }
+
 
 class TaskForm(forms.ModelForm):
     def __init__(self, request, *args, **kwargs):
@@ -40,7 +48,11 @@ class TaskForm(forms.ModelForm):
             label='CRM User Id', initial=user_id,
             widget=forms.HiddenInput())
         self.fields['type'].widget = forms.HiddenInput()
+        self.initial['type'] = 0
+        self.fields['state'].widget = forms.HiddenInput()
+        self.initial['state'] = 0
         self.fields['recipients_filter'].widget = forms.HiddenInput()
+        self.initial['recipients_filter'] = 0
         self.fields['to-everyone'] = forms.BooleanField(
             label=_('Отправить всем избирателям'), required=False)
         self.fields['age-from'] = forms.IntegerField(
@@ -92,42 +104,48 @@ class TaskForm(forms.ModelForm):
             label=_('Статус'), queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
 
     def save(self, commit=True):
-        form_model = super().save(commit=False)
-        form_model.fields['type'] = 0
-        self.fields['recipients_filter'] = json.dumps({
-            'to-everyone': self.fields['to-everyone'],
-            'age-from': self.fields['age-from'],
-            'age-to': self.fields['age-to'],
-            'reg-region': self.fields['reg-region'],
-            'reg-locality': self.fields['reg-locality'],
-            'reg-street': self.fields['reg-street'],
-            'reg-building': self.fields['reg-building'],
-            'actual-region': self.fields['actual-region'],
-            'actual-area': self.fields['actual-area'],
-            'actual-locality': self.fields['actual-locality'],
-            'actual-street': self.fields['actual-street'],
-            'actual-building': self.fields['actual-building'],
-            'sex': self.fields['sex'],
-            'family-status': self.fields['family-status'],
-            'education': self.fields['education'],
-            'social-category': self.fields['social-category'],
-            'poll-place': self.fields['poll-place'],
-            'contact': self.fields['contact'],
-            'candidate': self.fields['candidate'],
-            'status': self.fields['status']
+        self.cleaned_data['type'] = 0
+        self.cleaned_data['recipients_filter'] = json.dumps({
+            'to-everyone': self.cleaned_data['to-everyone'],
+            'age-from': self.cleaned_data['age-from'],
+            'age-to': self.cleaned_data['age-to'],
+            'reg-region': self.cleaned_data['reg-region'],
+            'reg-locality': self.cleaned_data['reg-locality'],
+            'reg-street': self.cleaned_data['reg-street'],
+            'reg-building': self.cleaned_data['reg-building'],
+            'actual-region': self.cleaned_data['actual-region'],
+            'actual-area': self.cleaned_data['actual-area'],
+            'actual-locality': self.cleaned_data['actual-locality'],
+            'actual-street': self.cleaned_data['actual-street'],
+            'actual-building': self.cleaned_data['actual-building'],
+            'sex': self.cleaned_data['sex'],
+            'family-status': self.cleaned_data['family-status'],
+            'education': self.cleaned_data['education'],
+            'social-category': self.cleaned_data['social-category'],
+            'poll-place': self.cleaned_data['poll-place'],
+            'contact': self.cleaned_data['contact'],
+            'candidate': self.cleaned_data['candidate'],
+            'status': self.cleaned_data['status']
         })
-        if commit:
-            form_model.save()
-        return form_model
+        return super().save(commit=commit)
 
     class Meta:
         model = Task
-        fields = ['alphaname', 'title', 'message_text', 'start_date', 'recipients_filter', 'type']
+        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'recipients_filter', 'type',
+                  'created_by_crm_user_id', 'state']
         labels = {
             'alphaname': _('Альфаимя'),
             'title': _('Название шаблона'),
             'message_text': _('Текст сообщения'),
-            'start_date': _('Дата начала'),
+            'start_datetime': _('Дата начала'),
+        }
+
+        dateTimeOptions = {
+            'format': 'DD.MM.YYYY hh:mm'
+        }
+
+        widgets = {
+            'start_datetime': DateTimeWidget(usel10n=True, options=dateTimeOptions, bootstrap_version=3)
         }
 
 
@@ -145,7 +163,7 @@ class RecurringTaskForm(forms.ModelForm):
     def save(self, commit=True):
         form_model = super().save(commit=False)
         form_model.fields['recurrence_rule'] = json.dumps({
-            'start_date': '11111',  # TODO: replace with fields
+            'start_datetime': '11111',  # TODO: replace with fields
             'end_date': '11111',
             ####
             'type': 'EVERY_YEAR',
@@ -164,7 +182,7 @@ class RecurringTaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ['alphaname', 'title', 'message_text', 'start_date', 'type', 'end_date',
+        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
                   'recurrence_rule', 'recipients_filter', ]
         labels = {
             'alphaname': _('Альфаимя'),
@@ -197,14 +215,14 @@ class EventDrivenTaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ['alphaname', 'title', 'message_text', 'start_date', 'type', 'end_date',
+        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
                   'touch_project', 'triggered_by', 'touch_status', 'touch_contact',
                   'touch_candidate', 'trigger_status', 'recipients_filter', ]
         labels = {
             'alphaname': _('Альфаимя'),
             'title': _('Название шаблона'),
             'message_text': _('Текст сообщения'),
-            'start_date': _('Дата начала'),
+            'start_datetime': _('Дата начала'),
             'type': _('Тип'),
             'end_date': _('Дата окончания'),
             'triggered_by': _('Тип даты отправки'),

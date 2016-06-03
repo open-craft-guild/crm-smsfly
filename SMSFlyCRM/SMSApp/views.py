@@ -15,7 +15,7 @@ from django.views.generic.edit import FormView, CreateView
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Alphaname, Project, Task
-from .forms import AlphanameForm, OneTimeTaskForm, TaskForm
+from .forms import AlphanameForm, OneTimeTaskForm, TaskForm, RecurringTaskForm
 
 
 class IndexView(TemplateView):
@@ -96,7 +96,7 @@ class CampaignNewView(CreateView):
     form_class = TaskForm
     success_url = reverse_lazy('campaigns-root')
 
-    def get_form(self, form_class=TaskForm):
+    def get_form(self, form_class=None):
         return (form_class or self.form_class)(self.request, **self.get_form_kwargs())
 
     def get_context_data(self, **kwargs):
@@ -116,6 +116,16 @@ class CampaignNewView(CreateView):
     def form_valid(self, form):
         # Save new campaign and notify everyone about it, add job into queue if needed
         return super().form_valid(form)
+
+
+class CampaignNewRecurringView(CampaignNewView):
+    form_class = RecurringTaskForm
+    template_name = 'campaign-recurring-edit.html'
+
+
+class CampaignNewEventDrivenView(CampaignNewView):
+    form_class = RecurringTaskForm
+    template_name = 'campaign-recurring-edit.html'
 
 
 class CampaignEditView(FormView):

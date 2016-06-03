@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n bootstrap3 %}
+
+{% block content %}
+{% include 'under-construction.html' %}
+<section id="campaign-edit">
+  <form method="post">
+    {% bootstrap_form_errors form %}
+    {% csrf_token %}
+    {% bootstrap_form form layout='inline' show_label=True %}
+    <!-- {# {% bootstrap_field form.title %}
+    {% bootstrap_field form.message_text %}
+    {% bootstrap_field form.alphaname %} #}
+    <input type="text" name="campaign-name" value="" placeholder="{% trans 'Название шаблона' %}">
+    <select class="" name="aplhaname">
+      <option value="option">option</option>
+    </select>
+    <textarea name="name" rows="8" cols="40"></textarea>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Фамилия' %}</button>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Имя' %}</button>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Отчество' %}</button>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Номер' %}</button>
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Адрес' %}</button> -->
+
+
+    {% block campaign-filters %}
+    {% endblock campaign-filters %}
+
+    {% trans 'Отправить рассылку' as create_task_btn %}
+    {% bootstrap_button create_task_btn button_type="submit" button_class="btn-primary" %}
+  </form>
+</section>
+{% endblock content %}

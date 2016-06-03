@@ -34,10 +34,10 @@ class AlphanameForm(forms.ModelForm):
         }
 
     class Media:
-            js = ['js/bootstrap-datetimepicker.js']
-            css = {
-                'all': ('css/datetimepicker.css',)
-                }
+        js = ['js/bootstrap-datetimepicker.js']
+        css = {
+            'all': ('css/datetimepicker.css',)
+            }
 
 
 class TaskForm(forms.ModelForm):
@@ -145,7 +145,8 @@ class TaskForm(forms.ModelForm):
         }
 
         widgets = {
-            'start_datetime': DateTimeWidget(usel10n=True, options=dateTimeOptions, bootstrap_version=3)
+            'start_datetime': DateTimeWidget(usel10n=True, options=dateTimeOptions, bootstrap_version=3),
+            'state': forms.HiddenInput(),
         }
 
 
@@ -153,20 +154,27 @@ class OneTimeTaskForm(TaskForm):
     pass
 
 
-class RecurringTaskForm(forms.ModelForm):
+class RecurringTaskForm(TaskForm):
+    RECURRENCE_TYPES = (
+        ('EVERY_WEEK', _('Каждую неделю')),
+        ('EVERY_MONTH', _('Каждый месяц')),
+        ('EVERY_YEAR', _('Каждый год')),
+    )
+
     def __init__(self, request, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['type'].widget = forms.HiddenInput()
-        self.fields['recipients_filter'].widget = forms.HiddenInput()
+        super().__init__(request, *args, **kwargs)
         self.fields['recurrence_rule'].widget = forms.HiddenInput()
+        self.initial['recurrence_rule'] = ''
+        self.fields['recurrence_type'] = forms.ChoiceField(
+            choices=self.RECURRENCE_TYPES, label=_('Повторяется:'), required=True)
 
     def save(self, commit=True):
-        form_model = super().save(commit=False)
-        form_model.fields['recurrence_rule'] = json.dumps({
+        form_data = super().save(commit=False)
+        form_data.cleaned_data['recurrence_rule'] = json.dumps({
             'start_datetime': '11111',  # TODO: replace with fields
             'end_date': '11111',
             ####
-            'type': 'EVERY_YEAR',
+            'type': form_data.cleaned_data['recurrence_type'],
             'period': 2,  # 2 yrs
             ###
             'type': 'EVERY_MONTH',
@@ -176,14 +184,12 @@ class RecurringTaskForm(forms.ModelForm):
             'type': 'EVERY_WEEK',
             'days': [0, 3, 4],  # Sun, Wed, Thu
         })
-        if commit:
-            form_model.save()
-        return form_model
+        return form_data.save(commit=commit)
 
     class Meta:
         model = Task
         fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
-                  'recurrence_rule', 'recipients_filter', ]
+                  'recurrence_rule', 'recipients_filter', 'state']
         labels = {
             'alphaname': _('Альфаимя'),
             'title': _('Название шаблона'),

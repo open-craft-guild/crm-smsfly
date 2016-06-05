@@ -3,7 +3,7 @@ from datetime import date
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from datetimewidget.widgets import DateTimeWidget
+from datetimewidget.widgets import DateTimeWidget, DateWidget
 
 
 from .models import (Alphaname, Task, ProjectContact, FollowerStatus,
@@ -30,7 +30,7 @@ class AlphanameForm(forms.ModelForm):
         }
         widgets = {
             'created_by_crm_user_id': forms.HiddenInput(),
-            'registration_date': forms.HiddenInput()
+            'registration_date': forms.HiddenInput(),
         }
 
     class Media:
@@ -41,18 +41,49 @@ class AlphanameForm(forms.ModelForm):
 
 
 class TaskForm(forms.ModelForm):
+    DATETIME_INPUTS = [
+        '%d.%m.%Y %H:%M',       # '25.10.2006 14:30'
+        '%d.%m.%Y',             # '25.10.2006'
+        '%Y-%m-%d %H:%M:%S',    # '2006-10-25 14:30:59'
+        '%Y-%m-%d %H:%M',       # '2006-10-25 14:30'
+        '%Y-%m-%d',             # '2006-10-25'
+        '%m/%d/%Y %H:%M:%S',    # '10/25/2006 14:30:59'
+        '%m/%d/%Y %H:%M',       # '10/25/2006 14:30'
+        '%m/%d/%Y',             # '10/25/2006'
+        '%m/%d/%y %H:%M:%S',    # '10/25/06 14:30:59'
+        '%m/%d/%y %H:%M',       # '10/25/06 14:30'
+        '%m/%d/%y',             # '10/25/06'
+    ]
+
+    dateTimeOptions = {
+        'format': 'dd.mm.yyyy hh:ii'
+    }
+
+    dateOptions = {
+        'format': 'dd.mm.yyyy'
+    }
+
+    start_datetime = forms.DateTimeField(
+        label=_('Дата начала'),
+        input_formats=DATETIME_INPUTS,
+        widget=DateTimeWidget(usel10n=False, options=dateTimeOptions,
+                              bootstrap_version=3))
+
+    end_date = forms.DateField(
+        label=_('Дата окончания'),
+        input_formats=DATETIME_INPUTS,
+        widget=DateWidget(usel10n=False,
+                          options=dateOptions, bootstrap_version=3))
+
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
         user_id = request.session['crm_user_id']
-        self.fields['created_by_crm_user_id'] = forms.IntegerField(
-            label='CRM User Id', initial=user_id,
-            widget=forms.HiddenInput())
-        self.fields['type'].widget = forms.HiddenInput()
+
+        self.initial['created_by_crm_user_id'] = user_id
         self.initial['type'] = 0
-        self.fields['state'].widget = forms.HiddenInput()
         self.initial['state'] = 0
-        self.fields['recipients_filter'].widget = forms.HiddenInput()
         self.initial['recipients_filter'] = 0
+
         self.fields['to-everyone'] = forms.BooleanField(
             label=_('Отправить всем избирателям'), required=False)
         self.fields['age-from'] = forms.IntegerField(
@@ -103,9 +134,15 @@ class TaskForm(forms.ModelForm):
         self.fields['status'] = forms.ModelChoiceField(
             label=_('Статус'), queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
 
-    def save(self, commit=True):
-        self.cleaned_data['type'] = 0
-        self.cleaned_data['recipients_filter'] = json.dumps({
+        for field in self.fields.values():
+            field.error_messages.update({
+                'required': 'The field {fieldname} is required'.format(
+                    fieldname=field.label)
+            })
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cleaned_data['recipients_filter'] = json.dumps({
             'to-everyone': self.cleaned_data['to-everyone'],
             'age-from': self.cleaned_data['age-from'],
             'age-to': self.cleaned_data['age-to'],
@@ -127,7 +164,7 @@ class TaskForm(forms.ModelForm):
             'candidate': self.cleaned_data['candidate'],
             'status': self.cleaned_data['status']
         })
-        return super().save(commit=commit)
+        return cleaned_data
 
     class Meta:
         model = Task
@@ -136,22 +173,33 @@ class TaskForm(forms.ModelForm):
         labels = {
             'alphaname': _('Альфаимя'),
             'title': _('Название шаблона'),
+            'type': _('Тип'),
             'message_text': _('Текст сообщения'),
-            'start_datetime': _('Дата начала'),
-        }
+            'created_by_crm_user_id': 'CRM User Id',
 
-        dateTimeOptions = {
-            'format': 'DD.MM.YYYY hh:mm'
+            'triggered_by': _('Тип даты отправки'),
+            'touch_project': _('Проект'),
+            'touch_status': _('Статус'),
+            'touch_contact': _('Контакт'),
+            'touch_candidate': _('Кандидат'),
+            'trigger_status': _('Статус'),
         }
 
         widgets = {
-            'start_datetime': DateTimeWidget(usel10n=True, options=dateTimeOptions, bootstrap_version=3),
+            'created_by_crm_user_id': forms.HiddenInput(),
+            'type': forms.HiddenInput(),
             'state': forms.HiddenInput(),
+            'recurrence_rule': forms.HiddenInput(),
+
+            'state': forms.HiddenInput(),
+            'recipients_filter': forms.HiddenInput(),
         }
 
 
 class OneTimeTaskForm(TaskForm):
-    pass
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        self.initial['type'] = 0
 
 
 class RecurringTaskForm(TaskForm):
@@ -161,51 +209,62 @@ class RecurringTaskForm(TaskForm):
         ('EVERY_YEAR', _('Каждый год')),
     )
 
+    WEEKDAYS = (
+        ('mon', 'пн'),
+        ('tue', 'вт'),
+        ('wed', 'ср'),
+        ('thu', 'чт'),
+        ('fri', 'пт'),
+        ('sat', 'сб'),
+        ('sun', 'нд'),
+    )
+
+    RANGE30 = [(str(x), str(x)) for x in range(1, 31)]
+
+    recurrence_type = forms.ChoiceField(
+        choices=RECURRENCE_TYPES, label=_('Повторяется:'), required=True,
+        widget=forms.RadioSelect)
+    recurrence_period = forms.ChoiceField(
+        choices=RANGE30, label=_('Интервал:'), required=True)
+    recurrence_weekdays = forms.MultipleChoiceField(
+        choices=WEEKDAYS, label=_('Дни повторения'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
-        self.fields['recurrence_rule'].widget = forms.HiddenInput()
-        self.initial['recurrence_rule'] = ''
-        self.fields['recurrence_type'] = forms.ChoiceField(
-            choices=self.RECURRENCE_TYPES, label=_('Повторяется:'), required=True)
+        self.initial['type'] = 1
+        self.fields['recurrence_rule'].required = False
 
-    def save(self, commit=True):
-        form_data = super().save(commit=False)
-        form_data.cleaned_data['recurrence_rule'] = json.dumps({
+    def clean(self):
+        cleaned_data = super().clean()
+        cleaned_data['recurrence_rule'] = json.dumps({
             'start_datetime': '11111',  # TODO: replace with fields
             'end_date': '11111',
             ####
-            'type': form_data.cleaned_data['recurrence_type'],
-            'period': 2,  # 2 yrs
+            'type': self.cleaned_data['recurrence_type'],
+            'period': self.cleaned_data['recurrence_period'],  # 2 yrs
             ###
             'type': 'EVERY_MONTH',
             'when': 'BY_MONTHDAY',  # BY_WEEKDAY
             'period': 2,  # 2 months
             ####
             'type': 'EVERY_WEEK',
-            'days': [0, 3, 4],  # Sun, Wed, Thu
+            'days': self.cleaned_data['recurrence_weekdays']  # Sun, Wed, Thu
         })
-        return form_data.save(commit=commit)
+        return cleaned_data
 
-    class Meta:
-        model = Task
+    class Meta(TaskForm.Meta):
         fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
-                  'recurrence_rule', 'recipients_filter', 'state']
-        labels = {
-            'alphaname': _('Альфаимя'),
-            'title': _('Название шаблона'),
-            'message_text': _('Текст сообщения'),
-            'start_date': _('Дата начала'),
-            'type': _('Тип'),
-            'end_date': _('Дата окончания'),
-        }
+                  'recurrence_rule', 'recipients_filter', 'state',
+                  'created_by_crm_user_id', 'recurrence_type']
 
 
-class EventDrivenTaskForm(forms.ModelForm):
+class EventDrivenTaskForm(TaskForm):
     def __init__(self, request, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(request, *args, **kwargs)
         user_id = request.session['crm_user_id']
-        self.fields['created_by_crm_user_id'] = forms.IntegerField(
-            label='CRM User Id', initial=user_id, widgets=forms.HiddenInput())
+        self.initial['type'] = 2
+
         self.fields['touch_project'] = forms.ModelChoiceField(
             queryset=Project.objects.for_user(user_id).all())
         self.fields['touch_contact'] = forms.ModelChoiceField(
@@ -216,25 +275,9 @@ class EventDrivenTaskForm(forms.ModelForm):
             queryset=Candidate.objects.for_user(user_id).all())
         self.fields['trigger_status'] = forms.ModelChoiceField(
             queryset=FollowerStatus.objects.for_user(user_id).all())
-        self.fields['type'].widget = forms.HiddenInput()
-        self.fields['recipients_filter'].widget = forms.HiddenInput()
 
-    class Meta:
+    class Meta(TaskForm.Meta):
         model = Task
         fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
                   'touch_project', 'triggered_by', 'touch_status', 'touch_contact',
                   'touch_candidate', 'trigger_status', 'recipients_filter', ]
-        labels = {
-            'alphaname': _('Альфаимя'),
-            'title': _('Название шаблона'),
-            'message_text': _('Текст сообщения'),
-            'start_datetime': _('Дата начала'),
-            'type': _('Тип'),
-            'end_date': _('Дата окончания'),
-            'triggered_by': _('Тип даты отправки'),
-            'touch_project': _('Проект'),
-            'touch_status': _('Статус'),
-            'touch_contact': _('Контакт'),
-            'touch_candidate': _('Кандидат'),
-            'trigger_status': _('Статус'),
-        }

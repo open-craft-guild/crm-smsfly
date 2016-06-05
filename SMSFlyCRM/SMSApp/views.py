@@ -102,15 +102,6 @@ class CampaignNewView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['range30'] = range(1, 31)
-        context['weekdays'] = (
-            (1, 'пн'),
-            (2, 'вт'),
-            (3, 'ср'),
-            (4, 'чт'),
-            (5, 'пт'),
-            (6, 'сб'),
-            (7, 'нд'),
-        )
         return context
 
     def form_valid(self, form):
@@ -121,6 +112,19 @@ class CampaignNewView(CreateView):
 class CampaignNewRecurringView(CampaignNewView):
     form_class = RecurringTaskForm
     template_name = 'campaign-recurring-edit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['weekdays'] = (
+            (1, 'пн'),
+            (2, 'вт'),
+            (3, 'ср'),
+            (4, 'чт'),
+            (5, 'пт'),
+            (6, 'сб'),
+            (7, 'нд'),
+        )
+        return context
 
 
 class CampaignNewEventDrivenView(CampaignNewView):

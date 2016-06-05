@@ -109,8 +109,8 @@ commands:
       rq: !Command
         container: django
         run: |
-            while [ true ]; do sleep 60; python3 manage.py rqjobs; done &
-            python3 manage.py rqworker high default low
+            while [ true ]; do sleep 60; python3 manage.py rqjobs --pythonpath=/work; done &
+            python3 manage.py rqworker --pythonpath=/work high default low
       redis: !Command
         container: redis
         run: |

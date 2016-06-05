@@ -266,18 +266,18 @@ class EventDrivenTaskForm(TaskForm):
         self.initial['type'] = 2
 
         self.fields['touch_project'] = forms.ModelChoiceField(
-            queryset=Project.objects.for_user(user_id).all())
+            queryset=Project.objects.for_user(user_id).all(), required=False)
         self.fields['touch_contact'] = forms.ModelChoiceField(
-            queryset=ProjectContact.objects.for_user(user_id).all())
+            queryset=ProjectContact.objects.for_user(user_id).all(), required=False)
         self.fields['touch_status'] = forms.ModelChoiceField(
-            queryset=FollowerStatus.objects.for_user(user_id).all())
+            queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
         self.fields['touch_candidate'] = forms.ModelChoiceField(
-            queryset=Candidate.objects.for_user(user_id).all())
+            queryset=Candidate.objects.for_user(user_id).all(), required=False)
         self.fields['trigger_status'] = forms.ModelChoiceField(
-            queryset=FollowerStatus.objects.for_user(user_id).all())
+            queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
 
     class Meta(TaskForm.Meta):
         model = Task
         fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
-                  'touch_project', 'triggered_by', 'touch_status', 'touch_contact',
-                  'touch_candidate', 'trigger_status', 'recipients_filter', ]
+                  'triggered_by', 'touch_project', 'touch_status', 'touch_contact',
+                  'touch_candidate', 'trigger_status', 'recipients_filter', 'created_by_crm_user_id', 'state']

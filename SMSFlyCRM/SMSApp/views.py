@@ -15,7 +15,8 @@ from django.views.generic.edit import FormView, CreateView
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Alphaname, Project, Task
-from .forms import AlphanameForm, OneTimeTaskForm, TaskForm, RecurringTaskForm
+from .forms import AlphanameForm, OneTimeTaskForm, TaskForm, RecurringTaskForm,\
+    EventDrivenTaskForm
 
 
 class IndexView(TemplateView):
@@ -128,8 +129,8 @@ class CampaignNewRecurringView(CampaignNewView):
 
 
 class CampaignNewEventDrivenView(CampaignNewView):
-    form_class = RecurringTaskForm
-    template_name = 'campaign-recurring-edit.html'
+    form_class = EventDrivenTaskForm
+    template_name = 'campaign-event-driven-edit.html'
 
 
 class CampaignEditView(FormView):

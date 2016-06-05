@@ -1,10 +1,14 @@
+from datetime import datetime
+from time import sleep
+
 from django.conf import settings
 
 from django_rq import job
-from time import sleep
-from datetime import datetime
 
 from smsfly import SMSFlyAPI
+
+from .models import Alphaname
+
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
@@ -26,3 +30,17 @@ def sendMessagesInstantly(message='Hi man!', send_as='Alpha',
         lifetime=24, rate='AUTO', desc=description,
         source=send_as, body=message, recipients=to
     )
+
+
+@job('high')
+def submitAlphanameInstantly(name):
+    api = SMSFlyAPI(account_id=settings.SMS_FLY['login'],
+                    account_pass=settings.SMS_FLY['password'])
+    print('Submitting register request for alphaname `{}`...'.format(name))
+
+    api_response_status = api.add_alphaname(alphaname=name).state.attrs['status']
+    alphaname = Alphaname.objects.get(name=name)
+    alphaname.status = api_response_status
+    alphaname.save()
+
+    return api_response_status

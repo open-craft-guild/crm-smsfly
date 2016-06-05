@@ -18,6 +18,8 @@ from .models import Alphaname, Project, Task
 from .forms import AlphanameForm, OneTimeTaskForm, TaskForm, RecurringTaskForm,\
     EventDrivenTaskForm
 
+from .tasks import submitAlphanameInstantly
+
 
 class IndexView(TemplateView):
     """Shows all menu entries of an app"""
@@ -37,11 +39,12 @@ class AlphanameRegisterView(CreateView):
     form_class = AlphanameForm
     success_url = reverse_lazy('alphanames-root')
 
-    def get_form(self, form_class=AlphanameForm):
+    def get_form(self, form_class=None):
         return (form_class or self.form_class)(self.request, **self.get_form_kwargs())
 
     def form_valid(self, form):
         # Add job for sending request to register a new alphanumeric name
+        submitAlphanameInstantly.delay(**form.cleaned_data)
         return super().form_valid(form)
 
 

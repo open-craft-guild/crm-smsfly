@@ -39,10 +39,10 @@ containers:
       - 'mysqlclient >=1.3.7,<1.4'
       - 'gunicorn >=19.6.0,<19.7'
       - 'django-datetime-widget >=0.9.3,<1.0'
-      - 'git+https://github.com/wk-tech/python-smsfly@v0.1.1#egg=smsfly'
+      - 'git+https://github.com/wk-tech/python-smsfly@v0.1.2#egg=smsfly'
     - !Sh pip uninstall --yes SMSFly
     - !Sh pip freeze > requirements.txt
-    - !Sh echo '-e git+https://github.com/wk-tech/python-smsfly@v0.1.1#egg=smsfly' >> requirements.txt
+    - !Sh echo '-e git+https://github.com/wk-tech/python-smsfly@v0.1.2#egg=smsfly' >> requirements.txt
   django:
     setup:
     - !Alpine v3.3

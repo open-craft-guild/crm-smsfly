@@ -43,4 +43,7 @@ def submitAlphanameInstantly(name):
     alphaname.status = api_response_status
     alphaname.save()
 
+    print('Saved')
+    print('Got status `{}`...'.format(api_response_status))
+
     return api_response_status

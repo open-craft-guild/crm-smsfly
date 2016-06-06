@@ -44,7 +44,7 @@ class AlphanameRegisterView(CreateView):
 
     def form_valid(self, form):
         # Add job for sending request to register a new alphanumeric name
-        submitAlphanameInstantly.delay(**form.cleaned_data)
+        submitAlphanameInstantly.delay(form.cleaned_data['name'])
         return super().form_valid(form)
 
 

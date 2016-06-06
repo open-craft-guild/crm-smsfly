@@ -425,6 +425,21 @@ class Alphaname(models.Model):
         return '{} ({}). Зарегистрировано {} пользователем {}'.format(
             self.name, self.status, self.registration_date, self.created_by_crm_user_id)
 
+    @property
+    def text_status(self):
+        return self.STATUS_LIST[self.status]
+
+    @text_status.setter
+    def text_status(self, status_text):
+        self.status = self.status_id_by_text(status_text)
+
+    def status_id_by_text(self, status_text):
+        for i, t in self.STATUS_LIST:
+            if t == status_text:
+                return i
+
+        raise KeyError
+
     class Meta:
         db_route = 'internal_app'
 

@@ -40,7 +40,7 @@ def submitAlphanameInstantly(name):
 
     api_response_status = api.add_alphaname(alphaname=name).state.attrs['status']
     alphaname = Alphaname.objects.get(name=name)
-    alphaname.status = api_response_status
+    alphaname.text_status = api_response_status
     alphaname.save()
 
     print('Saved')

@@ -7,24 +7,37 @@
   <form method="post">
     {% bootstrap_form_errors form %}
     {% csrf_token %}
-    {% bootstrap_form form layout='inline' show_label=True %}
-    <!--{# {% bootstrap_field form.title %}
+
+    {% bootstrap_field form.title %}
+    {% bootstrap_field form.alphaname %}
     {% bootstrap_field form.message_text %}
-    {% bootstrap_field form.alphaname %}#}
-    <input type="text" name="campaign-name" value="" placeholder="{% trans 'Название шаблона' %}">
-    <select class="" name="aplhaname">
-      <option value="option">option</option>
-    </select>
-    <textarea name="name" rows="8" cols="40"></textarea>
     <button type="button" class="btn btn-primary btn-sm">{% trans 'Фамилия' %}</button>
     <button type="button" class="btn btn-primary btn-sm">{% trans 'Имя' %}</button>
     <button type="button" class="btn btn-primary btn-sm">{% trans 'Отчество' %}</button>
     <button type="button" class="btn btn-primary btn-sm">{% trans 'Номер' %}</button>
-    <button type="button" class="btn btn-primary btn-sm">{% trans 'Адрес' %}</button> -->
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Адрес' %}</button>
+    {% bootstrap_field form.start_datetime %}
+    {% bootstrap_field form.end_date %}
+    <formgroup id="elector-filters">
 
-
-    {% block campaign-filters %}
-    {% endblock campaign-filters %}
+    {% bootstrap_field form.created_by_crm_user_id %}
+    {% bootstrap_field form.type %}
+    {% bootstrap_field form.state %}
+    {% bootstrap_field form.recipients_filter %}
+    {% bootstrap_field form.to_everyone %}
+    {% bootstrap_field form.age_from %}
+    {% bootstrap_field form.age_to %}
+    {% bootstrap_field form.reg_region %}
+    {% bootstrap_field form.reg_area %}
+    {% bootstrap_field form.reg_locality %}
+    {% bootstrap_field form.reg_street %}
+    {% bootstrap_field form.reg_building %}
+    {% bootstrap_field form.actual_region %}
+    {% bootstrap_field form.actual_area %}
+    {% bootstrap_field form.actual_locality %}
+    {% bootstrap_field form.actual_street %}
+    {% bootstrap_field form.actual_building %}
+    </formgroup>
 
     {% trans 'Отправить рассылку' as create_task_btn %}
     {% bootstrap_button create_task_btn button_type="submit" button_class="btn-primary" %}

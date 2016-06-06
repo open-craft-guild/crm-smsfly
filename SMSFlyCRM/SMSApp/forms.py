@@ -84,45 +84,45 @@ class TaskForm(forms.ModelForm):
         self.initial['state'] = 0
         self.initial['recipients_filter'] = 0
 
-        self.fields['to-everyone'] = forms.BooleanField(
+        self.fields['to_everyone'] = forms.BooleanField(
             label=_('Отправить всем избирателям'), required=False)
-        self.fields['age-from'] = forms.IntegerField(
+        self.fields['age_from'] = forms.IntegerField(
             label=_('От'), min_value=0, required=False)
-        self.fields['age-to'] = forms.IntegerField(
+        self.fields['age_to'] = forms.IntegerField(
             label=_('До'), min_value=0, required=False)
-        self.fields['reg-region'] = forms.ModelChoiceField(
+        self.fields['reg_region'] = forms.ModelChoiceField(
             label=_('Область'), queryset=Region.objects.for_user(user_id).all(), required=False)
-        self.fields['reg-area'] = forms.ModelChoiceField(
+        self.fields['reg_area'] = forms.ModelChoiceField(
             label=_('Район'), queryset=Area.objects.for_user(user_id).all(), required=False)
-        self.fields['reg-locality'] = forms.ModelChoiceField(
+        self.fields['reg_locality'] = forms.ModelChoiceField(
             label=_('Населенный пункт'), queryset=Locality.objects.for_user(user_id).all(),
             required=False)
-        self.fields['reg-street'] = forms.ModelChoiceField(
+        self.fields['reg_street'] = forms.ModelChoiceField(
             label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
-        self.fields['reg-building'] = forms.ModelChoiceField(
+        self.fields['reg_building'] = forms.ModelChoiceField(
             label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
-        self.fields['actual-region'] = forms.ModelChoiceField(
+        self.fields['actual_region'] = forms.ModelChoiceField(
             label=_('Область'), queryset=Region.objects.for_user(user_id).all(), required=False)
-        self.fields['actual-area'] = forms.ModelChoiceField(
+        self.fields['actual_area'] = forms.ModelChoiceField(
             label=_('Район'), queryset=Area.objects.for_user(user_id).all(), required=False)
-        self.fields['actual-locality'] = forms.ModelChoiceField(
+        self.fields['actual_locality'] = forms.ModelChoiceField(
             label=_('Населенный пункт'), queryset=Locality.objects.for_user(user_id).all(),
             required=False)
-        self.fields['actual-street'] = forms.ModelChoiceField(
+        self.fields['actual_street'] = forms.ModelChoiceField(
             label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
-        self.fields['actual-building'] = forms.ModelChoiceField(
+        self.fields['actual_building'] = forms.ModelChoiceField(
             label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
         self.fields['sex'] = forms.ModelChoiceField(
             label=_('Пол'), queryset=Sex.objects.for_user(user_id).all(), required=False)
-        self.fields['family-status'] = forms.ModelChoiceField(
+        self.fields['family_status'] = forms.ModelChoiceField(
             label=_('Семейное положение'), queryset=FamilyStatus.objects.for_user(user_id).all(),
             required=False)
         self.fields['education'] = forms.ModelChoiceField(
             label=_('Образование'), queryset=Education.objects.for_user(user_id).all(), required=False)
-        self.fields['social-category'] = forms.ModelChoiceField(
+        self.fields['social_category'] = forms.ModelChoiceField(
             label=_('Социальная категория'), queryset=SocialCategory.objects.for_user(user_id).all(),
             required=False)
-        self.fields['poll-place'] = forms.ModelChoiceField(
+        self.fields['poll_place'] = forms.ModelChoiceField(
             label=_('Избирательный участок'), queryset=PollPlace.objects.for_user(user_id).all(),
             required=False)
         self.fields['contact'] = forms.ModelChoiceField(
@@ -143,23 +143,23 @@ class TaskForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         cleaned_data['recipients_filter'] = json.dumps({
-            'to-everyone': self.cleaned_data['to-everyone'],
-            'age-from': self.cleaned_data['age-from'],
-            'age-to': self.cleaned_data['age-to'],
-            'reg-region': self.cleaned_data['reg-region'],
-            'reg-locality': self.cleaned_data['reg-locality'],
-            'reg-street': self.cleaned_data['reg-street'],
-            'reg-building': self.cleaned_data['reg-building'],
-            'actual-region': self.cleaned_data['actual-region'],
-            'actual-area': self.cleaned_data['actual-area'],
-            'actual-locality': self.cleaned_data['actual-locality'],
-            'actual-street': self.cleaned_data['actual-street'],
-            'actual-building': self.cleaned_data['actual-building'],
+            'to_everyone': self.cleaned_data['to_everyone'],
+            'age_from': self.cleaned_data['age_from'],
+            'age_to': self.cleaned_data['age_to'],
+            'reg_region': self.cleaned_data['reg_region'],
+            'reg_locality': self.cleaned_data['reg_locality'],
+            'reg_street': self.cleaned_data['reg_street'],
+            'reg_building': self.cleaned_data['reg_building'],
+            'actual_region': self.cleaned_data['actual_region'],
+            'actual_area': self.cleaned_data['actual_area'],
+            'actual_locality': self.cleaned_data['actual_locality'],
+            'actual_street': self.cleaned_data['actual_street'],
+            'actual_building': self.cleaned_data['actual_building'],
             'sex': self.cleaned_data['sex'],
-            'family-status': self.cleaned_data['family-status'],
+            'family_status': self.cleaned_data['family_status'],
             'education': self.cleaned_data['education'],
-            'social-category': self.cleaned_data['social-category'],
-            'poll-place': self.cleaned_data['poll-place'],
+            'social_category': self.cleaned_data['social_category'],
+            'poll_place': self.cleaned_data['poll_place'],
             'contact': self.cleaned_data['contact'],
             'candidate': self.cleaned_data['candidate'],
             'status': self.cleaned_data['status']

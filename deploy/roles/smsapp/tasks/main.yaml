@@ -26,22 +26,22 @@
 
 - name: Add SMSApp systemd unit
   template: 'src=smsapp.unit.service dest=/etc/systemd/system/smsapp.service mode=0644'
-  register: unit_added
+  register: smsapp_unit_added
 
 - name: Add rqworker systemd unit
   template: 'src=rqworker.unit.service dest=/etc/systemd/system/rqworker.service mode=0644'
-  register: unit_added
+  register: rqworker_unit_added
 
 - name: Add rqjobs systemd unit
   template: 'src=rqjobs.unit.service dest=/etc/systemd/system/rqjobs.service mode=0644'
-  register: unit_added
+  register: rqjobs_unit_added
 
 - name: Add rqjobs systemd timer
   template: 'src=rqjobs.unit.timer dest=/etc/systemd/system/rqjobs.timer mode=0644'
-  register: unit_added
+  register: rqjobs_timer_added
 
 - shell: systemctl daemon-reload
-  when: unit_added|changed
+  when: smsapp_unit_added|changed or rqworker_unit_added|changed or rqjobs_unit_added|changed or rqjobs_timer_added|changed
 
 - file: path=/home/smsapp/static state=directory owner=smsapp
 

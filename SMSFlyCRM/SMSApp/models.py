@@ -1,5 +1,7 @@
-from django.db import models
 import datetime
+import json
+
+from django.db import models
 
 # Add recognized model option to django
 # :seealso: https://djangosnippets.org/snippets/2687/
@@ -400,6 +402,30 @@ class Task(models.Model):
     touch_candidate = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING, null=True)
     trigger_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', related_name='+',
                                        on_delete=models.DO_NOTHING, null=True)
+
+    @property
+    def recipients_filter_json(self):
+        return json.loads(self.recipients_filter)
+
+    @recipients_filter_json.setter
+    def recipients_filter_json(self, value):
+        self.recipients_filter = json.dumps(value)
+
+    @recipients_filter_json.deleter
+    def recipients_filter_json(self):
+        self.recipients_filter = None
+
+    @property
+    def recurrence_rule_json(self):
+        return json.loads(self.recurrence_rule)
+
+    @recurrence_rule_json.setter
+    def recurrence_rule_json(self, value):
+        self.recurrence_rule = json.dumps(value)
+
+    @recurrence_rule_json.deleter
+    def recurrence_rule_json(self):
+        self.recurrence_rule = None
 
     def __str__(self):
         return '{} ({}). {}'.format(self.title, self.alphaname, self.state)

@@ -9,6 +9,7 @@
 - apt: name=libxml2-dev state=present
 - apt: name=libxslt-dev state=present
 - apt: name=python3-pip state=present
+- apt: name=redis-server state=present
 
 - name: Load source code
   git: "repo=https://github.com/wk-tech/crm-smsfly.git dest=/home/smsapp/repo accept_hostkey=yes"
@@ -23,8 +24,20 @@
 - name: Add env file
   template: 'src=smsapp.env dest=/home/smsapp/smsapp.env mode=0644'
 
-- name: Add systemd unit
-  template: 'src=unit.service dest=/etc/systemd/system/smsapp.service mode=0644'
+- name: Add SMSApp systemd unit
+  template: 'src=smsapp.unit.service dest=/etc/systemd/system/smsapp.service mode=0644'
+  register: unit_added
+
+- name: Add rqworker systemd unit
+  template: 'src=rqworker.unit.service dest=/etc/systemd/system/rqworker.service mode=0644'
+  register: unit_added
+
+- name: Add rqjobs systemd unit
+  template: 'src=rqjobs.unit.service dest=/etc/systemd/system/rqjobs.service mode=0644'
+  register: unit_added
+
+- name: Add rqjobs systemd timer
+  template: 'src=rqjobs.unit.timer dest=/etc/systemd/system/rqjobs.timer mode=0644'
   register: unit_added
 
 - shell: systemctl daemon-reload
@@ -33,3 +46,5 @@
 - file: path=/home/smsapp/static state=directory owner=smsapp
 
 - service: 'name=smsapp state=restarted enabled=yes'
+- service: 'name=rqworker state=restarted enabled=yes'
+- service: 'name=rqjobs.timer state=restarted enabled=yes'

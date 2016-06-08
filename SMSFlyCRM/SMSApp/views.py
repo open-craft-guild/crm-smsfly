@@ -18,7 +18,7 @@ from .models import Alphaname, Project, Task
 from .forms import AlphanameForm, OneTimeTaskForm, TaskForm, RecurringTaskForm,\
     EventDrivenTaskForm
 
-from .tasks import submitAlphanameInstantly
+from .tasks import submitAlphanameInstantly, addNewCampaignTask
 
 
 class IndexView(TemplateView):
@@ -110,6 +110,7 @@ class CampaignNewView(CreateView):
 
     def form_valid(self, form):
         # Save new campaign and notify everyone about it, add job into queue if needed
+        addNewCampaignTask.delay()
         return super().form_valid(form)
 
 

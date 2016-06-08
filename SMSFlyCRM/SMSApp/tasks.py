@@ -15,7 +15,8 @@ DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 @job('default')
 def addNewCampaignTask(task_id):
-    sleep(0.5)
+    sleep(0.4)
+    print('Ran {}'.format(task_id))
     return 'Ran {}'.format(task_id)
 
 

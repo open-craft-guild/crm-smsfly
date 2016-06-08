@@ -154,6 +154,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = env('STATIC_ROOT', default=BASE_DIR('static'))
 
 SMS_FLY = {
     'login': env('SMSFLY_ID'),

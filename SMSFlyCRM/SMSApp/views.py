@@ -110,7 +110,7 @@ class CampaignNewView(CreateView):
 
     def form_valid(self, form):
         # Save new campaign and notify everyone about it, add job into queue if needed
-        addNewCampaignTask.delay(form.instance.id)
+        addNewCampaignTask.delay(form.instance.pk)
         return super().form_valid(form)
 
 

@@ -1,10 +1,11 @@
 import json
+import logging
 
 from django.core.urlresolvers import reverse_lazy
 
 from django.db.models import Q
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
@@ -19,6 +20,9 @@ from .forms import AlphanameForm, OneTimeTaskForm, TaskForm, RecurringTaskForm,\
     EventDrivenTaskForm
 
 from .tasks import submitAlphanameInstantly, addNewCampaignTask
+
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(TemplateView):
@@ -192,4 +196,6 @@ def webhook_crm_event(request, crm_event, crm_user_id):
 @require_POST
 @csrf_exempt
 def webhook_smsfly_status(request):
-    return 'SMSFly webhook here'
+    logger.debug(request)
+    logger.debug(request.body.decode())
+    return HttpResponse(request.body)

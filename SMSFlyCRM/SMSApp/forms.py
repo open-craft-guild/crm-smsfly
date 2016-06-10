@@ -90,27 +90,27 @@ class TaskForm(forms.ModelForm):
             label=_('От'), min_value=0, required=False)
         self.fields['age_to'] = forms.IntegerField(
             label=_('До'), min_value=0, required=False)
-        self.fields['reg_region'] = forms.ModelChoiceField(
+        self.fields['regaddress_region'] = forms.ModelChoiceField(
             label=_('Область'), queryset=Region.objects.for_user(user_id).all(), required=False)
-        self.fields['reg_area'] = forms.ModelChoiceField(
+        self.fields['regaddress_area'] = forms.ModelChoiceField(
             label=_('Район'), queryset=Area.objects.for_user(user_id).all(), required=False)
-        self.fields['reg_locality'] = forms.ModelChoiceField(
+        self.fields['regaddress_locality'] = forms.ModelChoiceField(
             label=_('Населенный пункт'), queryset=Locality.objects.for_user(user_id).all(),
             required=False)
-        self.fields['reg_street'] = forms.ModelChoiceField(
+        self.fields['regaddress_street'] = forms.ModelChoiceField(
             label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
-        self.fields['reg_building'] = forms.ModelChoiceField(
+        self.fields['regaddress_building'] = forms.ModelChoiceField(
             label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
-        self.fields['actual_region'] = forms.ModelChoiceField(
+        self.fields['address_region'] = forms.ModelChoiceField(
             label=_('Область'), queryset=Region.objects.for_user(user_id).all(), required=False)
-        self.fields['actual_area'] = forms.ModelChoiceField(
+        self.fields['address_area'] = forms.ModelChoiceField(
             label=_('Район'), queryset=Area.objects.for_user(user_id).all(), required=False)
-        self.fields['actual_locality'] = forms.ModelChoiceField(
+        self.fields['address_locality'] = forms.ModelChoiceField(
             label=_('Населенный пункт'), queryset=Locality.objects.for_user(user_id).all(),
             required=False)
-        self.fields['actual_street'] = forms.ModelChoiceField(
+        self.fields['address_street'] = forms.ModelChoiceField(
             label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
-        self.fields['actual_building'] = forms.ModelChoiceField(
+        self.fields['address_building'] = forms.ModelChoiceField(
             label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
         self.fields['sex'] = forms.ModelChoiceField(
             label=_('Пол'), queryset=Sex.objects.for_user(user_id).all(), required=False)
@@ -146,15 +146,15 @@ class TaskForm(forms.ModelForm):
             'to_everyone': self.cleaned_data['to_everyone'],
             'age_from': self.cleaned_data['age_from'],
             'age_to': self.cleaned_data['age_to'],
-            'reg_region': self.cleaned_data['reg_region'],
-            'reg_locality': self.cleaned_data['reg_locality'],
-            'reg_street': self.cleaned_data['reg_street'],
-            'reg_building': self.cleaned_data['reg_building'],
-            'actual_region': self.cleaned_data['actual_region'],
-            'actual_area': self.cleaned_data['actual_area'],
-            'actual_locality': self.cleaned_data['actual_locality'],
-            'actual_street': self.cleaned_data['actual_street'],
-            'actual_building': self.cleaned_data['actual_building'],
+            'regaddress_region': self.cleaned_data['regaddress_region'],
+            'regaddress_locality': self.cleaned_data['regaddress_locality'],
+            'regaddress_street': self.cleaned_data['regaddress_street'],
+            'regaddress_building': self.cleaned_data['regaddress_building'],
+            'address_region': self.cleaned_data['address_region'],
+            'address_area': self.cleaned_data['address_area'],
+            'address_locality': self.cleaned_data['address_locality'],
+            'address_street': self.cleaned_data['address_street'],
+            'address_building': self.cleaned_data['address_building'],
             'sex': self.cleaned_data['sex'],
             'family_status': self.cleaned_data['family_status'],
             'education': self.cleaned_data['education'],
@@ -190,7 +190,6 @@ class TaskForm(forms.ModelForm):
             'type': forms.HiddenInput(),
             'state': forms.HiddenInput(),
             'recurrence_rule': forms.HiddenInput(),
-
             'state': forms.HiddenInput(),
             'recipients_filter': forms.HiddenInput(),
         }
@@ -219,6 +218,11 @@ class RecurringTaskForm(TaskForm):
         ('sun', 'нд'),
     )
 
+    MONTH_REPEAT_TYPES = (
+        ('BY_WEEKDAY', _('День недели')),
+        ('BY_MONTHDAY', _('День месяца')),
+    )
+
     RANGE30 = [(str(x), str(x)) for x in range(1, 31)]
 
     recurrence_type = forms.ChoiceField(
@@ -229,6 +233,8 @@ class RecurringTaskForm(TaskForm):
     recurrence_weekdays = forms.MultipleChoiceField(
         choices=WEEKDAYS, label=_('Дни повторения'), required=False,
         widget=forms.CheckboxSelectMultiple())
+    recurrence_month_type = forms.ChoiceField(
+        choices=MONTH_REPEAT_TYPES, label=_('Дни повторения'), widget=forms.RadioSelect, required=False)
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
@@ -237,25 +243,19 @@ class RecurringTaskForm(TaskForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        cleaned_data['recurrence_rule'] = json.dumps({
-            'start_datetime': '11111',  # TODO: replace with fields
-            'end_date': '11111',
-            ####
+        cleaned_data['recurrence_rule'] = {
+            'start_datetime': self.cleaned_data['start_datetime'].strftime(self.DATETIME_INPUTS[0]),
+            'end_date': self.cleaned_data['end_date'].strftime(self.DATETIME_INPUTS[1]),
             'type': self.cleaned_data['recurrence_type'],
-            'period': self.cleaned_data['recurrence_period'],  # 2 yrs
-            ###
-            'type': 'EVERY_MONTH',
-            'when': 'BY_MONTHDAY',  # BY_WEEKDAY
-            'period': 2,  # 2 months
-            ####
-            'type': 'EVERY_WEEK',
-            'days': self.cleaned_data['recurrence_weekdays']  # Sun, Wed, Thu
-        })
+            'period': self.cleaned_data['recurrence_period'],
+            'when': self.cleaned_data['recurrence_month_type'],
+            'days': self.cleaned_data['recurrence_weekdays']
+        }
         return cleaned_data
 
     class Meta(TaskForm.Meta):
         fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
-                  'recurrence_rule', 'recipients_filter', 'state',
+                  'recipients_filter', 'state', 'recurrence_rule',
                   'created_by_crm_user_id', 'recurrence_type']
 
 

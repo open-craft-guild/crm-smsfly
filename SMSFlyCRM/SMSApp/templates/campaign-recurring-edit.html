@@ -7,24 +7,74 @@
   <form method="post">
     {% bootstrap_form_errors form %}
     {% csrf_token %}
-    {% bootstrap_form form layout='inline' show_label=True %}
-    <!-- {# {% bootstrap_field form.title %}
+    {% bootstrap_field form.created_by_crm_user_id %}
+    {% bootstrap_field form.type %}
+    {% bootstrap_field form.recurrence_rule %}
+    {% bootstrap_field form.state %}
+    {% bootstrap_field form.recipients_filter %}
+    {% bootstrap_field form.title %}
+    {% bootstrap_field form.alphaname %}
+    <formgroup class="col-md-6">
+      <div>
     {% bootstrap_field form.message_text %}
-    {% bootstrap_field form.alphaname %} #}
-    <input type="text" name="campaign-name" value="" placeholder="{% trans 'Название шаблона' %}">
-    <select class="" name="aplhaname">
-      <option value="option">option</option>
-    </select>
-    <textarea name="name" rows="8" cols="40"></textarea>
     <button type="button" class="btn btn-primary btn-sm">{% trans 'Фамилия' %}</button>
     <button type="button" class="btn btn-primary btn-sm">{% trans 'Имя' %}</button>
     <button type="button" class="btn btn-primary btn-sm">{% trans 'Отчество' %}</button>
     <button type="button" class="btn btn-primary btn-sm">{% trans 'Номер' %}</button>
-    <button type="button" class="btn btn-primary btn-sm">{% trans 'Адрес' %}</button> -->
+    <button type="button" class="btn btn-primary btn-sm">{% trans 'Адрес' %}</button>
+  </div>
+    </formgroup>
+    <formgroup class="col-md-6">
+      <div>
+    {% bootstrap_field form.start_datetime %}
+    {% bootstrap_field form.recurrence_type field_class='radio-inline' %}
+    {% bootstrap_field form.recurrence_period %}
+    {% bootstrap_field form.recurrence_weekdays layout='horizontal' %}
+    {% bootstrap_field form.recurrence_month_type layout='horizontal' %}
+    {% bootstrap_field form.end_date %}
 
 
-    {% block campaign-filters %}
-    {% endblock campaign-filters %}
+    </div>
+    </formgroup>
+    <formgroup id="elector-filters" class="col-md-4">
+      <div>
+      {% bootstrap_field form.to_everyone  %}
+      {% bootstrap_field form.age_from%}
+      {% bootstrap_field form.age_to%}
+    </div>
+    </formgroup>
+    <formgroup class="col-md-4">
+      <div>
+      <legend>
+        Адрес прописки
+      </legend>
+      {% bootstrap_field form.regaddress_region %}
+      {% bootstrap_field form.regaddress_area %}
+      {% bootstrap_field form.regaddress_locality %}
+      {% bootstrap_field form.regaddress_street %}
+      {% bootstrap_field form.regaddress_building %}
+      {% bootstrap_field form.sex horizontal_field_class='col-md-2' %}
+      {% bootstrap_field form.family_status horizontal_field_class='col-md-2' %}
+      {% bootstrap_field form.education horizontal_field_class='col-md-2' %}
+      {% bootstrap_field form.social_category horizontal_field_class='col-md-2' %}
+    </div>
+    </formgroup>
+    <formgroup class="col-md-4">
+      <div>
+      <legend>
+        Адрес проживания
+      </legend>
+    {% bootstrap_field form.address_region %}
+    {% bootstrap_field form.address_area %}
+    {% bootstrap_field form.address_locality %}
+    {% bootstrap_field form.address_street %}
+    {% bootstrap_field form.address_building %}
+    {% bootstrap_field form.poll_place horizontal_field_class='col-md-2' %}
+    {% bootstrap_field form.contact horizontal_field_class='col-md-2' %}
+    {% bootstrap_field form.candidate horizontal_field_class='col-md-2' %}
+    {% bootstrap_field form.status horizontal_field_class='col-md-2' %}
+    </formgroup>
+  </div>
 
     {% trans 'Отправить рассылку' as create_task_btn %}
     {% bootstrap_button create_task_btn button_type="submit" button_class="btn-primary" %}

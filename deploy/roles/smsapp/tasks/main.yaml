@@ -44,6 +44,7 @@
   when: smsapp_unit_added|changed or rqworker_unit_added|changed or rqjobs_unit_added|changed or rqjobs_timer_added|changed
 
 - file: path=/home/smsapp/static state=directory owner=smsapp
+- file: path=/home/smsapp/log state=directory owner=smsapp
 
 - service: 'name=smsapp state=restarted enabled=yes'
 - service: 'name=rqworker state=restarted enabled=yes'

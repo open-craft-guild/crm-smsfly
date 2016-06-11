@@ -343,6 +343,9 @@ class Follower(models.Model):
     def __str__(self):
         return '{} {} {}'.format(self.lastname, self.firstname, self.middlename)
 
+    def address(self):
+        return '{st}, {bld}'.format(st=self.address_street, bld=self.address_builing)
+
     class Meta:
         db_route = 'external_app'
         managed = False

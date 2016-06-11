@@ -375,10 +375,10 @@ class Task(models.Model):
     )
 
     TRIGGERS_LIST = (
-        (0, 'onElectorBirthday'),
-        (1, 'onElectorAdded'),
-        (2, 'onElectorTouched'),
-        (3, 'onElectorStatusChanged'),
+        ('onElectorBirthday', 'День рождения избирателя'),
+        ('onElectorAdded', 'Внесение анкеты избирателя в базу'),
+        ('onElectorTouched', 'Внесение касания с избирателем в базу'),
+        ('onElectorStatusChanged', 'Смена статуса избирателя'),
     )
 
     STATE_LIST = (
@@ -398,7 +398,7 @@ class Task(models.Model):
     type = models.IntegerField(choices=TYPE_LIST)
     end_date = models.DateField(null=True)
     recurrence_rule = models.TextField()
-    triggered_by = models.IntegerField(null=True, choices=TRIGGERS_LIST)
+    triggered_by = models.CharField(null=True, max_length=22, choices=TRIGGERS_LIST)
     touch_project = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING, null=True)
     touch_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', related_name='+',
                                      on_delete=models.DO_NOTHING, null=True)

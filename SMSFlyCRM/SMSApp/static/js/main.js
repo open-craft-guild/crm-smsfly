@@ -54,5 +54,11 @@
       $('#id_message_text').insertAtCaret(ADDRESS);
     });
 
+    $('#id_to_everyone').change(function(){
+      $('#age-filters input').prop('disabled', this.checked);
+      $('#address-filters select').prop('disabled', this.checked);
+      $('#regaddress-filters select').prop('disabled', this.checked);
+    })
+
   });
 })(jQuery);

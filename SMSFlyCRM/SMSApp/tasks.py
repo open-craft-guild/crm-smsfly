@@ -1,4 +1,5 @@
 from datetime import datetime
+from itertools import starmap
 from time import sleep
 
 from django.conf import settings
@@ -7,7 +8,7 @@ from django_rq import job
 
 from smsfly import SMSFlyAPI
 
-from .models import Alphaname
+from .models import Alphaname, Task, Campaign, Follower
 
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -26,11 +27,31 @@ def sendMessagesInstantly(message='Hi man!', send_as='Alpha',
                           task_id=100500):
     api = SMSFlyAPI(account_id=settings.SMS_FLY['login'],
                     account_pass=settings.SMS_FLY['password'])
-    return api.send_sms_to_recipients(
+    task = Task.objects.get(pk=task_id)
+
+    recipients_filter = task.recipients_filter_json
+    recipients = Follower.objects.get(**recipients_filter)  # Filter out recipients from external DB
+
+    message_pairs = starmap(lambda r: (r.cellphone,  # Generate tuple containing cell number and message body
+                                       message.format(  # substitute template tags with personalized values:
+                                           firstname=r.firstname, lastname=r.lastname,
+                                           middlename=r.middlename, cellphone=r.cellphone,
+                                           address=r.address,
+                                       )),
+                            recipients)
+
+    api_result = api.send_sms_pairs(
         start_time=datetime.now().strftime(DATETIME_FORMAT), end_time='AUTO',
         lifetime=24, rate='AUTO', desc=description,
-        source=send_as, body=message, recipients=to
+        source=send_as, message_pairs=message_pairs
     )
+
+    res_state = api_result.message.state
+    Campaign.objects.create(task=task, code=res_state.attrs['code'],
+                            datetime_sent=datetime.strptime(res_state.attrs['date'], DATETIME_FORMAT),
+                            state=res_state.text, smsfly_campaign_id=int(res_state.attrs['campaignID']))
+
+    return api_result
 
 
 @job('high')

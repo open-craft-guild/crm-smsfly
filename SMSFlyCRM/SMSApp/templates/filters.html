@@ -1,74 +1,41 @@
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
-{% block campaign-filters %}
-<!-- TODO: adjust layout to grid -->
-<section id="campaign-filters">
-  <form id="filters">
-
-    <input type="checkbox" name="send-to-all" />
-    <p>
-      {% trans 'Возраст'%}
-    </p>
-    <label for="age-from">{% trans 'От' %}</label>
-    <input type="number" name="age-from" id="age-from"/>
-    <label for="age-to">{% trans 'До' %}</label>
-    <input type="number" name="age-to" id="age-to"/>
-
-    <fieldset>
-      <p>
-        {% trans 'Адрес прописки' %}
-      </p>
-      <input type="text" class="form-control" name="reg-region" placeholder="{% trans 'Область' %}">
-      <input type="text" class="form-control" name="reg-area" placeholder="{% trans 'Район' %}">
-      <input type="text" class="form-control" name="reg-locality" placeholder="{% trans 'Населенный пункт' %}">
-      <input type="text" class="form-control" name="reg-street" placeholder="{% trans 'Улица' %}">
-      <input type="text" class="form-control" name="reg-building" placeholder="{% trans 'Дом' %}">
-    </fieldset>
-
-    <select class="form-control" name="sex">
-      <option value="a">A</option>
-      <option value="b">B</option>
-    </select>
-    <select class="form-control" name="family-status">
-      <option value="a">A</option>
-      <option value="b">B</option>
-    </select>
-    <select class="form-control" name="education">
-      <option value="a">A</option>
-      <option value="b">B</option>
-    </select>
-    <select class="form-control" name="social-category">
-      <option value="a">A</option>
-      <option value="b">B</option>
-    </select>
-
-    <fieldset>
-      <p>
-        {% trans 'Адрес проживания' %}
-      </p>
-      <input type="text" class="form-control" name="actual-region" placeholder="{% trans 'Область' %}">
-      <input type="text" class="form-control" name="actual-area" placeholder="{% trans 'Район' %}">
-      <input type="text" class="form-control" name="actual-locality" placeholder="{% trans 'Населенный пункт' %}">
-      <input type="text" class="form-control" name="actual-street" placeholder="{% trans 'Улица' %}">
-      <input type="text" class="form-control" name="actual-building" placeholder="{% trans 'Дом' %}">
-
-      <select class="form-control" name="poll-place">
-        <option value="a">A</option>
-        <option value="b">B</option>
-      </select>
-      <select class="form-control" name="contact">
-        <option value="a">A</option>
-        <option value="b">B</option>
-      </select>
-      <select class="form-control" name="candidate">
-        <option value="a">A</option>
-        <option value="b">B</option>
-      </select>
-      <select class="form-control" name="status">
-        <option value="a">A</option>
-        <option value="b">B</option>
-      </select>
-    </fieldset>
-  </form>
-</section>
-{% endblock %}
+<formgroup id="elector-filters" class="col-md-4">
+  {% bootstrap_field form.to_everyone  %}
+  <div id="age-filters">
+    {% bootstrap_field form.age_from%}
+    {% bootstrap_field form.age_to%}
+  </div>
+</formgroup>
+<formgroup class="col-md-4" id="regaddress-filters">
+  <div>
+    <legend>
+      {% trans 'Адрес прописки' %}
+    </legend>
+    {% bootstrap_field form.regaddress_region %}
+    {% bootstrap_field form.regaddress_area %}
+    {% bootstrap_field form.regaddress_locality %}
+    {% bootstrap_field form.regaddress_street %}
+    {% bootstrap_field form.regaddress_building %}
+    {% bootstrap_field form.sex horizontal_field_class='col-md-2' %}
+    {% bootstrap_field form.family_status horizontal_field_class='col-md-2' %}
+    {% bootstrap_field form.education horizontal_field_class='col-md-2' %}
+    {% bootstrap_field form.social_category horizontal_field_class='col-md-2' %}
+  </div>
+</formgroup>
+<formgroup class="col-md-4" id="address-filters">
+  <div>
+    <legend>
+      {% trans 'Адрес проживания' %}
+    </legend>
+    {% bootstrap_field form.address_region %}
+    {% bootstrap_field form.address_area %}
+    {% bootstrap_field form.address_locality %}
+    {% bootstrap_field form.address_street %}
+    {% bootstrap_field form.address_building %}
+    {% bootstrap_field form.poll_place horizontal_field_class='col-md-2' %}
+    {% bootstrap_field form.contact horizontal_field_class='col-md-2' %}
+    {% bootstrap_field form.candidate horizontal_field_class='col-md-2' %}
+    {% bootstrap_field form.status horizontal_field_class='col-md-2' %}
+  </div>
+</formgroup>

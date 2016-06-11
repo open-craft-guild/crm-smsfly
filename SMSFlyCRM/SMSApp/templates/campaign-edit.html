@@ -25,45 +25,7 @@
     {% bootstrap_field form.end_date %}
     </div>
     </formgroup>
-    <formgroup id="elector-filters" class="col-md-4">
-      <div>
-      {% bootstrap_field form.to_everyone  %}
-      {% bootstrap_field form.age_from%}
-      {% bootstrap_field form.age_to%}
-    </div>
-    </formgroup>
-    <formgroup class="col-md-4">
-      <div>
-      <legend>
-        Адрес прописки
-      </legend>
-      {% bootstrap_field form.regaddress_region %}
-      {% bootstrap_field form.regaddress_area %}
-      {% bootstrap_field form.regaddress_locality %}
-      {% bootstrap_field form.regaddress_street %}
-      {% bootstrap_field form.regaddress_building %}
-      {% bootstrap_field form.sex horizontal_field_class='col-md-2' %}
-      {% bootstrap_field form.family_status horizontal_field_class='col-md-2' %}
-      {% bootstrap_field form.education horizontal_field_class='col-md-2' %}
-      {% bootstrap_field form.social_category horizontal_field_class='col-md-2' %}
-    </div>
-    </formgroup>
-    <formgroup class="col-md-4">
-      <div>
-      <legend>
-        Адрес проживания
-      </legend>
-    {% bootstrap_field form.address_region %}
-    {% bootstrap_field form.address_area %}
-    {% bootstrap_field form.address_locality %}
-    {% bootstrap_field form.address_street %}
-    {% bootstrap_field form.address_building %}
-    {% bootstrap_field form.poll_place horizontal_field_class='col-md-2' %}
-    {% bootstrap_field form.contact horizontal_field_class='col-md-2' %}
-    {% bootstrap_field form.candidate horizontal_field_class='col-md-2' %}
-    {% bootstrap_field form.status horizontal_field_class='col-md-2' %}
-    </formgroup>
-  </div>
+    {% include 'filters.html' %}
 
     {% trans 'Отправить рассылку' as create_task_btn %}
     {% bootstrap_button create_task_btn button_type="submit" button_class="btn-primary btn-lg" %}

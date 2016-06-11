@@ -260,6 +260,12 @@ class RecurringTaskForm(TaskForm):
 
 
 class EventDrivenTaskForm(TaskForm):
+    TRIGGER_FIELDS_LIST = (
+        'touch_project', 'touch_contact',
+        'touch_status', 'touch_candidate',
+        'trigger_status',
+    )
+
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
         user_id = request.session['crm_user_id']
@@ -275,6 +281,33 @@ class EventDrivenTaskForm(TaskForm):
             queryset=Candidate.objects.for_user(user_id).all(), required=False)
         self.fields['trigger_status'] = forms.ModelChoiceField(
             queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        for field_name in self.TRIGGER_FIELDS_LIST:
+            try:
+                cleaned_data['{}_id'.format(field_name)] = cleaned_data[field_name].pk
+            except AttributeError:
+                pass
+            finally:
+                del cleaned_data[field_name]
+
+        return cleaned_data
+
+    def save(self):
+        task = super().save(commit=False)
+
+        for field_name in self.TRIGGER_FIELDS_LIST:
+            attr_name = '{}_id'.format(field_name)
+            try:
+                setattr(task, attr_name, self.cleaned_data[attr_name])
+            except KeyError:
+                pass
+
+        task.save()
+
+        return task
 
     class Meta(TaskForm.Meta):
         model = Task

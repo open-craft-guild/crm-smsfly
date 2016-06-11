@@ -353,7 +353,7 @@ class Follower(models.Model):
 
 
 class Campaign(models.Model):
-    task = models.ForeignKey('Task')
+    task = models.ForeignKey('Task', related_name='campaigns')
     code = models.CharField(max_length=20)
     datetime_sent = models.DateTimeField()
     state = models.TextField()
@@ -364,6 +364,7 @@ class Campaign(models.Model):
 
     class Meta:
         db_route = 'internal_app'
+        get_latest_by = 'datetime_sent'
 
 
 class Task(models.Model):
@@ -429,6 +430,13 @@ class Task(models.Model):
     @recurrence_rule_json.deleter
     def recurrence_rule_json(self):
         self.recurrence_rule = None
+
+    @property
+    def last_time_sent(self):
+        try:
+            return self.campaigns.latest()
+        except self.DoesNotExist:
+            return None
 
     def __str__(self):
         return '{} ({}). {}'.format(self.title, self.alphaname, self.state)

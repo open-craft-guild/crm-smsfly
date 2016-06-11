@@ -1,9 +1,10 @@
 {% extends 'bootstrap3/bootstrap3.html' %}
-{% load bootstrap3 %}
+{% load bootstrap3 static %}
 {% block bootstrap3_extra_head %}
 {% if form %}
 {{ form.media }}
 {% endif %}
+<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}
 {% block bootstrap3_title %}{% block title %}SMSFlyCRM{% endblock %}{% endblock %}
 

@@ -17,11 +17,7 @@
     <formgroup class="col-md-6">
       <div>
     {% bootstrap_field form.message_text %}
-    <button type="button" class="btn btn-primary btn-sm">{% trans 'Фамилия' %}</button>
-    <button type="button" class="btn btn-primary btn-sm">{% trans 'Имя' %}</button>
-    <button type="button" class="btn btn-primary btn-sm">{% trans 'Отчество' %}</button>
-    <button type="button" class="btn btn-primary btn-sm">{% trans 'Номер' %}</button>
-    <button type="button" class="btn btn-primary btn-sm">{% trans 'Адрес' %}</button>
+    {% include 'text-buttons.html'%}
   </div>
     </formgroup>
     <formgroup class="col-md-6">

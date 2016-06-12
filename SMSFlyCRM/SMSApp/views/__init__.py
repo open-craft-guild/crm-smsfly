@@ -2,7 +2,7 @@ import logging
 
 from django.core.urlresolvers import reverse_lazy
 
-from django.views.generic import ListView, TemplateView
+from django.views.generic import TemplateView
 from django.views.generic.edit import FormView, CreateView
 
 from ..forms import (
@@ -73,15 +73,3 @@ class CampaignEditView(FormView):
     def form_valid(self, form):
         # Change campaign settings and notify everyone about its change, which involves changing DB and rescheduling job
         return super().form_valid(form)
-
-
-class CampaignMessagesView(ListView):
-    """Keeps a history of messages"""
-    template_name = 'sent-messages.html'
-    queryset = []  # TODO: replace fake queryset with an existing model
-
-
-class CampaignStatsView(ListView):
-    """Shows stats on campaigns"""
-    template_name = 'campaigns-stats.html'
-    queryset = []  # TODO: replace fake queryset with an existing model

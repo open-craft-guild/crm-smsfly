@@ -1,3 +1,5 @@
+import logging
+
 from datetime import datetime
 from itertools import starmap
 from time import sleep
@@ -7,11 +9,20 @@ from django.conf import settings
 from django_rq import job
 
 from smsfly import SMSFlyAPI
+from smsfly.errors import (
+    XMLError, PhoneError, StartTimeError,
+    EndTimeError, LifetimeError, SpeedError,
+    AlphanameError, TextError, InsufficientFundsError,
+    AuthError
+)
 
 from .models import Alphaname, Task, Campaign, Follower
 
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+
+
+logger = logging.getLogger(__name__)
 
 
 @job('default')
@@ -40,18 +51,30 @@ def sendMessagesInstantly(message='Hi man!', send_as='Alpha',
                                        )),
                             recipients)
 
-    api_result = api.send_sms_pairs(
-        start_time=datetime.now().strftime(DATETIME_FORMAT), end_time='AUTO',
-        lifetime=24, rate='AUTO', desc=description,
-        source=send_as, message_pairs=message_pairs
-    )
+    try:
+        api_result = api.send_sms_pairs(
+            start_time=datetime.now().strftime(DATETIME_FORMAT), end_time='AUTO',
+            lifetime=24, rate='AUTO', desc=description, source=send_as,
+            message_pairs=message_pairs
+        )
+    except (XMLError, PhoneError, StartTimeError,
+            EndTimeError, LifetimeError, SpeedError,
+            AlphanameError, TextError, InsufficientFundsError,
+            AuthError) as exc:
+        err_msg = "Couldn't submit task {task} (task_id={task_id})".format(task=task, task_id=task_id)
+        logger.exception(err_msg)
+        raise RuntimeError(err_msg) from exc
+    else:
+        res_state = api_result.message.state
+        campaign = Campaign.objects.create(
+            task=task, code=res_state.attrs['code'], state=res_state.text,
+            datetime_sent=datetime.strptime(res_state.attrs['date'], DATETIME_FORMAT),
+            smsfly_campaign_id=int(res_state.attrs['campaignID']))
+        logger.info('Campaign {camp} (smsfly_campaign_id={api_id}) has been accepted by SMS-Fly '
+                    'for sending to recipients, defined in task {task} (task_id={task_id})'.
+                    format(camp=campaign, api_id=campaign.smsfly_campaign_id, task=task, task_id=task_id))
 
-    res_state = api_result.message.state
-    Campaign.objects.create(task=task, code=res_state.attrs['code'],
-                            datetime_sent=datetime.strptime(res_state.attrs['date'], DATETIME_FORMAT),
-                            state=res_state.text, smsfly_campaign_id=int(res_state.attrs['campaignID']))
-
-    return api_result
+        return api_result
 
 
 @job('high')

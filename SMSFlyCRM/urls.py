@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 import SMSFlyCRM.SMSApp.urls
-from SMSFlyCRM.SMSApp.views import webhook_crm_event, webhook_smsfly_status
+from SMSFlyCRM.SMSApp.views.webhooks import webhook_crm_event, webhook_smsfly_status
 
 
 urlpatterns = [

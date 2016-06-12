@@ -99,5 +99,11 @@
        }
     });
 
+    $("#id_message_text").keyup(function() {
+      var msg_len = $(this).val().length;
+      var msgs = (msg_len > 70) ? Math.ceil(msg_len/67) : 1;
+      $('#characters').text(msg_len + ' символов (' + msgs + ' сообщений)');
+    });
+
   });
 })(jQuery);

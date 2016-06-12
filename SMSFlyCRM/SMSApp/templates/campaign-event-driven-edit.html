@@ -21,17 +21,19 @@
     </formgroup>
     <formgroup class="col-md-6">
       <div>
-    {% bootstrap_field form.start_datetime %}
-    {% bootstrap_field form.end_date %}
-    {% bootstrap_field form.triggered_by %}
-    {% bootstrap_field form.touch_project field_class='radio-inline' %}
-    {% bootstrap_field form.touch_status %}
-    {% bootstrap_field form.touch_contact %}
-    {% bootstrap_field form.touch_candidate %}
-    {% bootstrap_field form.touch_status %}
-
-
-    </div>
+        {% bootstrap_field form.start_datetime %}
+        {% bootstrap_field form.end_date %}
+        {% bootstrap_field form.triggered_by %}
+        <formgroup id="touch_conditions">
+          {% bootstrap_field form.touch_project field_class='radio-inline' %}
+          {% bootstrap_field form.touch_status %}
+          {% bootstrap_field form.touch_contact %}
+          {% bootstrap_field form.touch_candidate %}
+        </formgroup>
+        <formgroup id="status_trigger">
+          {% bootstrap_field form.trigger_status %}
+        </formgroup>
+      </div>
     </formgroup>
     {% include 'filters.html' %}
 

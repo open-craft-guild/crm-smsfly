@@ -34,6 +34,9 @@
     var CELLPHONE = ' {cellphone}';
     var ADDRESS = ' {address}';
 
+    $('#touch_conditions').hide();
+    $('#status_trigger').hide();
+
     $('#btn-lastname').click(function(){
       $('#id_message_text').insertAtCaret(LASTNAME);
     });
@@ -58,6 +61,23 @@
       $('#age-filters input').prop('disabled', this.checked);
       $('#address-filters select').prop('disabled', this.checked);
       $('#regaddress-filters select').prop('disabled', this.checked);
+    });
+
+    $('#id_triggered_by').change(function(){
+      $('#touch_conditions').hide();
+      $('#status_trigger').hide();
+      var selectedOption = $('#id_triggered_by').find(':selected').val();
+      switch (selectedOption) {
+        case 'onElectorTouched':
+          $('#touch_conditions').show();
+          break;
+        case 'onElectorStatusChanged':
+          $('#status_trigger').show();
+          break;
+        default:
+          $('#touch_conditions').hide();
+          $('#status_trigger').hide();
+      }
     })
 
   });

@@ -202,6 +202,11 @@ LOGGING = {
             'level': env('DJANGO_LOG_LEVEL', default='ERROR'),
             'propagate': True,
         },
+        'watchdog': {
+            'handlers': ['console', 'file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
     },
 }
 

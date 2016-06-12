@@ -32,13 +32,29 @@ def addNewCampaignTask(task_id):
     return 'Ran {}'.format(task_id)
 
 
+@job('default')
+def scheduleNewCampaignTask(task_id):
+    task = Task.objects.get(pk=task_id)
+
+    if task.type == 0:  # one-time
+        sendTaskMessagesInstantlyTask.delay(task_id=task_id)
+        task.state = 2
+        task.save()
+    elif task.type == 2:  # event-driven
+        sendTaskMessagesInstantlyTask.delay(task_id=task_id)
+    elif task.type == 1:  # recurrence
+        pass  # TODO: not to
+
+
 @job('high')
-def sendMessagesInstantly(message='Hi man!', send_as='Alpha',
-                          description='Test task', to=('380971234567',),
-                          task_id=100500):
+def sendTaskMessagesInstantlyTask(task_id):
     api = SMSFlyAPI(account_id=settings.SMS_FLY['login'],
                     account_pass=settings.SMS_FLY['password'])
+
     task = Task.objects.get(pk=task_id)
+    message = task.message_text
+    send_as = task.alphaname.name
+    description = str(task)
 
     recipients_filter = task.recipients_filter_json
     recipients = Follower.objects.get(**recipients_filter)  # Filter out recipients from external DB

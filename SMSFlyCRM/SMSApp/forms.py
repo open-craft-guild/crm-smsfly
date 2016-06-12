@@ -272,15 +272,15 @@ class EventDrivenTaskForm(TaskForm):
         self.initial['type'] = 2
 
         self.fields['touch_project'] = forms.ModelChoiceField(
-            queryset=Project.objects.for_user(user_id).all(), required=False)
+            queryset=Project.objects.for_user(user_id).all(), required=False, label='Проект')
         self.fields['touch_contact'] = forms.ModelChoiceField(
-            queryset=ProjectContact.objects.for_user(user_id).all(), required=False)
+            queryset=ProjectContact.objects.for_user(user_id).all(), required=False, label='Контакт')
         self.fields['touch_status'] = forms.ModelChoiceField(
-            queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
+            queryset=FollowerStatus.objects.for_user(user_id).all(), required=False, label='Статус')
         self.fields['touch_candidate'] = forms.ModelChoiceField(
-            queryset=Candidate.objects.for_user(user_id).all(), required=False)
+            queryset=Candidate.objects.for_user(user_id).all(), required=False, label='Кандидат')
         self.fields['trigger_status'] = forms.ModelChoiceField(
-            queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
+            queryset=FollowerStatus.objects.for_user(user_id).all(), required=False, label='Статус')
 
     def clean(self):
         cleaned_data = super().clean()

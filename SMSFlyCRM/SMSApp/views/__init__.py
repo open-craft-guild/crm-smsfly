@@ -9,13 +9,13 @@ from django.views.generic.edit import FormView, CreateView
 
 from django.utils.translation import ugettext_lazy as _
 
-from ..models import Alphaname, Task
+from ..models import Task
 from ..forms import (
-    AlphanameForm, OneTimeTaskForm, TaskForm,
+    OneTimeTaskForm, TaskForm,
     RecurringTaskForm, EventDrivenTaskForm
 )
 
-from ..tasks import submitAlphanameInstantly, addNewCampaignTask
+from ..tasks import addNewCampaignTask
 
 
 logger = logging.getLogger(__name__)
@@ -24,28 +24,6 @@ logger = logging.getLogger(__name__)
 class IndexView(TemplateView):
     """Shows all menu entries of an app"""
     template_name = 'main.html'
-
-
-class AlphanameIndexView(ListView):
-    """Shows all alphaname list available along with registrar and registration date"""
-    template_name = 'alphanames-list.html'
-    context_object_name = 'alphanames'
-    model = Alphaname
-
-
-class AlphanameRegisterView(CreateView):
-    """Sends new alphaname register request"""
-    template_name = 'alphaname-new.html'
-    form_class = AlphanameForm
-    success_url = reverse_lazy('alphanames-root')
-
-    def get_form(self, form_class=None):
-        return (form_class or self.form_class)(self.request, **self.get_form_kwargs())
-
-    def form_valid(self, form):
-        # Add job for sending request to register a new alphanumeric name
-        submitAlphanameInstantly.delay(form.cleaned_data['name'])
-        return super().form_valid(form)
 
 
 class CampaignBaseView(ListView):

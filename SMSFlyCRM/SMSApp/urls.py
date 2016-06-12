@@ -2,12 +2,14 @@ from django.conf.urls import url
 
 from . import views
 
+from .views import alphanames
+
 
 urlpatterns = (
     # Alphanames list:
-    url('^alphanames$', views.AlphanameIndexView.as_view(), name='alphanames-root'),
+    url('^alphanames$', alphanames.AlphanameIndexView.as_view(), name='alphanames-root'),
     # Alphaname registration request form:
-    url('^alphanames/new$', views.AlphanameRegisterView.as_view(), name='add-alphaname'),
+    url('^alphanames/new$', alphanames.AlphanameRegisterView.as_view(), name='add-alphaname'),
     # Active campaigns list:
     url('^sms-campaigns$', views.CampaignIndexView.as_view(), name='campaigns-root'),
     # Campaign adding/scheduling form:

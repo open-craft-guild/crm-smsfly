@@ -199,7 +199,7 @@ LOGGING = {
         },
         'werkzeug': {
             'handlers': ['console', 'file'],
-            'level': 'DEBUG',
+            'level': env('DJANGO_LOG_LEVEL', default='ERROR'),
             'propagate': True,
         },
     },

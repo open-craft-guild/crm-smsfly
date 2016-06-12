@@ -1,8 +1,6 @@
 from django.conf.urls import url
 
-from . import views
-
-from .views import alphanames, campaigns_list, stats, messages
+from .views import alphanames, campaigns_list, stats, messages, campaigns_crud, IndexView
 
 
 urlpatterns = (
@@ -13,12 +11,14 @@ urlpatterns = (
     # Active campaigns list:
     url('^sms-campaigns$', campaigns_list.CampaignIndexView.as_view(), name='campaigns-root'),
     # Campaign adding/scheduling form:
-    url('^sms-campaigns/new/one-time$', views.CampaignNewView.as_view(), name='add-campaign'),
-    url('^sms-campaigns/new/recurring$', views.CampaignNewRecurringView.as_view(), name='add-recurring-campaign'),
-    url('^sms-campaigns/new/event-driven$', views.CampaignNewEventDrivenView.as_view(),
+    url('^sms-campaigns/new/one-time$', campaigns_crud.CampaignNewView.as_view(), name='add-campaign'),
+    url('^sms-campaigns/new/recurring$',
+        campaigns_crud.CampaignNewRecurringView.as_view(),
+        name='add-recurring-campaign'),
+    url('^sms-campaigns/new/event-driven$', campaigns_crud.CampaignNewEventDrivenView.as_view(),
         name='add-event-driven-campaign'),
     # Campaign editing form:
-    url('^sms-campaigns/edit$', views.CampaignEditView.as_view(), name='edit-campaign'),
+    url('^sms-campaigns/edit$', campaigns_crud.CampaignEditView.as_view(), name='edit-campaign'),
     # Archive of inactive/sent campaigns:
     url('^sms-campaigns/archive$', campaigns_list.CampaignArchiveView.as_view(), name='campaigns-archive'),
     # List of all sent messages:
@@ -26,5 +26,5 @@ urlpatterns = (
     # Stats on campaigns:
     url('^sms-campaigns/stats$', stats.CampaignStatsView.as_view(), name='campaigns-stats'),
     # Index page with a menu:
-    url('^$', views.IndexView.as_view(), name='app-root'),  # Keep it in bottom
+    url('^$', IndexView.as_view(), name='app-root'),  # Keep it in bottom
 )

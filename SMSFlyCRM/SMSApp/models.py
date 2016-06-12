@@ -1,7 +1,9 @@
-import datetime
 import json
+from datetime import datetime
 
 from django.db import models
+
+from django.utils.translation import ugettext_lazy as _
 
 # Add recognized model option to django
 # :seealso: https://djangosnippets.org/snippets/2687/
@@ -375,10 +377,10 @@ class Task(models.Model):
     )
 
     TRIGGERS_LIST = (
-        ('onElectorBirthday', 'День рождения избирателя'),
-        ('onElectorAdded', 'Внесение анкеты избирателя в базу'),
-        ('onElectorTouched', 'Внесение касания с избирателем в базу'),
-        ('onElectorStatusChanged', 'Смена статуса избирателя'),
+        ('onElectorBirthday', _('День рождения избирателя')),
+        ('onElectorAdded', _('Внесение анкеты избирателя в базу')),
+        ('onElectorTouched', _('Внесение касания с избирателем в базу')),
+        ('onElectorStatusChanged', _('Смена статуса избирателя')),
     )
 
     STATE_LIST = (
@@ -394,7 +396,7 @@ class Task(models.Model):
     recipients_filter = models.TextField()
     state = models.IntegerField(choices=STATE_LIST)
     code = models.CharField(max_length=20)
-    start_datetime = models.DateTimeField(default=datetime.datetime.now)
+    start_datetime = models.DateTimeField(default=datetime.now)
     type = models.IntegerField(choices=TYPE_LIST)
     end_date = models.DateField(null=True)
     recurrence_rule = models.TextField()

@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from . import views
 
-from .views import alphanames
+from .views import alphanames, campaigns_list
 
 
 urlpatterns = (
@@ -11,7 +11,7 @@ urlpatterns = (
     # Alphaname registration request form:
     url('^alphanames/new$', alphanames.AlphanameRegisterView.as_view(), name='add-alphaname'),
     # Active campaigns list:
-    url('^sms-campaigns$', views.CampaignIndexView.as_view(), name='campaigns-root'),
+    url('^sms-campaigns$', campaigns_list.CampaignIndexView.as_view(), name='campaigns-root'),
     # Campaign adding/scheduling form:
     url('^sms-campaigns/new/one-time$', views.CampaignNewView.as_view(), name='add-campaign'),
     url('^sms-campaigns/new/recurring$', views.CampaignNewRecurringView.as_view(), name='add-recurring-campaign'),
@@ -20,7 +20,7 @@ urlpatterns = (
     # Campaign editing form:
     url('^sms-campaigns/edit$', views.CampaignEditView.as_view(), name='edit-campaign'),
     # Archive of inactive/sent campaigns:
-    url('^sms-campaigns/archive$', views.CampaignArchiveView.as_view(), name='campaigns-archive'),
+    url('^sms-campaigns/archive$', campaigns_list.CampaignArchiveView.as_view(), name='campaigns-archive'),
     # List of all sent messages:
     url('^sms-campaigns/messages$', views.CampaignMessagesView.as_view(), name='campaigns-messages'),
     # Stats on campaigns:

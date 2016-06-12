@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django_rq',
     'django_rq_jobs',
     'datetimewidget',
+    'django_extensions',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -195,5 +197,12 @@ LOGGING = {
             'level': env('DJANGO_LOG_LEVEL', default='ERROR'),
             'propagate': False,
         },
+        'werkzeug': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
 }
+
+RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'

@@ -17,13 +17,13 @@ containers:
       - postgresql-dev
       - mariadb-dev
       - gcc
-    - !PipConfig
-      dependencies: true
     - !Py3Install
       - setuptools
       - pip
       - six
       - 'Django >=1.9,<1.10'
+      - 'django-extensions >=1.6.7,<1.7'
+      - 'django-debug-toolbar >=1.4,<2.0'
       - 'django-environ >=0.4,<0.5'
       - 'pylibmc >=1.5,<1.6'
       - 'django-cache-url >=1.0,<1.1'
@@ -39,6 +39,10 @@ containers:
       - 'mysqlclient >=1.3.7,<1.4'
       - 'gunicorn >=19.6.0,<19.7'
       - 'django-datetime-widget >=0.9.3,<1.0'
+      - 'ipython >=4.2.0,<4.3'
+      - 'ipdb >=0.10.0,<1.0'
+      - 'Werkzeug >=0.11.4,<0.12'
+      - 'watchdog >=0.8.3,<0.9'
       - 'git+https://github.com/wk-tech/python-smsfly@v0.1.2#egg=smsfly'
     - !Sh pip uninstall --yes SMSFly
     - !Sh pip freeze > requirements.txt
@@ -111,7 +115,7 @@ commands:
         container: django
         environ:
           CACHE_URL: memcached://127.0.0.1:11211
-        run: python3 manage.py runserver
+        run: python3 manage.py runserver_plus --traceback
       rq: !Command
         container: django
         run: |

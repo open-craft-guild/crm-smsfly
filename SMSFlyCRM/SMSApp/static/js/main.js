@@ -34,6 +34,9 @@
     var CELLPHONE = ' {cellphone}';
     var ADDRESS = ' {address}';
 
+    $('#id_recurrence_weekdays').parent().parent().hide();
+    $('#id_recurrence_month_type').parent().parent().hide();
+
     $('#touch_conditions').hide();
     $('#status_trigger').hide();
 
@@ -79,6 +82,22 @@
           $('#status_trigger').hide();
       }
     })
+
+    $("input:radio[name=recurrence_type]").click(function() {
+      $('#id_recurrence_weekdays').parent().parent().hide();
+      $('#id_recurrence_month_type').parent().parent().hide();
+      switch ($(this).val()) {
+        case 'EVERY_WEEK':
+          $('#id_recurrence_weekdays').parent().parent().show();
+          break;
+        case 'EVERY_MONTH':
+          $('#id_recurrence_month_type').parent().parent().show();
+          break;
+        default:
+          $('#id_recurrence_weekdays').parent().parent().hide();
+          $('#id_recurrence_month_type').parent().parent().hide();
+       }
+    });
 
   });
 })(jQuery);

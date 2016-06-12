@@ -18,17 +18,15 @@
       <div>
     {% bootstrap_field form.message_text %}
     {% include 'text-buttons.html' %}
-  </div>
+      </div>
     </formgroup>
     <formgroup class="col-md-6">
-      <div>
-        {% bootstrap_field form.start_datetime %}
-        {% bootstrap_field form.recurrence_type field_class='radio-inline' %}
-        {% bootstrap_field form.recurrence_period %}
-        {% bootstrap_field form.recurrence_weekdays layout='horizontal' %}
-        {% bootstrap_field form.recurrence_month_type layout='horizontal' %}
-        {% bootstrap_field form.end_date %}
-      </div>
+      {% bootstrap_field form.start_datetime %}
+      {% bootstrap_field form.recurrence_type field_class='radio-inline' %}
+      {% bootstrap_field form.recurrence_period %}
+      {% bootstrap_field form.end_date %}
+      {% bootstrap_field form.recurrence_weekdays layout='horizontal' %}
+      {% bootstrap_field form.recurrence_month_type layout='horizontal' %}
     </formgroup>
     {% include 'filters.html' %}
 

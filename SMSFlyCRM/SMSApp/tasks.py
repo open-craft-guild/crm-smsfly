@@ -2,7 +2,6 @@ import logging
 
 from datetime import datetime
 from itertools import starmap
-from time import sleep
 
 from django.conf import settings
 
@@ -23,13 +22,6 @@ DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 
 logger = logging.getLogger(__name__)
-
-
-@job('default')
-def addNewCampaignTask(task_id):
-    sleep(0.4)
-    print('Ran {}'.format(task_id))
-    return 'Ran {}'.format(task_id)
 
 
 @job('default')

@@ -9,7 +9,7 @@ from ..forms import (
     RecurringTaskForm, EventDrivenTaskForm
 )
 
-from ..tasks import addNewCampaignTask
+from ..tasks import scheduleNewCampaignTask
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,8 @@ class CampaignNewView(CreateView):
 
     def form_valid(self, form):
         # Save new campaign and notify everyone about it, add job into queue if needed
-        addNewCampaignTask.delay(form.instance.pk)
+        if form.instance.type != 2:  # is not event-driven
+            scheduleNewCampaignTask.delay(form.instance.pk)
         return super().form_valid(form)
 
 

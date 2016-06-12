@@ -28,6 +28,10 @@
   template: 'src=smsapp.unit.service dest=/etc/systemd/system/smsapp.service mode=0644'
   register: smsapp_unit_added
 
+- name: Add rqscheduler systemd unit
+  template: 'src=rqscheduler.unit.service dest=/etc/systemd/system/rqscheduler.service mode=0644'
+  register: rqscheduler_unit_added
+
 - name: Add rqworker systemd unit
   template: 'src=rqworker.unit.service dest=/etc/systemd/system/rqworker.service mode=0644'
   register: rqworker_unit_added
@@ -41,7 +45,7 @@
   register: rqjobs_timer_added
 
 - shell: systemctl daemon-reload
-  when: smsapp_unit_added|changed or rqworker_unit_added|changed or rqjobs_unit_added|changed or rqjobs_timer_added|changed
+  when: smsapp_unit_added|changed or rqscheduler_unit_added|changed or rqworker_unit_added|changed or rqjobs_unit_added|changed or rqjobs_timer_added|changed
 
 - file: path=/home/smsapp/static state=directory owner=smsapp
 - file: path=/home/smsapp/log state=directory owner=smsapp

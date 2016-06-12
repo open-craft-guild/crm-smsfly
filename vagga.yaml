@@ -119,6 +119,7 @@ commands:
       rq: !Command
         container: django
         run: |
+            python3 manage.py rqscheduler --pythonpath=/work &
             while [ true ]; do sleep 60; python3 manage.py rqjobs --pythonpath=/work; done &
             python3 manage.py rqworker --pythonpath=/work high default low
       redis: !Command

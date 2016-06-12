@@ -1,0 +1,16 @@
+[Unit]
+Description=Job that runs the smsapp's rqscheduler daemon
+
+[Service]
+Requires=redis.service
+ExecStart=/home/smsapp/venv/bin/python manage.py rqscheduler --pythonpath=/home/smsapp/repo
+User=smsapp
+Group=smsapp
+WorkingDirectory=/home/smsapp/repo
+Restart=always
+KillMode=process
+RestartSec=5s
+EnvironmentFile=/home/smsapp/smsapp.env
+
+[Install]
+WantedBy=multi-user.target

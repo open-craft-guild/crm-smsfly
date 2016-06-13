@@ -23,6 +23,10 @@
       <div>
     {% bootstrap_field form.start_datetime %}
     {% bootstrap_field form.end_date %}
+
+    {% block conditions %}
+    {% endblock conditions %}
+
     </div>
     </formgroup>
     {% include 'filters.html' %}

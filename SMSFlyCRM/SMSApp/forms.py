@@ -1,4 +1,3 @@
-import json
 from datetime import date
 
 from django import forms
@@ -82,7 +81,6 @@ class TaskForm(forms.ModelForm):
         self.initial['created_by_crm_user_id'] = user_id
         self.initial['type'] = 0
         self.initial['state'] = 0
-        self.initial['recipients_filter'] = 0
 
         self.fields['to_everyone'] = forms.BooleanField(
             label=_('Отправить всем избирателям'), required=False)
@@ -142,33 +140,36 @@ class TaskForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        cleaned_data['recipients_filter'] = json.dumps({
-            'to_everyone': self.cleaned_data['to_everyone'],
-            'age_from': self.cleaned_data['age_from'],
-            'age_to': self.cleaned_data['age_to'],
-            'regaddress_region': self.cleaned_data['regaddress_region'],
-            'regaddress_locality': self.cleaned_data['regaddress_locality'],
-            'regaddress_street': self.cleaned_data['regaddress_street'],
-            'regaddress_building': self.cleaned_data['regaddress_building'],
-            'address_region': self.cleaned_data['address_region'],
-            'address_area': self.cleaned_data['address_area'],
-            'address_locality': self.cleaned_data['address_locality'],
-            'address_street': self.cleaned_data['address_street'],
-            'address_building': self.cleaned_data['address_building'],
-            'sex': self.cleaned_data['sex'],
-            'family_status': self.cleaned_data['family_status'],
-            'education': self.cleaned_data['education'],
-            'social_category': self.cleaned_data['social_category'],
-            'poll_place': self.cleaned_data['poll_place'],
-            'contact': self.cleaned_data['contact'],
-            'candidate': self.cleaned_data['candidate'],
-            'status': self.cleaned_data['status']
-        })
+        FILTER_FIELDS = [
+            'regaddress_region', 'regaddress_locality', 'regaddress_street', 'regaddress_building',
+            'address_region', 'address_area', 'address_locality', 'address_street', 'address_building',
+            'sex', 'family_status', 'education', 'social_category', 'poll_place', 'contact',
+            'candidate', 'status',
+        ]
+        cleaned_data['recipients_filter_json'] = {
+            'to_everyone': self.cleaned_data['to_everyone']
+        }
+        if not self.cleaned_data['to_everyone']:
+            for field in ('age_from', 'age_to'):
+                if cleaned_data[field]:
+                    cleaned_data['recipients_filter_json'][field] = int(cleaned_data[field])
+            for field in FILTER_FIELDS:
+                if cleaned_data[field]:
+                    cleaned_data['recipients_filter_json']['{}_id'.format(field)] = cleaned_data[field].pk
         return cleaned_data
+
+    def save(self, commit=True):
+        task = super().save(commit=False)
+
+        task.recipients_filter_json = self.cleaned_data['recipients_filter_json']
+
+        task.save()
+
+        return task
 
     class Meta:
         model = Task
-        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'recipients_filter', 'type',
+        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type',
                   'created_by_crm_user_id', 'state']
         labels = {
             'alphaname': _('Альфаимя'),
@@ -191,7 +192,6 @@ class TaskForm(forms.ModelForm):
             'state': forms.HiddenInput(),
             'recurrence_rule': forms.HiddenInput(),
             'state': forms.HiddenInput(),
-            'recipients_filter': forms.HiddenInput(),
         }
 
 
@@ -239,11 +239,10 @@ class RecurringTaskForm(TaskForm):
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
         self.initial['type'] = 1
-        self.fields['recurrence_rule'].required = False
 
     def clean(self):
         cleaned_data = super().clean()
-        cleaned_data['recurrence_rule'] = {
+        cleaned_data['recurrence_rule_json'] = {
             'start_datetime': self.cleaned_data['start_datetime'].strftime(self.DATETIME_INPUTS[0]),
             'end_date': self.cleaned_data['end_date'].strftime(self.DATETIME_INPUTS[1]),
             'type': self.cleaned_data['recurrence_type'],
@@ -253,10 +252,21 @@ class RecurringTaskForm(TaskForm):
         }
         return cleaned_data
 
+    def save(self):
+        task = super().save(commit=False)
+
+        task.recurrence_rule_json = self.cleaned_data['recurrence_rule_json']
+
+        task.save()
+
+        return task
+
     class Meta(TaskForm.Meta):
         fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
-                  'recipients_filter', 'state', 'recurrence_rule',
-                  'created_by_crm_user_id', 'recurrence_type']
+                  'state',
+                  'created_by_crm_user_id', 'recurrence_type',
+                  'recurrence_period', 'recurrence_month_type', 'recurrence_weekdays',
+                  ]
 
 
 class EventDrivenTaskForm(TaskForm):
@@ -295,7 +305,7 @@ class EventDrivenTaskForm(TaskForm):
 
         return cleaned_data
 
-    def save(self):
+    def save(self, commit=True):
         task = super().save(commit=False)
 
         for field_name in self.TRIGGER_FIELDS_LIST:
@@ -313,4 +323,4 @@ class EventDrivenTaskForm(TaskForm):
         model = Task
         fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
                   'triggered_by', 'touch_project', 'touch_status', 'touch_contact',
-                  'touch_candidate', 'trigger_status', 'recipients_filter', 'created_by_crm_user_id', 'state']
+                  'touch_candidate', 'trigger_status', 'created_by_crm_user_id', 'state']

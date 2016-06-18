@@ -23,8 +23,12 @@ class ExternalCRMManager(models.Manager):
     def for_user(self, crm_user_id):
         """Hacks setting @user SQL variable needed for user-personalized queries"""
         assert isinstance(crm_user_id, int)
-        return self.get_queryset().extra(where=('{user_id} = (select @user := {user_id})'.
-                                                format(user_id=crm_user_id), ))
+        qs = self.get_queryset()
+        try:
+            next(iter(qs.raw('set @user:={user_id}'.format(user_id=crm_user_id))))
+        except TypeError:
+            pass  # hack for pre-setting SQL variable before query
+        return qs
 
 
 class Area(models.Model):

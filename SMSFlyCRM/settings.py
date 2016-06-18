@@ -213,3 +213,7 @@ LOGGING = {
 }
 
 RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
+
+# Django Smart Selects:
+USE_DJANGO_JQUERY = False
+JQUERY_URL = '//about:blank'  # hack around loading jquery to prevent it from breaking datepicker

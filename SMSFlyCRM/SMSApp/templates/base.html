@@ -4,7 +4,7 @@
 {% if form %}
 {{ form.media }}
 {% endif %}
-<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/main.js' %}" defer></script>
 {% endblock %}
 {% block bootstrap3_title %}{% block title %}SMSFlyCRM{% endblock %}{% endblock %}
 

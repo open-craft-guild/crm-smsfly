@@ -5,6 +5,8 @@ from django.db import models
 
 from django.utils.translation import ugettext_lazy as _
 
+from smart_selects.db_fields import ChainedForeignKey
+
 # Add recognized model option to django
 # :seealso: https://djangosnippets.org/snippets/2687/
 import django.db.models.options as options
@@ -304,40 +306,43 @@ class Follower(models.Model):
     lastname = models.CharField(null=True, max_length=255)
     firstname = models.CharField(null=True, max_length=255)
     middlename = models.CharField(null=True, max_length=255)
-    sex = models.ForeignKey('Sex', to_field='sex_id', null=True, on_delete=models.DO_NOTHING)
+    sex = models.ForeignKey(Sex, to_field='sex_id', null=True, on_delete=models.DO_NOTHING)
     datebirth = models.DateField(null=True)
-    social_category = models.ForeignKey('SocialCategory', to_field='social_category_id', related_name='followers',
+    social_category = models.ForeignKey(SocialCategory, to_field='social_category_id', related_name='followers',
                                         on_delete=models.DO_NOTHING, null=True)
-    family_status = models.ForeignKey('FamilyStatus', to_field='family_status_id', related_name='followers',
+    family_status = models.ForeignKey(FamilyStatus, to_field='family_status_id', related_name='followers',
                                       on_delete=models.DO_NOTHING, null=True)
-    education = models.ForeignKey('Education', related_name='followers', to_field='education_id',
+    education = models.ForeignKey(Education, related_name='followers', to_field='education_id',
                                   on_delete=models.DO_NOTHING, null=True)
     cellphone = models.CharField(null=True, max_length=255)
-    address_region = models.ForeignKey('Region', to_field='region_id', related_name='living_followers',
+    address_region = models.ForeignKey(Region, to_field='region_id', related_name='living_followers',
                                        on_delete=models.DO_NOTHING, null=True)
-    address_area = models.ForeignKey('Area', to_field='area_id', related_name='living_followers',
-                                     on_delete=models.DO_NOTHING, null=True)
-    address_locality = models.ForeignKey('Locality', to_field='locality_id', related_name='living_followers',
-                                         on_delete=models.DO_NOTHING, null=True)
-    address_street = models.ForeignKey('Street', to_field='street_id', related_name='living_followers',
-                                       on_delete=models.DO_NOTHING, null=True)
-    address_builing = models.ForeignKey('Building', to_field='building_id', related_name='living_followers',
-                                        on_delete=models.DO_NOTHING, null=True)
-    regaddress_region = models.ForeignKey('Region', to_field='region_id', related_name='registered_followers',
+    address_area = ChainedForeignKey(Area, related_name='living_followers', chained_field='address_region',
+                                     chained_model_field='region',)
+    address_locality = ChainedForeignKey(Locality, related_name='living_followers', chained_field='address_area',
+                                         chained_model_field='area',)
+    address_street = ChainedForeignKey(Street, related_name='living_followers', chained_field='address_locality',
+                                       chained_model_field='locality',)
+    address_builing = ChainedForeignKey(Building, related_name='living_followers', chained_field='address_street',
+                                        chained_model_field='street',)
+    regaddress_region = models.ForeignKey(Region, to_field='region_id', related_name='registered_followers',
                                           on_delete=models.DO_NOTHING, null=True)
-    regaddress_area = models.ForeignKey('Area', to_field='area_id', related_name='registered_followers',
-                                        on_delete=models.DO_NOTHING, null=True)
-    regaddress_locality = models.ForeignKey('Locality', to_field='locality_id', related_name='registered_followers',
-                                            on_delete=models.DO_NOTHING, null=True)
-    regaddress_street = models.ForeignKey('Street', to_field='street_id', related_name='registered_followers',
-                                          on_delete=models.DO_NOTHING, null=True)
-    regaddress_builing = models.ForeignKey('Building', to_field='building_id', related_name='registered_followers',
-                                           on_delete=models.DO_NOTHING, null=True)
-    polplace = models.ForeignKey('PollPlace', to_field='polplace_id', related_name='followers',
+    regaddress_area = ChainedForeignKey(Area, related_name='registered_followers', chained_field='regaddress_region',
+                                        chained_model_field='region',)
+    regaddress_locality = ChainedForeignKey(Locality, related_name='registered_followers',
+                                            chained_field='regaddress_area',
+                                            chained_model_field='area',)
+    regaddress_street = ChainedForeignKey(Street, related_name='registered_followers',
+                                          chained_field='regaddress_locality',
+                                          chained_model_field='locality',)
+    regaddress_builing = ChainedForeignKey(Building, related_name='registered_followers',
+                                           chained_field='regaddress_street',
+                                           chained_model_field='street',)
+    polplace = models.ForeignKey(PollPlace, to_field='polplace_id', related_name='followers',
                                  on_delete=models.DO_NOTHING, null=True)
-    last_contact = models.ForeignKey('FollowerContact', to_field='id', on_delete=models.DO_NOTHING, null=True,
+    last_contact = models.ForeignKey(FollowerContact, to_field='id', on_delete=models.DO_NOTHING, null=True,
                                      related_name='last_contact')
-    last_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
+    last_status = models.ForeignKey(FollowerStatus, to_field='follower_status_id', on_delete=models.DO_NOTHING,
                                     null=True)
 
     objects = ExternalCRMManager()

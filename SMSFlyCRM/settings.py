@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'SMSFlyCRM.SMSApp',  # <-- our app
+    'SMSFlyCRM.smartselects',  # <-- smart_selects custom views
     # third-party apps:
     'bootstrap3',
     'django_rq',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'datetimewidget',
     'django_extensions',
     'debug_toolbar',
+    'smart_selects',
 ]
 
 MIDDLEWARE_CLASSES = [

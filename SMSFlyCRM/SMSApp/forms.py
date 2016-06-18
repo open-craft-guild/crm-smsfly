@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetimewidget.widgets import DateTimeWidget, DateWidget
 
 
-from .models import (Alphaname, Task, ProjectContact, FollowerStatus,
+from .models import (Alphaname, Task, ProjectContact, FollowerStatus, Follower,
                      Candidate, Area, Building, Region, Locality, Street,
                      Project, PollPlace, FamilyStatus, Education, SocialCategory, Sex)
 
@@ -90,25 +90,27 @@ class TaskForm(forms.ModelForm):
             label=_('До'), min_value=0, required=False)
         self.fields['regaddress_region'] = forms.ModelChoiceField(
             label=_('Область'), queryset=Region.objects.for_user(user_id).all(), required=False)
-        self.fields['regaddress_area'] = forms.ModelChoiceField(
-            label=_('Район'), queryset=Area.objects.for_user(user_id).all(), required=False)
-        self.fields['regaddress_locality'] = forms.ModelChoiceField(
+        self.fields['regaddress_area'] = Follower.regaddress_area.field.formfield(
+            label=_('Район'), queryset=Area.objects.for_user(user_id).all(),
+            required=False
+        )
+        self.fields['regaddress_locality'] = Follower.regaddress_locality.field.formfield(
             label=_('Населенный пункт'), queryset=Locality.objects.for_user(user_id).all(),
             required=False)
-        self.fields['regaddress_street'] = forms.ModelChoiceField(
+        self.fields['regaddress_street'] = Follower.regaddress_street.field.formfield(
             label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
-        self.fields['regaddress_building'] = forms.ModelChoiceField(
+        self.fields['regaddress_building'] = Follower.regaddress_builing.field.formfield(
             label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
         self.fields['address_region'] = forms.ModelChoiceField(
             label=_('Область'), queryset=Region.objects.for_user(user_id).all(), required=False)
-        self.fields['address_area'] = forms.ModelChoiceField(
+        self.fields['address_area'] = Follower.address_area.field.formfield(
             label=_('Район'), queryset=Area.objects.for_user(user_id).all(), required=False)
-        self.fields['address_locality'] = forms.ModelChoiceField(
+        self.fields['address_locality'] = Follower.address_locality.field.formfield(
             label=_('Населенный пункт'), queryset=Locality.objects.for_user(user_id).all(),
             required=False)
-        self.fields['address_street'] = forms.ModelChoiceField(
+        self.fields['address_street'] = Follower.address_street.field.formfield(
             label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
-        self.fields['address_building'] = forms.ModelChoiceField(
+        self.fields['address_building'] = Follower.address_builing.field.formfield(
             label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
         self.fields['sex'] = forms.ModelChoiceField(
             label=_('Пол'), queryset=Sex.objects.for_user(user_id).all(), required=False)

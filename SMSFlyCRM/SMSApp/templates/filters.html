@@ -1,45 +1,48 @@
 {% load i18n bootstrap3 %}
 
-<formgroup id="elector-filters" class="col-md-4">
-  {% bootstrap_field form.to_everyone  %}
-  <div id="age-filters">
-    {% bootstrap_field form.age_from%}
-    {% bootstrap_field form.age_to%}
-  </div>
-</formgroup>
-<formgroup class="col-md-4" id="regaddress-filters">
-  <div>
-    <legend>
-      {% trans 'Адрес прописки' %}
-    </legend>
-    {% bootstrap_field form.regaddress_region %}
-    {% bootstrap_field form.regaddress_area %}
-    {% bootstrap_field form.regaddress_locality %}
-    {% bootstrap_field form.regaddress_street %}
-    {% bootstrap_field form.regaddress_building %}
-    {% bootstrap_field form.sex horizontal_field_class='col-md-2' %}
-    {% bootstrap_field form.family_status horizontal_field_class='col-md-2' %}
-    {% bootstrap_field form.education horizontal_field_class='col-md-2' %}
-    {% bootstrap_field form.social_category horizontal_field_class='col-md-2' %}
-  </div>
-</formgroup>
-<formgroup class="col-md-4" id="address-filters">
-  <div>
-    <legend>
-      {% trans 'Адрес проживания' %}
-    </legend>
-    {% bootstrap_field form.address_region %}
-    {% bootstrap_field form.address_area %}
-    {% bootstrap_field form.address_locality %}
-    {% bootstrap_field form.address_street %}
-    {% bootstrap_field form.address_building %}
-    {% bootstrap_field form.poll_place horizontal_field_class='col-md-2' %}
-    {% bootstrap_field form.contact horizontal_field_class='col-md-2' %}
-    {% bootstrap_field form.candidate horizontal_field_class='col-md-2' %}
-    {% bootstrap_field form.status horizontal_field_class='col-md-2' %}
-  </div>
-</formgroup>
+<div class="row">
+  <formgroup id="elector-filters" class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    {% bootstrap_field form.to_everyone %}
+    <div id="age-filters">
+      {% bootstrap_field form.age_from %}
+      {% bootstrap_field form.age_to %}
+    </div>
+  </formgroup>
+  <formgroup id="regaddress-filters" class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    <div>
+      <legend>
+        {% trans 'Адрес прописки' %}
+      </legend>
+      {% bootstrap_field form.regaddress_region %}
+      {% bootstrap_field form.regaddress_area %}
+      {% bootstrap_field form.regaddress_locality %}
+      {% bootstrap_field form.regaddress_street %}
+      {% bootstrap_field form.regaddress_building %}
+      {% bootstrap_field form.sex horizontal_field_class='col-md-2' %}
+      {% bootstrap_field form.family_status horizontal_field_class='col-md-2' %}
+      {% bootstrap_field form.education horizontal_field_class='col-md-2' %}
+      {% bootstrap_field form.social_category horizontal_field_class='col-md-2' %}
+    </div>
+  </formgroup>
+  <formgroup id="address-filters"class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    <div>
+      <legend>
+        {% trans 'Адрес проживания' %}
+      </legend>
+      {% bootstrap_field form.address_region %}
+      {% bootstrap_field form.address_area %}
+      {% bootstrap_field form.address_locality %}
+      {% bootstrap_field form.address_street %}
+      {% bootstrap_field form.address_building %}
+      {% bootstrap_field form.poll_place horizontal_field_class='col-md-2' %}
+      {% bootstrap_field form.contact horizontal_field_class='col-md-2' %}
+      {% bootstrap_field form.candidate horizontal_field_class='col-md-2' %}
+      {% bootstrap_field form.status horizontal_field_class='col-md-2' %}
+    </div>
+  </formgroup>
+</div>
 
+<div class="row">
   <table class="table">
     <tr>
       <td>
@@ -50,57 +53,60 @@
       </td>
     </tr>
   </table>
+</div>
 
-<formgroup id="recipients-list">
-  <input type="text" id="name_filter" name="name_filter" class="col-md-3" placeholder="Поиск по ФИО">
-  <input type="phone_number" id="phone_filter" name="phone_filter" class="col-md-3" placeholder="Поиск по тел.номеру">
-
-  <table class="table">
-    <tbody>
-      <tr>
-        <td>
-          <input type="checkbox" name="sendtoid" value="">
-        </td>
-        <td>380971111111</td>
-        <td>Иванов Иван Иванович</td>
-        <td>Запорожская</td>
-        <td>Запорожье</td>
-        <td>Кандидат_name</td>
-        <td>Свой</td>
-      </tr>
-      <tr>
-        <td>
-          <input type="checkbox" name="sendtoid" value="">
-        </td>
-        <td>380971111111</td>
-        <td>Иванов Иван Иванович</td>
-        <td>Запорожская</td>
-        <td>Запорожье</td>
-        <td>Кандидат_name</td>
-        <td>Свой</td>
-      </tr>
-      <tr>
-        <td>
-          <input type="checkbox" name="sendtoid" value="">
-        </td>
-        <td>380971111111</td>
-        <td>Иванов Иван Иванович</td>
-        <td>Запорожская</td>
-        <td>Запорожье</td>
-        <td>Кандидат_name</td>
-        <td>Свой</td>
-      </tr>
-      <tr>
-        <td>
-          <input type="checkbox" name="sendtoid" value="">
-        </td>
-        <td>380971111111</td>
-        <td>Иванов Иван Иванович</td>
-        <td>Запорожская</td>
-        <td>Запорожье</td>
-        <td>Кандидат_name</td>
-        <td>Свой</td>
-      </tr>
-    </tbody>
-  </table>
-</formgroup>
+<div class="row">
+  <formgroup id="recipients-list">
+    <input type="text" id="name_filter" name="name_filter" class="col-md-3" placeholder="Поиск по ФИО">
+    <input type="phone_number" id="phone_filter" name="phone_filter" class="col-md-3" placeholder="Поиск по тел.номеру">
+  
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>
+            <input type="checkbox" name="sendtoid" value="">
+          </td>
+          <td>380971111111</td>
+          <td>Иванов Иван Иванович</td>
+          <td>Запорожская</td>
+          <td>Запорожье</td>
+          <td>Кандидат_name</td>
+          <td>Свой</td>
+        </tr>
+        <tr>
+          <td>
+            <input type="checkbox" name="sendtoid" value="">
+          </td>
+          <td>380971111111</td>
+          <td>Иванов Иван Иванович</td>
+          <td>Запорожская</td>
+          <td>Запорожье</td>
+          <td>Кандидат_name</td>
+          <td>Свой</td>
+        </tr>
+        <tr>
+          <td>
+            <input type="checkbox" name="sendtoid" value="">
+          </td>
+          <td>380971111111</td>
+          <td>Иванов Иван Иванович</td>
+          <td>Запорожская</td>
+          <td>Запорожье</td>
+          <td>Кандидат_name</td>
+          <td>Свой</td>
+        </tr>
+        <tr>
+          <td>
+            <input type="checkbox" name="sendtoid" value="">
+          </td>
+          <td>380971111111</td>
+          <td>Иванов Иван Иванович</td>
+          <td>Запорожская</td>
+          <td>Запорожье</td>
+          <td>Кандидат_name</td>
+          <td>Свой</td>
+        </tr>
+      </tbody>
+    </table>
+  </formgroup>
+</div>

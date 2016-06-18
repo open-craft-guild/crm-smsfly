@@ -5,6 +5,7 @@ from django.db import models
 
 from django.utils.translation import ugettext_lazy as _
 
+from recurrence.fields import RecurrenceField
 from smart_selects.db_fields import ChainedForeignKey
 
 # Add recognized model option to django
@@ -408,7 +409,7 @@ class Task(models.Model):
     start_datetime = models.DateTimeField(default=datetime.now)
     type = models.IntegerField(choices=TYPE_LIST)
     end_date = models.DateField(null=True)
-    recurrence_rule = models.TextField()
+    recurrence_rule = RecurrenceField()
     triggered_by = models.CharField(null=True, max_length=22, choices=TRIGGERS_LIST)
     touch_project = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING, null=True)
     touch_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', related_name='+',
@@ -431,23 +432,22 @@ class Task(models.Model):
         self.recipients_filter = None
 
     @property
-    def recurrence_rule_json(self):
-        return json.loads(self.recurrence_rule)
-
-    @recurrence_rule_json.setter
-    def recurrence_rule_json(self, value):
-        self.recurrence_rule = json.dumps(value)
-
-    @recurrence_rule_json.deleter
-    def recurrence_rule_json(self):
-        self.recurrence_rule = None
+    def last_time_sent(self):
+        return self.campaigns.latest()
 
     @property
-    def last_time_sent(self):
-        try:
-            return self.campaigns.latest()
-        except self.DoesNotExist:
-            return None
+    def next_send_time(self):
+        now = datetime.now()
+
+        if now > self.end_date:
+            raise ValueError('Task {task} is out of date'.format(self))
+
+        if self.type == 1:  # recurring
+            return self.recurrence_rule.after(now)
+        elif self.type == 2:  # event-driven
+            raise ValueError('Task {task} is out of date'.format(self))
+        elif self.type == 0:  # one-time
+            return now
 
     def __str__(self):
         return '{} ({}). {}'.format(self.title, self.alphaname, self.state)

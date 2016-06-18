@@ -2,6 +2,10 @@
 {% load i18n bootstrap3 %}
 
   {% block conditions %}
+  {{ block.super }}
+
+  {% bootstrap_field form.end_date %}
+
   {% bootstrap_field form.triggered_by %}
   <formgroup id="touch_conditions">
     {% bootstrap_field form.touch_project field_class='radio-inline' %}

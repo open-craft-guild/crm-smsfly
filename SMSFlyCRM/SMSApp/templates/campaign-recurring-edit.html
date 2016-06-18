@@ -2,8 +2,6 @@
 {% load i18n bootstrap3 %}
 
 {% block conditions %}
-  {% bootstrap_field form.recurrence_type field_class='radio-inline' %}
-  {% bootstrap_field form.recurrence_period %}
-  {% bootstrap_field form.recurrence_weekdays layout='horizontal' %}
-  {% bootstrap_field form.recurrence_month_type layout='horizontal' %}
+  {{ block.super }}
+  {{ form.recurrence_rule }}
 {% endblock conditions %}

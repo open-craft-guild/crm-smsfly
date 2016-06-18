@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'datetimewidget',
     'django_extensions',
     'debug_toolbar',
+    'recurrence',
     'smart_selects',
 ]
 

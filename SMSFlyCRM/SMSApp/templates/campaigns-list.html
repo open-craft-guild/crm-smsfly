@@ -4,7 +4,7 @@
 {% block campaign-content %}
 <section id="campaigns-list" class="list-group">
   {% for task in tasks %}
-  <a href="#" class="list-group-item">{{ task.title }}</a>
+  <a href="#" class="list-group-item">{{ task.title }} | {% trans 'Next send time:' %} {{ task.next_send_time }} | {% trans 'Last send time:' %} {{ task.last_time_sent }}</a>
   {% endfor %}
 </section>
 {% endblock campaign-content %}

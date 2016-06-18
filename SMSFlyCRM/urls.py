@@ -15,10 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.i18n import javascript_catalog
 
 import SMSFlyCRM.smartselects.urls
 import SMSFlyCRM.SMSApp.urls
 from SMSFlyCRM.SMSApp.views.webhooks import webhook_crm_event, webhook_smsfly_status
+
+js_info_dict = {
+    'packages': ('recurrence', ),
+}
 
 
 urlpatterns = [
@@ -28,4 +33,5 @@ urlpatterns = [
     url(r'^webhooks/on(?P<crm_event>\w+)/(?P<crm_user_id>\d+)', webhook_crm_event, name='webhook-crm'),
     url(r'^webhooks/onSMSFlyStatus', webhook_smsfly_status, name='webhook-smsfly'),
     url(r'^chaining/', include(SMSFlyCRM.smartselects.urls)),
+    url(r'^jsi18n/$', javascript_catalog, js_info_dict),
 ]

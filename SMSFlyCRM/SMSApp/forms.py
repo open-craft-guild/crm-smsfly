@@ -192,8 +192,6 @@ class TaskForm(forms.ModelForm):
             'created_by_crm_user_id': forms.HiddenInput(),
             'type': forms.HiddenInput(),
             'state': forms.HiddenInput(),
-            'recurrence_rule': forms.HiddenInput(),
-            'state': forms.HiddenInput(),
         }
 
 
@@ -204,70 +202,13 @@ class OneTimeTaskForm(TaskForm):
 
 
 class RecurringTaskForm(TaskForm):
-    RECURRENCE_TYPES = (
-        ('EVERY_WEEK', _('Каждую неделю')),
-        ('EVERY_MONTH', _('Каждый месяц')),
-        ('EVERY_YEAR', _('Каждый год')),
-    )
-
-    WEEKDAYS = (
-        ('mon', 'пн'),
-        ('tue', 'вт'),
-        ('wed', 'ср'),
-        ('thu', 'чт'),
-        ('fri', 'пт'),
-        ('sat', 'сб'),
-        ('sun', 'нд'),
-    )
-
-    MONTH_REPEAT_TYPES = (
-        ('BY_WEEKDAY', _('День недели')),
-        ('BY_MONTHDAY', _('День месяца')),
-    )
-
-    RANGE30 = [(str(x), str(x)) for x in range(1, 31)]
-
-    recurrence_type = forms.ChoiceField(
-        choices=RECURRENCE_TYPES, label=_('Повторяется:'), required=True,
-        widget=forms.RadioSelect)
-    recurrence_period = forms.ChoiceField(
-        choices=RANGE30, label=_('Интервал:'), required=True)
-    recurrence_weekdays = forms.MultipleChoiceField(
-        choices=WEEKDAYS, label=_('Дни повторения'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-    recurrence_month_type = forms.ChoiceField(
-        choices=MONTH_REPEAT_TYPES, label=_('Дни повторения'), widget=forms.RadioSelect, required=False)
-
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
         self.initial['type'] = 1
 
-    def clean(self):
-        cleaned_data = super().clean()
-        cleaned_data['recurrence_rule_json'] = {
-            'start_datetime': self.cleaned_data['start_datetime'].strftime(self.DATETIME_INPUTS[0]),
-            'end_date': self.cleaned_data['end_date'].strftime(self.DATETIME_INPUTS[1]),
-            'type': self.cleaned_data['recurrence_type'],
-            'period': self.cleaned_data['recurrence_period'],
-            'when': self.cleaned_data['recurrence_month_type'],
-            'days': self.cleaned_data['recurrence_weekdays']
-        }
-        return cleaned_data
-
-    def save(self):
-        task = super().save(commit=False)
-
-        task.recurrence_rule_json = self.cleaned_data['recurrence_rule_json']
-
-        task.save()
-
-        return task
-
     class Meta(TaskForm.Meta):
         fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
-                  'state',
-                  'created_by_crm_user_id', 'recurrence_type',
-                  'recurrence_period', 'recurrence_month_type', 'recurrence_weekdays',
+                  'state', 'created_by_crm_user_id', 'recurrence_rule',
                   ]
 
 

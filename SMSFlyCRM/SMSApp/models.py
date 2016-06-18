@@ -432,22 +432,40 @@ class Task(models.Model):
         self.recipients_filter = None
 
     @property
-    def last_time_sent(self):
+    def end_datetime(self):
+        return datetime.combine(self.end_date, datetime.min.time())
+
+    def get_last_time_sent(self):
         return self.campaigns.latest()
 
     @property
-    def next_send_time(self):
+    def last_time_sent(self):
+        try:
+            return self.get_last_time_sent()
+        except Campaign.DoesNotExist:
+            return None
+
+    def get_next_send_time(self):
+        TASK_OUT_OF_DATE_ERROR = 'Task {task} is out of date'.format(task=self)
+
         now = datetime.now()
 
-        if now > self.end_date:
-            raise ValueError('Task {task} is out of date'.format(self))
+        if not self.end_date or now > self.end_datetime:
+            raise ValueError(TASK_OUT_OF_DATE_ERROR)
 
         if self.type == 1:  # recurring
             return self.recurrence_rule.after(now)
         elif self.type == 2:  # event-driven
-            raise ValueError('Task {task} is out of date'.format(self))
+            raise ValueError(TASK_OUT_OF_DATE_ERROR)
         elif self.type == 0:  # one-time
             return now
+
+    @property
+    def next_send_time(self):
+        try:
+            return self.get_next_send_time()
+        except ValueError:
+            return None
 
     def __str__(self):
         return '{} ({}). {}'.format(self.title, self.alphaname, self.state)

@@ -99,7 +99,7 @@ class TaskForm(forms.ModelForm):
             required=False)
         self.fields['regaddress_street'] = Follower.regaddress_street.field.formfield(
             label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
-        self.fields['regaddress_building'] = Follower.regaddress_builing.field.formfield(
+        self.fields['regaddress_building'] = Follower.regaddress_building.field.formfield(
             label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
         self.fields['address_region'] = forms.ModelChoiceField(
             label=_('Область'), queryset=Region.objects.for_user(user_id).all(), required=False)
@@ -110,7 +110,7 @@ class TaskForm(forms.ModelForm):
             required=False)
         self.fields['address_street'] = Follower.address_street.field.formfield(
             label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
-        self.fields['address_building'] = Follower.address_builing.field.formfield(
+        self.fields['address_building'] = Follower.address_building.field.formfield(
             label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
         self.fields['sex'] = forms.ModelChoiceField(
             label=_('Пол'), queryset=Sex.objects.for_user(user_id).all(), required=False)

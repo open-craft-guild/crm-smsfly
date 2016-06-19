@@ -20,6 +20,7 @@ from django.views.i18n import javascript_catalog
 import SMSFlyCRM.smartselects.urls
 import SMSFlyCRM.SMSApp.urls
 from SMSFlyCRM.SMSApp.views.webhooks import webhook_crm_event, webhook_smsfly_status
+from SMSFlyCRM.SMSApp.views.api import preview_recipients_list
 
 js_info_dict = {
     'packages': ('recurrence', ),
@@ -34,4 +35,5 @@ urlpatterns = [
     url(r'^webhooks/onSMSFlyStatus', webhook_smsfly_status, name='webhook-smsfly'),
     url(r'^chaining/', include(SMSFlyCRM.smartselects.urls)),
     url(r'^jsi18n/$', javascript_catalog, js_info_dict),
+    url(r'^api/preview_recipients/$', preview_recipients_list, name='preview-recipients'),
 ]

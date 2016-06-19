@@ -323,28 +323,29 @@ class Follower(models.Model):
     address_region = models.ForeignKey(Region, to_field='region_id', related_name='living_followers',
                                        on_delete=models.DO_NOTHING, null=True)
     address_area = ChainedForeignKey(Area, related_name='living_followers', chained_field='address_region',
-                                     chained_model_field='region',)
+                                     chained_model_field='region', null=True)
     address_locality = ChainedForeignKey(Locality, related_name='living_followers', chained_field='address_area',
-                                         chained_model_field='area',)
+                                         chained_model_field='area', null=True)
     address_street = ChainedForeignKey(Street, related_name='living_followers', chained_field='address_locality',
-                                       chained_model_field='locality',)
-    address_builing = ChainedForeignKey(Building, related_name='living_followers', chained_field='address_street',
-                                        chained_model_field='street',)
+                                       chained_model_field='locality', null=True)
+    address_building = ChainedForeignKey(Building, related_name='living_followers', chained_field='address_street',
+                                         chained_model_field='street', null=True)
     regaddress_region = models.ForeignKey(Region, to_field='region_id', related_name='registered_followers',
                                           on_delete=models.DO_NOTHING, null=True)
     regaddress_area = ChainedForeignKey(Area, related_name='registered_followers', chained_field='regaddress_region',
-                                        chained_model_field='region',)
+                                        chained_model_field='region', null=True)
     regaddress_locality = ChainedForeignKey(Locality, related_name='registered_followers',
                                             chained_field='regaddress_area',
-                                            chained_model_field='area',)
+                                            chained_model_field='area', null=True)
     regaddress_street = ChainedForeignKey(Street, related_name='registered_followers',
                                           chained_field='regaddress_locality',
-                                          chained_model_field='locality',)
-    regaddress_builing = ChainedForeignKey(Building, related_name='registered_followers',
-                                           chained_field='regaddress_street',
-                                           chained_model_field='street',)
-    polplace = models.ForeignKey(PollPlace, to_field='polplace_id', related_name='followers',
-                                 on_delete=models.DO_NOTHING, null=True)
+                                          chained_model_field='locality', null=True)
+    regaddress_building = ChainedForeignKey(Building, related_name='registered_followers',
+                                            chained_field='regaddress_street',
+                                            chained_model_field='street', null=True)
+    polplace = ChainedForeignKey(PollPlace, related_name='registered_followers',
+                                 chained_field='regaddress_locality',
+                                 chained_model_field='locality', null=True)
     last_contact = models.ForeignKey(FollowerContact, to_field='id', on_delete=models.DO_NOTHING, null=True,
                                      related_name='last_contact')
     last_status = models.ForeignKey(FollowerStatus, to_field='follower_status_id', on_delete=models.DO_NOTHING,
@@ -356,12 +357,12 @@ class Follower(models.Model):
         return '{} {} {}'.format(self.lastname, self.firstname, self.middlename)
 
     def address(self):
-        return '{st}, {bld}'.format(st=self.address_street, bld=self.address_builing)
+        return '{st}, {bld}'.format(st=self.address_street, bld=self.address_building)
 
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'sms_view_family_status'
+        db_table = 'sms_view_followers'
 
 
 class Campaign(models.Model):
@@ -418,6 +419,25 @@ class Task(models.Model):
     touch_candidate = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING, null=True)
     trigger_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', related_name='+',
                                        on_delete=models.DO_NOTHING, null=True)
+
+    @staticmethod
+    def get_recipients_queryset_by_filter(recipients_filter, user_id=None):
+        qs = Follower.objects
+        if user_id:
+            qs = qs.for_user(user_id)
+        return qs.filter(**recipients_filter)
+
+    @classmethod
+    def get_recipients_amount_by_filter(cls, recipients_filter, user_id=None):
+        return cls.get_recipients_queryset_by_filter(recipients_filter, user_id).count()
+
+    @property
+    def recipients_amount(self):
+        return self.__class__.get_recipients_amount(self.recipients_filter_json)
+
+    @property
+    def recipients_queryset(self):
+        return self.__class__.get_recipients_queryset_by_filter(self.recipients_filter_json)
 
     @property
     def recipients_filter_json(self):

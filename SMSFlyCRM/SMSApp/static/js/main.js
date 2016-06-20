@@ -105,5 +105,45 @@
       $('#characters').text(msg_len + ' символов (' + msgs + ' сообщений)');
     });
 
+    $("#btn_preview_recipients").click(function() {
+      var data_dict = [].
+        concat(
+          $('*[id^="id_regaddress"]'),
+          $('*[id^="id_address"]')
+          // $('*[id^="id_age_"]')
+        ).
+        map(function(el) {
+          return {
+            name: el.name,
+            val: +$(el).find(':selected').val()
+          }
+        }).
+        filter(function(el) {
+          return el.val !== '' && el.val !== null
+        }).
+        reduce(function(acc, el) {
+          acc[el.name] = acc[el.val]
+          return acc
+        }, {})
+
+      var request = $.ajax({
+        method: "POST",
+        url: "/api/preview_recipients/",
+        data: JSON.stringify({"recipients_filter": data_dict}),
+        dataType: "json",
+        contentType: "application/json; charset=utf-8"
+      }).then(function(data) {
+        var tr = $('<tr>');
+        for (var n = 0; n < data.recipients.length; n++) {
+          var el = data.recipients[n];
+          for (var prop in el) {
+            tr += '<td>' + el[prop] + '</td>';
+          }
+          tr += '</tr>'
+          $("#recipients-table > tbody:last-child").append(tr);
+          tr = '<tr>';
+        }
+      })
+    });
   });
 })(jQuery);

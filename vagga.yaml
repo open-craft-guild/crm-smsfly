@@ -58,7 +58,9 @@ containers:
       - libxslt-dev
       - libsasl
       - libpq
+      - mariadb-client
       - mariadb-dev
+      - sqlite
       - git
       - gcc
     - !PipConfig

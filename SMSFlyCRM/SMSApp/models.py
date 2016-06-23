@@ -483,11 +483,15 @@ class Task(models.Model):
     def get_recipients_amount_by_filter(cls, recipients_filter, user_id=None):
         return cls.get_recipients_queryset_by_filter(recipients_filter, user_id).count()
 
-    def get_recipients_amount(self, user_id=None):
-        return self.__class__.get_recipients_amount(self.recipients_filter_json, user_id)
+    @property
+    def recipients_amount(self):
+        return self.__class__.get_recipients_amount(self.recipients_filter_json,
+                                                    user_id=self.created_by_crm_user_id)
 
-    def get_recipients_queryset(self, user_id=None):
-        return self.__class__.get_recipients_queryset_by_filter(self.recipients_filter_json, user_id)
+    @property
+    def recipients_queryset(self):
+        return self.__class__.get_recipients_queryset_by_filter(self.recipients_filter_json,
+                                                                user_id=self.created_by_crm_user_id)
 
     @property
     def recipients_filter_json(self):

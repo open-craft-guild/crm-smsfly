@@ -519,6 +519,9 @@ class Task(models.Model):
         except Campaign.DoesNotExist:
             return None
 
+    def get_occurrences_between(self, dtstart, dtend):
+        return self.recurrence_rule.between(dtstart=dtstart, end=dtend)
+
     def get_next_send_time(self):
         TASK_OUT_OF_DATE_ERROR = 'Task {task} is out of date'.format(task=self)
 

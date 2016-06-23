@@ -1,9 +1,11 @@
 import logging
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from itertools import starmap
 
 from django.conf import settings
+
+from django.db.models import Q
 
 from django_rq import job
 
@@ -15,7 +17,7 @@ from smsfly.errors import (
     AuthError
 )
 
-from .models import Alphaname, Task, Campaign, Follower
+from .models import Alphaname, Task, Campaign
 
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -25,16 +27,21 @@ logger = logging.getLogger(__name__)
 
 
 @job('default')
-def scheduleNewCampaignTask(task_id):
-    task = Task.objects.get(pk=task_id)
+def scheduleRecurringCampaignTasksFor(min_interval):
+    now = datetime.now()
+    end_time = now + timedelta(min=min_interval)
+    tasks = Task.objects.filter(
+        Q(type=1) & Q(state=0) &
+        (
+            Q(end_date=None) | Q(end_date__le=now.date())
+        )
+    ).all()
 
-    if task.type == 0:  # one-time
-        sendTaskMessagesInstantlyTask.delay(task_id=task_id)
-        task.archive()
-    elif task.type == 2:  # event-driven
-        sendTaskMessagesInstantlyTask.delay(task_id=task_id)
-    elif task.type == 1:  # recurrence
-        pass  # TODO: not to
+    for task in tasks:
+        for occ in task.get_occurrences_between(now, end_time):
+            sendTaskMessagesInstantlyTask.enqueue_at(occ)
+            logger.info('Task {task} has been scheduled to be run at {scheduled_time}'.
+                        format(task=task, scheduled_time=occ))
 
 
 @job('high')
@@ -47,8 +54,7 @@ def sendTaskMessagesInstantlyTask(task_id):
     send_as = task.alphaname.name
     description = str(task)
 
-    recipients_filter = task.recipients_filter_json
-    recipients = Follower.objects.get(**recipients_filter)  # Filter out recipients from external DB
+    recipients = task.recipients_queryset  # Filter out recipients from external DB
 
     message_pairs = starmap(lambda r: (r.cellphone,  # Generate tuple containing cell number and message body
                                        message.format(  # substitute template tags with personalized values:

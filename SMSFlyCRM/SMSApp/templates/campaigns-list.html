@@ -1,5 +1,5 @@
 {% extends 'campaigns-base.html' %}
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
 {% block campaign-content %}
 <section id="campaigns-list" class="list-group">
@@ -7,6 +7,7 @@
         <thead>
             <tr>
                 <th>{% trans 'Title' %}</th>
+                <th>{% trans 'Actions' %}</th>
                 <th>{% trans 'Next send time' %}</th>
                 <th>{% trans 'Last send time' %}</th>
                 <th>{% trans 'Effective since' %}</th>
@@ -17,7 +18,8 @@
             {% block campaigns-list %}
                 {% for task in active_tasks %}
                 <tr>
-                    <td><a href="#" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">[{% trans 'Edit' %}]</a> {{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.get_type_display }})</td>
+                    <td>{{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.get_type_display }})</td>
+                    <td><a href="#" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'edit' %}</a> <a href="#" title="{% trans 'Pause' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'pushpin' %}</a> <a href="#" title="{% trans 'Archive' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'remove' %}</a></td>
                     <td>{{ task.next_send_time | default_if_none:_('N/A') }}</td>
                     <td>{{ task.last_time_sent | default_if_none:_('never') }}</td>
                     <td>{{ task.start_datetime }}</td>
@@ -29,7 +31,8 @@
         <tbody style="background: yellow;">
             {% for task in paused_tasks %}
             <tr>
-                <td><a href="#" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">[{% trans 'Edit' %}]</a> {{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.get_type_display }}, {% trans 'paused' %})</td>
+                <td>{{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.get_type_display }}, {% trans 'paused' %})</td>
+                <td><a href="#" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'edit' %}</a> <a href="#" title="{% trans 'Activate' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'paperclip' %} <a href="#" title="{% trans 'Archive' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'remove' %}</a></a></td>
                 <td>{{ task.next_send_time | default_if_none:_('N/A') }}</td>
                 <td>{{ task.last_time_sent | default_if_none:_('never') }}</td>
                 <td>{{ task.start_datetime }}</td>

@@ -64,3 +64,4 @@
 - service: 'name=smsapp state=restarted enabled=yes'
 - service: 'name=rqworker state=restarted enabled=yes'
 - service: 'name=rqjobs.timer state=restarted enabled=yes'
+- service: 'name=sms-campaign-scheduler.timer state=restarted enabled=yes'

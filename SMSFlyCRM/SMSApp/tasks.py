@@ -89,12 +89,12 @@ def sendTaskMessagesInstantlyTask(task_id):
 def submitAlphanameInstantly(name):
     api = SMSFlyAPI(account_id=settings.SMS_FLY['login'],
                     account_pass=settings.SMS_FLY['password'])
-    print('Submitting register request for alphaname `{}`...'.format(name))
+    logger.info('Submitting register request for alphaname `{}`...'.format(name))
 
     api_response_status = api.add_alphaname(alphaname=name).state.attrs['status']
     Alphaname.objects.get(name=name).change_status_to(api_response_status, commit=True)
 
-    print('Saved')
-    print('Got status `{}`...'.format(api_response_status))
+    logger.info('Saved')
+    logger.info('Got status `{}`...'.format(api_response_status))
 
     return api_response_status

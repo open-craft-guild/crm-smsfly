@@ -65,5 +65,5 @@ def webhook_crm_event(request, crm_event, crm_user_id):
 def webhook_smsfly_status(request):
     logger.debug(request)
     logger.debug(request.body.decode())
-    get_scheduler('default').enqueue_in(timedelta(minutes=1), print, 'hi there!')
+    get_scheduler('default').enqueue_in(timedelta(minutes=1), logger.info, 'hi there!')
     return HttpResponse(request.body)

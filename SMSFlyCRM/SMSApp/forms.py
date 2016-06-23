@@ -9,6 +9,8 @@ from .models import (Alphaname, Task, ProjectContact, FollowerStatus, Follower,
                      Candidate, Area, Building, Region, Locality, Street,
                      Project, PollPlace, FamilyStatus, Education, SocialCategory, Sex)
 
+from .tasks import scheduleNewCampaignTask
+
 
 class AlphanameForm(forms.ModelForm):
     def __init__(self, request, *args, **kwargs):
@@ -159,7 +161,7 @@ class TaskForm(forms.ModelForm):
 
         task.recipients_filter_json = self.cleaned_data['recipients_filter_json']
 
-        task.save()
+        task.activate(commit=commit)
 
         return task
 
@@ -193,6 +195,15 @@ class OneTimeTaskForm(TaskForm):
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
         self.initial['type'] = 0
+
+    def save(self, commit=True):
+        task = super().save(commit=False)
+        task.archive(commit=commit)
+
+        if commit:
+            scheduleNewCampaignTask.delay(task.pk)
+
+        return task
 
 
 class RecurringTaskForm(TaskForm):
@@ -272,7 +283,7 @@ class EventDrivenTaskForm(TaskForm):
             except KeyError:
                 pass
 
-        task.save()
+        task.save(commit=commit)
 
         return task
 

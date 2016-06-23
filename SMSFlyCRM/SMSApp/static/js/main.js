@@ -108,8 +108,8 @@
     $("#btn_preview_recipients").click(function() {
       var data_dict = [].
         concat(
-          $('*[id^="id_regaddress"]'),
-          $('*[id^="id_address"]')
+          $('*[id^="id_regaddress"]').toArray(),
+          $('*[id^="id_address"]').toArray()
           // $('*[id^="id_age_"]')
         ).
         map(function(el) {
@@ -119,30 +119,42 @@
           }
         }).
         filter(function(el) {
-          return el.val !== '' && el.val !== null
+          return el.val
         }).
         reduce(function(acc, el) {
-          acc[el.name] = acc[el.val]
+          acc[el.name] = el.val
           return acc
         }, {})
 
-      var request = $.ajax({
+      var tbody = $("#recipients-table > tbody:last-child")
+      var rec_amount = $('#recipients-amount')
+      var camp_cost = $('#campaign-cost')
+      var sms_price = $('#sms-price')
+      tbody.empty()
+      rec_amount.empty()
+      camp_cost.empty()
+      sms_price.empty()
+      tbody.append('Загрузка...')
+      $.ajax({
         method: "POST",
         url: "/api/preview_recipients/",
         data: JSON.stringify({"recipients_filter": data_dict}),
         dataType: "json",
         contentType: "application/json; charset=utf-8"
       }).then(function(data) {
-        var tr = $('<tr>');
-        for (var n = 0; n < data.recipients.length; n++) {
-          var el = data.recipients[n];
-          for (var prop in el) {
-            tr += '<td>' + el[prop] + '</td>';
-          }
-          tr += '</tr>'
-          $("#recipients-table > tbody:last-child").append(tr);
-          tr = '<tr>';
-        }
+        var tbody = $("#recipients-table > tbody:last-child")
+        tbody.empty()
+        rec_amount.append(data.amount)
+        camp_cost.append(data.campaign_cost + " грн")
+        sms_price.append(data.sms_price + " грн")
+        $(data.recipients).each(function(obj_id, obj) {
+          var tr = $('<tr>')
+          tbody.append(tr)
+          $.each(obj, function(key, val) {
+            var ins_val = val ? val : '-'
+            $(tr).append($('<td>').text(val))
+          })
+        })
       })
     });
   });

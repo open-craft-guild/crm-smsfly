@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, date
 
 from django.db import models
 
@@ -358,6 +358,37 @@ class Follower(models.Model):
 
     def address(self):
         return '{st}, {bld}'.format(st=self.address_street, bld=self.address_building)
+
+    @property
+    def name(self):
+        return '{last} {first} {mid}'.format(last=self.lastname, first=self.firstname, mid=self.middlename)
+
+    @property
+    def regaddress_full(self):
+        try:
+            return '{reg}, {ar}, {loc}, {st}, {bld}'.format(
+                reg=self.regaddress_region, ar=self.regaddress_area, loc=self.regaddress_locality,
+                st=self.regaddress_street, bld=self.regaddress_building)
+        except Region.DoesNotExist:
+            return None
+
+    @property
+    def address_full(self):
+        try:
+            return '{reg}, {ar}, {loc}, {st}, {bld}'.format(
+                reg=self.address_region, ar=self.address_area, loc=self.address_locality,
+                st=self.address_street, bld=self.address_building)
+        except Region.DoesNotExist:
+            return None
+
+    @property
+    def age(self):
+        born = self.datebirth
+        today = date.today()
+        try:
+            return int((today - born).days / 365)
+        except TypeError:
+            return None
 
     class Meta:
         db_route = 'external_app'

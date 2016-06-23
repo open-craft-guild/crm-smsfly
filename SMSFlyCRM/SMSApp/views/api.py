@@ -1,6 +1,8 @@
 import json
 import logging
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from django.http import JsonResponse
 
 from django.views.decorators.http import require_POST
@@ -28,7 +30,28 @@ def preview_recipients_list(request):
     rec_qs = Task.get_recipients_queryset_by_filter(json_req['recipients_filter'], user_id)
     rec_list = []
     for el in rec_qs[offset:until]:
-        rec_list.append(str(el))
+        rec = {}
+        for attr in ('name', 'cellphone', 'sex', 'age', 'polplace',
+                     'family_status', 'social_category',
+                     'education', ('last_status', 'status'),
+                     ('address_full', 'address'),
+                     ('regaddress_full', 'regaddress')):
+            if isinstance(attr, str):
+                attr_name = attr_key = attr
+            else:
+                attr_name, attr_key = attr
+
+            try:
+                attr_val = getattr(el, attr_name)
+                if attr_val is None:
+                    raise ObjectDoesNotExist
+                rec[attr_key] = str(attr_val)
+                rec[attr_key] = int(rec[attr_key])
+            except ObjectDoesNotExist:
+                rec[attr_key] = None
+            except ValueError:
+                pass  # Not an integer
+        rec_list.append(rec)
     result = {
         'amount': amount,
         'sms_price': float(price_per_msg),

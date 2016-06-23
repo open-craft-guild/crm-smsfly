@@ -1,5 +1,12 @@
 - user: name=smsapp state=present
 
+- apt_repository: repo='deb http://mirror.hetzner.de/debian/packages stretch main contrib non-free' state=present filename='smsapp'
+- apt_repository: repo='deb http://http.debian.net/debian stretch main contrib non-free' state=present filename='smsapp'
+- apt_repository: repo='deb http://http.debian.net/debian/ stretch-updates main contrib non-free' state=present filename='smsapp'
+- apt_repository: repo='deb http://security.debian.org/ stretch/updates main contrib non-free' state=present filename='smsapp'
+
+- apt: name=python3.5 state=present
+- apt: name=python3.5-dev state=present
 - apt: name=git state=present
 - apt: name=libmysql++-dev state=present
 - apt: name=libpq-dev state=present
@@ -19,7 +26,7 @@
 - file: path=/home/smsapp/repo state=directory owner='smsapp' group='smsapp'
 
 - pip: name=virtualenv executable=pip3
-- pip: requirements=/home/smsapp/repo/requirements.txt virtualenv=/home/smsapp/venv virtualenv_command=virtualenv virtualenv_python=python3
+- pip: requirements=/home/smsapp/repo/requirements.txt virtualenv=/home/smsapp/venv virtualenv_command=virtualenv virtualenv_python=python3.5
 
 - name: Add env file
   template: 'src=smsapp.env dest=/home/smsapp/smsapp.env mode=0644'

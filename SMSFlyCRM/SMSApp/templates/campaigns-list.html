@@ -13,10 +13,23 @@
                 <th>{% trans 'Active till' %}</th>
             </tr>
         </thead>
-        <tbody>
-            {% for task in tasks %}
+        <tfoot>
+            {% block campaigns-list %}
+                {% for task in active_tasks %}
+                <tr>
+                    <td><a href="#" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">[{% trans 'Edit' %}]</a> {{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.type_text }})</td>
+                    <td>{{ task.next_send_time | default_if_none:_('N/A') }}</td>
+                    <td>{{ task.last_time_sent | default_if_none:_('never') }}</td>
+                    <td>{{ task.start_datetime }}</td>
+                    <td>{{ task.end_date | default_if_none:_('forever') }}</td>
+                </tr>
+                {% endfor %}
+            {% endblock campaigns-list %}
+        </tfoot>
+        <tbody style="background: yellow;">
+            {% for task in paused_tasks %}
             <tr>
-                <td><a href="#" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">[{% trans 'Edit' %}]</a> {{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.type_text }})</td>
+                <td><a href="#" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">[{% trans 'Edit' %}]</a> {{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.type_text }}, {% trans 'paused' %})</td>
                 <td>{{ task.next_send_time | default_if_none:_('N/A') }}</td>
                 <td>{{ task.last_time_sent | default_if_none:_('never') }}</td>
                 <td>{{ task.start_datetime }}</td>

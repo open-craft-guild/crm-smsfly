@@ -2,8 +2,6 @@ import logging
 
 from django.core.urlresolvers import reverse_lazy
 
-from django.db.models import Q
-
 from django.views.generic import ListView
 
 from django.utils.translation import ugettext_lazy as _
@@ -16,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 class CampaignBaseView(ListView):
     """Base for tabbed list views"""
+
+    context_object_name = 'tasks'
+    model = Task
 
     active_menu_item = None
 
@@ -38,9 +39,33 @@ class CampaignBaseView(ListView):
 
         return menu
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.exclude_state:
+            qs = qs.exclude(state=self.exclude_state)
+        return qs
+
+    def get_querysets_dict(self):
+        try:
+            return self.querysets
+        except AttributeError:
+            pass
+
+        qs = self.get_queryset()
+
+        self.querysets = {'all_{}'.format(self.context_object_name): qs}
+        for (i, state) in Task.STATE_LIST:
+            self.querysets['{}_{}'.format(state, self.context_object_name)] = qs.filter(state=i).all()
+
+        return self.querysets
+
     def get_context_data(self):
         context = super().get_context_data()
         context['tab_menu'] = self.get_tab_menu()
+
+        for (qs_name, qs) in self.get_querysets_dict().items():
+            context[qs_name] = qs
+
         return context
 
 
@@ -48,13 +73,11 @@ class CampaignIndexView(CampaignBaseView):
     """Lists all active campaigns currently in progress (scheduled)"""
     template_name = 'campaigns-list.html'
     active_menu_item = 0
-    context_object_name = 'tasks'
-    queryset = Task.objects.filter(state=0)
+    exclude_state = 2  # active/paused (not complete)
 
 
 class CampaignArchiveView(CampaignBaseView):
     """Keeps a history of campaigns, which are inactive"""
-    template_name = 'campaigns-list.html'
+    template_name = 'campaigns-archive-list.html'
     active_menu_item = 1
-    context_object_name = 'tasks'
-    queryset = Task.objects.filter(Q(state=2) | Q(state=1))
+    exclude_state = 0  # complete/paused (not active)

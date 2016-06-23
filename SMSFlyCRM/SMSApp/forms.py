@@ -68,12 +68,6 @@ class TaskForm(forms.ModelForm):
         widget=DateTimeWidget(usel10n=False, options=dateTimeOptions,
                               bootstrap_version=3))
 
-    end_date = forms.DateField(
-        label=_('Дата окончания'),
-        input_formats=DATETIME_INPUTS,
-        widget=DateWidget(usel10n=False,
-                          options=dateOptions, bootstrap_version=3))
-
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
         user_id = request.session['crm_user_id']
@@ -206,8 +200,22 @@ class RecurringTaskForm(TaskForm):
         super().__init__(request, *args, **kwargs)
         self.initial['type'] = 1
 
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Set datetime start into RRULE
+        cleaned_data['recurrence_rule'].dtstart = cleaned_data['start_datetime']
+
+        try:
+            # Retrieve and set end date from RRULE
+            cleaned_data['end_date'] = max(rr.until for rr in cleaned_data['recurrence_rule'].rrules).date()
+        except TypeError:
+            cleaned_data['end_date'] = None  # Endless
+
+        return cleaned_data
+
     class Meta(TaskForm.Meta):
-        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type', 'end_date',
+        fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type',
                   'state', 'created_by_crm_user_id', 'recurrence_rule',
                   ]
 
@@ -218,6 +226,12 @@ class EventDrivenTaskForm(TaskForm):
         'touch_status', 'touch_candidate',
         'trigger_status',
     )
+
+    end_date = forms.DateField(
+        label=_('Дата окончания'),
+        input_formats=TaskForm.DATETIME_INPUTS,
+        widget=DateWidget(usel10n=False,
+                          options=TaskForm.dateOptions, bootstrap_version=3))
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)

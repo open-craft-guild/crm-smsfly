@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer that runs the smsapp's campaign scheduler daemon periodically
+
+[Timer]
+OnBootSec=0m
+OnCalendar=*:0/30
+
+[Install]
+WantedBy=multi-user.target

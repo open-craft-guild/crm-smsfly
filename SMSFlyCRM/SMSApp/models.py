@@ -468,7 +468,7 @@ class Task(models.Model):
 
         now = datetime.now()
 
-        if now.date() > self.end_date:
+        if self.end_date and now.date() > self.end_date:
             raise ValueError(TASK_OUT_OF_DATE_ERROR)
 
         if self.type == 1:  # recurring

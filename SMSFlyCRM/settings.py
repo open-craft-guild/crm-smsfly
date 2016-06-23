@@ -181,7 +181,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': env.path('DJANGO_DEBUG_LOG', 'debug.log')(),
+            'filename': env.path('DJANGO_DEBUG_LOG', 'log/smsapp.debug.log')(),
         },
     },
     'loggers': {

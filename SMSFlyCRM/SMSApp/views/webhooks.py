@@ -11,7 +11,7 @@ from django_rq import get_scheduler
 
 from ..models import Task
 
-from ..tasks import scheduleNewCampaignTask
+from ..tasks import sendTaskMessagesInstantlyTask
 
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ def webhook_crm_event(request, crm_event, crm_user_id):
         logger.exception("Couldn't parse input request")
     else:
         for task in Task.objects.filter(**task_args):
-            scheduleNewCampaignTask.delay(task_id=task.pk)
+            sendTaskMessagesInstantlyTask.delay(task_id=task.pk)
             logger.info('Task {task} has been triggered'.format(task=task))
 
         json_res = {

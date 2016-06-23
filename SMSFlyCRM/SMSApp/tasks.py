@@ -30,8 +30,7 @@ def scheduleNewCampaignTask(task_id):
 
     if task.type == 0:  # one-time
         sendTaskMessagesInstantlyTask.delay(task_id=task_id)
-        task.state = 2
-        task.save()
+        task.archive()
     elif task.type == 2:  # event-driven
         sendTaskMessagesInstantlyTask.delay(task_id=task_id)
     elif task.type == 1:  # recurrence

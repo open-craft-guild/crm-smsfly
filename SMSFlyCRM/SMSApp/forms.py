@@ -9,7 +9,7 @@ from .models import (Alphaname, Task, ProjectContact, FollowerStatus, Follower,
                      Candidate, Area, Building, Region, Locality, Street,
                      Project, PollPlace, FamilyStatus, Education, SocialCategory, Sex)
 
-from .tasks import scheduleNewCampaignTask
+from .tasks import sendTaskMessagesInstantlyTask
 
 
 class AlphanameForm(forms.ModelForm):
@@ -198,10 +198,12 @@ class OneTimeTaskForm(TaskForm):
 
     def save(self, commit=True):
         task = super().save(commit=False)
-        task.archive(commit=commit)
 
         if commit:
-            scheduleNewCampaignTask.delay(task.pk)
+            sendTaskMessagesInstantlyTask.delay(task.pk)
+            task.archive(commit=commit)
+
+        task.save(commit=commit)
 
         return task
 

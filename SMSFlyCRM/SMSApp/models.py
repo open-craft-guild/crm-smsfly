@@ -526,13 +526,17 @@ class Alphaname(models.Model):
     registration_date = models.DateField()
     created_by_crm_user_id = models.IntegerField()
 
+    def change_status_to(self, status_text, commit=True):
+        self.text_status = status_text
+        return self.save(commit=commit)
+
     def __str__(self):
         return '{} ({}). Зарегистрировано {} пользователем {}'.format(
             self.name, self.status, self.registration_date, self.created_by_crm_user_id)
 
     @property
     def text_status(self):
-        return self.STATUS_LIST[self.status]
+        return self.get_status_display()
 
     @text_status.setter
     def text_status(self, status_text):

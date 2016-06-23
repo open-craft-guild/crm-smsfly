@@ -92,9 +92,7 @@ def submitAlphanameInstantly(name):
     print('Submitting register request for alphaname `{}`...'.format(name))
 
     api_response_status = api.add_alphaname(alphaname=name).state.attrs['status']
-    alphaname = Alphaname.objects.get(name=name)
-    alphaname.text_status = api_response_status
-    alphaname.save()
+    Alphaname.objects.get(name=name).change_status_to(api_response_status, commit=True)
 
     print('Saved')
     print('Got status `{}`...'.format(api_response_status))

@@ -506,14 +506,6 @@ class Task(models.Model):
         except ValueError:
             return None
 
-    @property
-    def type_text(self):
-        for (i, t) in self.TYPE_LIST:
-            if self.type == i:
-                return t
-
-        raise ValueError('Invalid type set ({})'.format(self.type))
-
     def __str__(self):
         return '{} ({}). {}'.format(self.title, self.alphaname, self.state)
 

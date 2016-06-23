@@ -373,7 +373,7 @@ class Campaign(models.Model):
     smsfly_campaign_id = models.IntegerField(default=0, null=True)  # campaign id given by smsfly
 
     def __str__(self):
-        return '{}, {}'.format(self.task.title, self.datetime_sent)
+        return '{}, {}'.format(self.task.title or _('Noname'), self.datetime_sent)
 
     class Meta:
         db_route = 'internal_app'
@@ -456,7 +456,7 @@ class Task(models.Model):
         return datetime.combine(self.end_date, datetime.min.time())
 
     def get_last_time_sent(self):
-        return self.campaigns.latest()
+        return self.campaigns.latest().datetime_sent
 
     @property
     def last_time_sent(self):

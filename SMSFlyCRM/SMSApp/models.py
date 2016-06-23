@@ -431,13 +431,11 @@ class Task(models.Model):
     def get_recipients_amount_by_filter(cls, recipients_filter, user_id=None):
         return cls.get_recipients_queryset_by_filter(recipients_filter, user_id).count()
 
-    @property
-    def recipients_amount(self):
-        return self.__class__.get_recipients_amount(self.recipients_filter_json)
+    def get_recipients_amount(self, user_id=None):
+        return self.__class__.get_recipients_amount(self.recipients_filter_json, user_id)
 
-    @property
-    def recipients_queryset(self):
-        return self.__class__.get_recipients_queryset_by_filter(self.recipients_filter_json)
+    def get_recipients_queryset(self, user_id=None):
+        return self.__class__.get_recipients_queryset_by_filter(self.recipients_filter_json, user_id)
 
     @property
     def recipients_filter_json(self):
@@ -470,7 +468,7 @@ class Task(models.Model):
 
         now = datetime.now()
 
-        if not self.end_date or now > self.end_datetime:
+        if now.date() > self.end_date:
             raise ValueError(TASK_OUT_OF_DATE_ERROR)
 
         if self.type == 1:  # recurring
@@ -486,6 +484,14 @@ class Task(models.Model):
             return self.get_next_send_time()
         except ValueError:
             return None
+
+    @property
+    def type_text(self):
+        for (i, t) in self.TYPE_LIST:
+            if self.type == i:
+                return t
+
+        raise ValueError('Invalid type set ({})'.format(self.type))
 
     def __str__(self):
         return '{} ({}). {}'.format(self.title, self.alphaname, self.state)

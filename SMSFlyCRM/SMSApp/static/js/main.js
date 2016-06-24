@@ -109,13 +109,13 @@
       var data_dict = [].
         concat(
           $('*[id^="id_regaddress"]').toArray(),
-          $('*[id^="id_address"]').toArray()
-          // $('*[id^="id_age_"]')
+          $('*[id^="id_address"]').toArray(),
+          $('*[id^="id_age_"]').toArray()
         ).
         map(function(el) {
           return {
             name: el.name,
-            val: +$(el).find(':selected').val()
+            val: $(el).is("select") ? +$(el).find(':selected').val() : +$(el).val()
           }
         }).
         filter(function(el) {

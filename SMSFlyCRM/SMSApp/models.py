@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 from django.db import models
 
@@ -474,10 +474,23 @@ class Task(models.Model):
 
     @staticmethod
     def get_recipients_queryset_by_filter(recipients_filter, user_id=None):
+        _filter = recipients_filter.copy()
         qs = Follower.objects
+        age_from = _filter.pop('age_from', None)
+        age_to = _filter.pop('age_to', None)
+
         if user_id:
             qs = qs.for_user(user_id)
-        return qs.filter(**recipients_filter)
+
+        qs = qs.filter(**_filter)
+
+        if age_from:
+            qs = qs.filter(datebirth__lte=datetime.now().date() - timedelta(days=age_from*365))
+
+        if age_to:
+            qs = qs.filter(datebirth__gte=datetime.now().date()-timedelta(days=age_to*365))
+
+        return qs
 
     @classmethod
     def get_recipients_amount_by_filter(cls, recipients_filter, user_id=None):

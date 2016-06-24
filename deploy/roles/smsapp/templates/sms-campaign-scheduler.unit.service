@@ -3,7 +3,7 @@ Description=Job that runs the smsapp's campaign scheduler daemon
 
 [Service]
 Requires=redis.service
-ExecStart=/home/smsapp/venv/bin/python manage.py sms_campaign_scheduler --min_interval 30 --pythonpath=/home/smsapp/repo
+ExecStart=/home/smsapp/venv/bin/python manage.py sms_campaign_scheduler --pythonpath=/home/smsapp/repo 30
 User=smsapp
 Group=smsapp
 WorkingDirectory=/home/smsapp/repo

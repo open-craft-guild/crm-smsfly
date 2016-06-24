@@ -54,6 +54,11 @@ def preview_recipients_list(request):
         rec_list.append(rec)
     result = {
         'amount': amount,
+        'attrs': [
+            'name', 'cellphone', 'sex', 'age', 'regaddress', 'address', 'polplace',
+            'social_category', 'family_status',
+            'education', 'status'
+            ],
         'sms_price': float(price_per_msg),
         'campaign_cost': float(price),
         'recipients': rec_list,

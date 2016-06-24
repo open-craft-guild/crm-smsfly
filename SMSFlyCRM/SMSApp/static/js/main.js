@@ -150,12 +150,13 @@
         $(data.recipients).each(function(obj_id, obj) {
           var tr = $('<tr>')
           tbody.append(tr)
-          $.each(obj, function(key, val) {
-            var ins_val = val ? val : '-'
-            $(tr).append($('<td>').text(val))
-          })
+          for (attr in data.attrs) {
+            var key = data.attrs[attr]
+            var ins_val = obj[key] ? obj[key] : '-';
+            $(tr).append($('<td>').text(ins_val));
+          }
+        });
         })
       })
     });
-  });
-})(jQuery);
+  })(jQuery);

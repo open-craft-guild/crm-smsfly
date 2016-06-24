@@ -27,21 +27,31 @@ logger = logging.getLogger(__name__)
 
 
 @job('default')
-def scheduleRecurringCampaignTasksFor(min_interval):
+def scheduleCampaignTasksFor(min_interval):
     now = datetime.now()
     end_time = now + timedelta(min=min_interval)
     tasks = Task.objects.filter(
-        Q(type=1) & Q(state=0) &
+        Q(state=0) &
+        (
+            Q(type=0) | Q(type=1)
+        ) &
         (
             Q(end_date=None) | Q(end_date__le=now.date())
         )
     ).all()
 
     for task in tasks:
-        for occ in task.get_occurrences_between(now, end_time):
-            sendTaskMessagesInstantlyTask.enqueue_at(occ)
+        if task.type == 0:
+            run_at = task.start_datetime
+            sendTaskMessagesInstantlyTask.enqueue_at(run_at)
+            task.archive()
             logger.info('Task {task} has been scheduled to be run at {scheduled_time}'.
-                        format(task=task, scheduled_time=occ))
+                        format(task=task, scheduled_time=run_at))
+        elif task.type == 1:
+            for occ in task.get_occurrences_between(now, end_time):
+                sendTaskMessagesInstantlyTask.enqueue_at(occ)
+                logger.info('Task {task} has been scheduled to be run at {scheduled_time}'.
+                            format(task=task, scheduled_time=occ))
 
 
 @job('high')

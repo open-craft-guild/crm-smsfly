@@ -9,8 +9,6 @@ from .models import (Alphaname, Task, ProjectContact, FollowerStatus, Follower,
                      Candidate, Area, Building, Region, Locality, Street,
                      Project, PollPlace, FamilyStatus, Education, SocialCategory, Sex)
 
-from .tasks import sendTaskMessagesInstantlyTask
-
 
 class AlphanameForm(forms.ModelForm):
     def __init__(self, request, *args, **kwargs):
@@ -195,17 +193,6 @@ class OneTimeTaskForm(TaskForm):
     def __init__(self, request, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
         self.initial['type'] = 0
-
-    def save(self, commit=True):
-        task = super().save(commit=False)
-
-        if commit:
-            sendTaskMessagesInstantlyTask.delay(task.pk)
-            task.archive(commit=commit)
-
-        task.save(commit=commit)
-
-        return task
 
 
 class RecurringTaskForm(TaskForm):

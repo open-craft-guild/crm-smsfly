@@ -490,7 +490,12 @@ class Task(models.Model):
         if age_to:
             qs = qs.filter(datebirth__gte=datetime.now().date()-timedelta(days=age_to*365))
 
-        return qs
+        return qs.select_related(
+            'sex', 'social_category', 'family_status', 'education',
+            'address_region', 'address_area', 'address_locality', 'address_street', 'address_building',
+            'regaddress_region', 'regaddress_area', 'regaddress_locality', 'regaddress_street', 'regaddress_building',
+            'polplace', 'last_contact', 'last_status',
+        )
 
     @classmethod
     def get_recipients_amount_by_filter(cls, recipients_filter, user_id=None):

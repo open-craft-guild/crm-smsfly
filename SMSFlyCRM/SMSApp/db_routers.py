@@ -7,7 +7,12 @@ and then improved a little then
 Thanks to answerers @ http://stackoverflow.com/a/18548287/595220
 """
 
+import logging
+
 from django.conf import settings
+
+
+logger = logging.getLogger(__name__)
 
 
 class DatabaseAppsRouter(object):
@@ -38,7 +43,12 @@ class DatabaseAppsRouter(object):
 
         db_obj1 = settings.DATABASE_APPS_MAPPING.get(getattr(obj1._meta, 'db_route', None), 'default')
         db_obj2 = settings.DATABASE_APPS_MAPPING.get(getattr(obj2._meta, 'db_route', None), 'default')
-        return db_obj1 == db_obj2
+        allow_relation = db_obj1 == db_obj2
+
+        logger.debug('Deciding whether to allow relation between {obj1} ({obj1_db}) and {obj2} ({obj2_db}): {allow}'.
+                     format(obj1=obj1, obj2=obj2, obj1_db=db_obj1, obj2_db=db_obj2, allow=allow_relation))
+
+        return allow_relation
 
     def allow_syncdb(self, db, model):
         """Make sure that apps only appear in the related database."""

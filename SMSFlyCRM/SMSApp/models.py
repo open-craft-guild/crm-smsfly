@@ -490,7 +490,11 @@ class Task(models.Model):
         if age_to:
             qs = qs.filter(datebirth__gte=datetime.now().date()-timedelta(days=age_to*365))
 
-        return qs.select_related(
+        return qs
+
+    @classmethod
+    def prefetch_recipients_queryset_by_filter(cls, recipients_filter, user_id=None):
+        return cls.get_recipients_queryset_by_filter(recipients_filter, user_id).select_related(
             'sex', 'social_category', 'family_status', 'education',
             'address_region', 'address_area', 'address_locality', 'address_street', 'address_building',
             'regaddress_region', 'regaddress_area', 'regaddress_locality', 'regaddress_street', 'regaddress_building',
@@ -508,8 +512,8 @@ class Task(models.Model):
 
     @property
     def recipients_queryset(self):
-        return self.__class__.get_recipients_queryset_by_filter(self.recipients_filter_json,
-                                                                user_id=self.created_by_crm_user_id)
+        return self.__class__.prefetch_recipients_queryset_by_filter(self.recipients_filter_json,
+                                                                     user_id=self.created_by_crm_user_id)
 
     @property
     def recipients_filter_json(self):

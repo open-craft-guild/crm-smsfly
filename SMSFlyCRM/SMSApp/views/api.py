@@ -27,7 +27,7 @@ def preview_recipients_list(request):
     msg_length = int(json_req.get('msg_length', 1))
     price_per_msg = get_price_for(amount)
     price = calculate_price_for(amount, msg_length)
-    rec_qs = Task.get_recipients_queryset_by_filter(json_req['recipients_filter'], user_id)
+    rec_qs = Task.prefetch_recipients_queryset_by_filter(json_req['recipients_filter'], user_id)
     rec_list = []
     for el in rec_qs[offset:until]:
         rec = {}

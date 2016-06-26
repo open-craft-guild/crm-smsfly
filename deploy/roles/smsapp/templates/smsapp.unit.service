@@ -2,6 +2,7 @@
 Description=Job that runs the smsapp daemon
 
 [Service]
+ExecStartPre=/home/smsapp/venv/bin/python manage.py bower install -- --allow-root
 ExecStartPre=/home/smsapp/venv/bin/python manage.py collectstatic --noinput
 ExecStartPre=/home/smsapp/venv/bin/python manage.py migrate
 ExecStart=/home/smsapp/venv/bin/gunicorn SMSFlyCRM.wsgi -b 127.0.0.1:8000 -w 1 --log-level=info

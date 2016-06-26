@@ -62,6 +62,7 @@ target/
 .ipynb_checkpoints
 
 .vagga/
+/$HOME/
 db.sqlite3
 .DS_Store
 .python-version

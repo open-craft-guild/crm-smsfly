@@ -8,6 +8,7 @@
 - apt: name=python3.5 state=present
 - apt: name=python3.5-dev state=present
 - apt: name=nodejs state=present
+- apt: name=nodejs-legacy state=present
 - apt: name=npm state=present
 - apt: name=git state=present
 - apt: name=libmysql++-dev state=present
@@ -32,9 +33,6 @@
 
 - npm: name=bower global=yes path=/home/smsapp/repo state=present
 - npm: path=/home/smsapp/repo
-
-- name: Install bower deps
-  command: "/home/smsapp/venv/bin/python manage.py bower install -- --allow-root"
 
 - name: Add env file
   template: 'src=smsapp.env dest=/home/smsapp/smsapp.env mode=0644'
@@ -70,8 +68,9 @@
 - shell: systemctl daemon-reload
   when: smsapp_unit_added|changed or rqscheduler_unit_added|changed or rqworker_unit_added|changed or rqjobs_unit_added|changed or rqjobs_timer_added|changed or smsapp_scheduler_unit_added|changed or smsapp_scheduler_timer_added|changed
 
-- file: path=/home/smsapp/static state=directory owner=smsapp
 - file: path=/home/smsapp/log state=directory owner=smsapp
+- file: path=/home/smsapp/repo/node_modules state=directory owner=smsapp
+- file: path=/home/smsapp/static state=directory owner=smsapp
 
 - service: 'name=smsapp state=restarted enabled=yes'
 - service: 'name=rqworker state=restarted enabled=yes'

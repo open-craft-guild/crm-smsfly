@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 @job('default')
 def scheduleCampaignTasksFor(min_interval):
     now = datetime.now()
-    end_time = now + timedelta(min=min_interval)
+    end_time = now + timedelta(minutes=min_interval)
     tasks = Task.objects.filter(
         Q(state=0) &
         (

@@ -1,0 +1,27 @@
+{
+  "name": "crm-smsfly",
+  "version": "1.0.0",
+  "description": "Embedded integration of some CRM with SMS-Fly gateway via iframe",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wk-tech/crm-smsfly.git"
+  },
+  "keywords": [
+    "sms",
+    "campaign",
+    "gateway"
+  ],
+  "author": "Anna Kurylo",
+  "contributors": [
+    "Sviatoslav Sydorenko"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wk-tech/crm-smsfly/issues"
+  },
+  "homepage": "https://github.com/wk-tech/crm-smsfly#readme"
+}

@@ -68,3 +68,6 @@ db.sqlite3
 .env
 /static/
 src/
+/.config/
+/.ipython/
+

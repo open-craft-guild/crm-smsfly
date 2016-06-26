@@ -19,9 +19,12 @@ env = environ.Env(
 )  # set default values and casting
 environ.Env.read_env()  # reading .env file
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'npm.finders.NpmFinder',
+    'djangobower.finders.BowerFinder',
+)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY',
@@ -53,6 +56,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'recurrence',
     'smart_selects',
+    'djangobower',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -159,7 +163,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = env('STATIC_ROOT', default=BASE_DIR('static'))
+STATIC_ROOT_DIR = env.path('STATIC_ROOT', BASE_DIR('static'))
+STATIC_ROOT = STATIC_ROOT_DIR()
 
 SMS_FLY = {
     'login': env('SMSFLY_ID'),
@@ -218,3 +223,21 @@ RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
 # Django Smart Selects:
 USE_DJANGO_JQUERY = False
 JQUERY_URL = '//about:blank'  # hack around loading jquery to prevent it from breaking datepicker
+
+NPM_FILE_PATTERNS = {
+    # 'angular2': ['*.js', '*.map'],
+    # 'es6-shim': ['es6-shim.min.js', 'es6-shim.map'],
+    # 'systemjs': ['dist/*.js', '*.map'],
+    # 'rxjs': ['bundles/Rx.js', '*.js', '*.map'],
+    # 'ng2-material': ['*.css', '*.js', '*.map', '*.ts']
+}
+
+NPM_DESTINATION_PREFIX = 'js/lib'
+
+# BOWER_COMPONENTS_ROOT = STATIC_ROOT_DIR('js/lib/components')
+BOWER_COMPONENTS_ROOT = BASE_DIR()
+
+BOWER_INSTALLED_APPS = (
+    'jquery#1.9',
+    'underscore',
+)

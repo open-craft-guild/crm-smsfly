@@ -17,6 +17,7 @@ containers:
       - postgresql-dev
       - mariadb-dev
       - gcc
+    - !NpmInstall [bower]
     - !Py3Install
       - setuptools
       - pip
@@ -41,6 +42,8 @@ containers:
       - 'django-datetime-widget >=0.9.3,<1.0'
       - 'django-recurrence >=1.3.0,<1.4'
       - 'django-smart-selects >=1.2.2,<1.3'
+      - 'django-npm >=1.0.0,<1.1'
+      - 'django-bower >=5.1.0,<5.2'
       - 'ipython >=4.2.0,<4.3'
       - 'ipdb >=0.10.0,<1.0'
       - 'Werkzeug >=0.11.4,<0.12'
@@ -49,6 +52,8 @@ containers:
     - !Sh pip uninstall --yes SMSFly
     - !Sh pip freeze > requirements.txt
     - !Sh echo '-e git+https://github.com/wk-tech/python-smsfly@v0.1.2#egg=smsfly' >> requirements.txt
+    # - !Sh pip install -r requirements.txt
+    # - !Sh python3 manage.py bower --pythonpath=/work freeze
   django:
     setup:
     - !Alpine v3.3
@@ -60,13 +65,16 @@ containers:
       - libpq
       - mariadb-client
       - mariadb-dev
+      - nodejs
       - sqlite
       - git
       - gcc
     - !PipConfig
       dependencies: true
     - !Py3Requirements requirements.txt
+    - !NpmInstall [bower]
     environ:
+      HOME: /work
       DATABASE_URL: sqlite:///db.sqlite3
   redis:
     setup:
@@ -118,15 +126,21 @@ commands:
       app: !Command
         container: django
         environ:
+          HOME: /work
           CACHE_URL: memcached://127.0.0.1:11211
-        run: python3 manage.py runserver_plus --traceback
+        run: |
+            echo "from npm.finders import npm_install; npm_install()" | python3 ./manage.py shell --pythonpath=$HOME
+            python3 ./manage.py bower --pythonpath=$HOME install -- --allow-root
+            python3 manage.py runserver_plus --pythonpath=$HOME --traceback
       rq: !Command
         container: django
+        environ:
+          HOME: /work
         run: |
-            python3 manage.py rqscheduler --pythonpath=/work &
-            while [ true ]; do sleep 60; python3 manage.py rqjobs --pythonpath=/work; done &
-            while [ true ]; do sleep 1800; python3 manage.py sms_campaign_scheduler --pythonpath=/work 30; done &
-            python3 manage.py rqworker --pythonpath=/work high default low
+            python3 manage.py rqscheduler --pythonpath=$HOME &
+            while [ true ]; do sleep 60; python3 manage.py rqjobs --pythonpath=$HOME; done &
+            while [ true ]; do sleep 1800; python3 manage.py sms_campaign_scheduler --pythonpath=$HOME 30; done &
+            python3 manage.py rqworker --pythonpath=$HOME high default low
       redis: !Command
         container: redis
         run: |

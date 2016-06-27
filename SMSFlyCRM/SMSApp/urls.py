@@ -22,7 +22,9 @@ urlpatterns = (
     # Archive of inactive/sent campaigns:
     url('^sms-campaigns/archive$', campaigns_list.CampaignArchiveView.as_view(), name='campaigns-archive'),
     # List of all sent messages:
-    url('^sms-campaigns/messages$', messages.CampaignMessagesView.as_view(), name='campaigns-messages'),
+    url('^sms-campaigns/messages(/(?P<page>\d+)?)?$',
+        messages.CampaignMessagesView.as_view(),
+        name='campaigns-messages'),
     # Stats on campaigns:
     url('^sms-campaigns/stats$', stats.CampaignStatsView.as_view(), name='campaigns-stats'),
     # Index page with a menu:

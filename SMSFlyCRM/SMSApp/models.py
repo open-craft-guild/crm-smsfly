@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from recurrence.fields import RecurrenceField
 from smart_selects.db_fields import ChainedForeignKey
 
+from .utils import calculate_price_for
+
 # Add recognized model option to django
 # :seealso: https://djangosnippets.org/snippets/2687/
 import django.db.models.options as options
@@ -192,7 +194,7 @@ class Candidate(models.Model):
 
 class FollowerCandidate(models.Model):
     """Describes the relation between candidate and elector"""
-    follower_id = models.IntegerField(unique=True, primary_key=True)
+    follower = models.ForeignKey('Follower', to_field='follower_id', on_delete=models.DO_NOTHING)
     candidate = models.ForeignKey('Candidate', to_field='candidate_id', on_delete=models.DO_NOTHING)
 
     objects = ExternalCRMManager()
@@ -343,13 +345,15 @@ class Follower(models.Model):
     regaddress_building = ChainedForeignKey(Building, related_name='registered_followers',
                                             chained_field='regaddress_street',
                                             chained_model_field='street', null=True)
-    polplace = ChainedForeignKey(PollPlace, related_name='registered_followers',
-                                 chained_field='regaddress_locality',
-                                 chained_model_field='locality', null=True)
-    last_contact = models.ForeignKey(FollowerContact, to_field='id', on_delete=models.DO_NOTHING, null=True,
-                                     related_name='last_contact')
-    last_status = models.ForeignKey(FollowerStatus, to_field='follower_status_id', on_delete=models.DO_NOTHING,
-                                    null=True)
+    poll_place = ChainedForeignKey(PollPlace, db_column='polplace_id', related_name='registered_followers',
+                                   chained_field='regaddress_locality',
+                                   chained_model_field='locality', null=True)
+    candidate = models.ManyToManyField(Candidate, through=FollowerCandidate,
+                                       related_name='followers')
+    contact = models.ForeignKey(FollowerContact, db_column='last_contact_id', to_field='id',
+                                on_delete=models.DO_NOTHING, null=True, related_name='last_contact')
+    status = models.ForeignKey(FollowerStatus, db_column='last_status_id', to_field='follower_status_id',
+                               on_delete=models.DO_NOTHING, null=True)
 
     objects = ExternalCRMManager()
 
@@ -473,51 +477,60 @@ class Task(models.Model):
         return self.save(commit=commit)
 
     @staticmethod
-    def get_recipients_queryset_by_filter(recipients_filter, user_id=None):
-        _filter = recipients_filter.copy()
+    def get_recipients_queryset_by_filter(recipients_filter, user_id=None, prefetch=True):
         qs = Follower.objects
-        age_from = _filter.pop('age_from', None)
-        age_to = _filter.pop('age_to', None)
 
         if user_id:
             qs = qs.for_user(user_id)
 
-        qs = qs.filter(**_filter)
+        if recipients_filter:
+            _filter = recipients_filter.copy()
+            age_from = _filter.pop('age_from', None)
+            age_to = _filter.pop('age_to', None)
 
-        if age_from:
-            qs = qs.filter(datebirth__lte=datetime.now().date() - timedelta(days=age_from*365))
+            qs = qs.filter(**_filter)
 
-        if age_to:
-            qs = qs.filter(datebirth__gte=datetime.now().date()-timedelta(days=age_to*365))
+            if age_from:
+                qs = qs.filter(datebirth__lte=datetime.now().date() - timedelta(days=age_from*365))
+
+            if age_to:
+                qs = qs.filter(datebirth__gte=datetime.now().date()-timedelta(days=age_to*365))
+
+            if prefetch:
+                qs = qs.select_related(
+                    'sex', 'social_category', 'family_status', 'education',
+                    'address_region', 'address_area', 'address_locality',
+                    'address_street', 'address_building',
+                    'regaddress_region', 'regaddress_area', 'regaddress_locality',
+                    'regaddress_street', 'regaddress_building',
+                    'polplace', 'last_contact', 'last_status',
+                )
 
         return qs
 
     @classmethod
-    def prefetch_recipients_queryset_by_filter(cls, recipients_filter, user_id=None):
-        return cls.get_recipients_queryset_by_filter(recipients_filter, user_id).select_related(
-            'sex', 'social_category', 'family_status', 'education',
-            'address_region', 'address_area', 'address_locality', 'address_street', 'address_building',
-            'regaddress_region', 'regaddress_area', 'regaddress_locality', 'regaddress_street', 'regaddress_building',
-            'polplace', 'last_contact', 'last_status',
-        )
-
-    @classmethod
     def get_recipients_amount_by_filter(cls, recipients_filter, user_id=None):
-        return cls.get_recipients_queryset_by_filter(recipients_filter, user_id).count()
+        return cls.get_recipients_queryset_by_filter(recipients_filter, user_id=user_id, prefetch=False).count()
 
     @property
     def recipients_amount(self):
-        return self.__class__.get_recipients_amount(self.recipients_filter_json,
-                                                    user_id=self.created_by_crm_user_id)
+        return self.__class__.get_recipients_amount_by_filter(
+            self.recipients_filter_json, user_id=self.created_by_crm_user_id)
 
     @property
     def recipients_queryset(self):
-        return self.__class__.prefetch_recipients_queryset_by_filter(self.recipients_filter_json,
-                                                                     user_id=self.created_by_crm_user_id)
+        return self.__class__.get_recipients_queryset_by_filter(
+            self.recipients_filter_json, user_id=self.created_by_crm_user_id)
 
     @property
     def recipients_filter_json(self):
-        return json.loads(self.recipients_filter)
+        try:
+            _filter = json.loads(self.recipients_filter)
+            raise AttributeError if _filter.pop('to_everyone') else KeyError
+        except KeyError:
+            return _filter
+        except (json.decoder.JSONDecodeError, AttributeError):
+            return {}
 
     @recipients_filter_json.setter
     def recipients_filter_json(self, value):
@@ -526,6 +539,11 @@ class Task(models.Model):
     @recipients_filter_json.deleter
     def recipients_filter_json(self):
         self.recipients_filter = None
+
+    @property
+    def est_cost(self):
+        return calculate_price_for(
+            self.recipients_amount, len(self.message_text))
 
     @property
     def end_datetime(self):

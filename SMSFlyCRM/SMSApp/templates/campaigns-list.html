@@ -7,6 +7,8 @@
         <thead>
             <tr>
                 <th>{% trans 'Title' %}</th>
+                <th>{% trans 'Recipients amount' %}</th>
+                <th>{% trans 'Estimated cost' %}</th>
                 <th>{% trans 'Actions' %}</th>
                 <th>{% trans 'Next send time' %}</th>
                 <th>{% trans 'Last send time' %}</th>
@@ -19,6 +21,8 @@
                 {% for task in active_tasks %}
                 <tr>
                     <td>{{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.get_type_display }})</td>
+                    <td>{{ task.recipients_amount }}</td>
+                    <td>{{ task.est_cost }} {% trans 'UAH' %}</td>
                     <td><a href="#" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'edit' %}</a> <a href="#" title="{% trans 'Pause' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'pushpin' %}</a> <a href="#" title="{% trans 'Archive' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'remove' %}</a></td>
                     <td>{{ task.next_send_time | default_if_none:_('N/A') }}</td>
                     <td>{{ task.last_time_sent | default_if_none:_('never') }}</td>
@@ -32,6 +36,8 @@
             {% for task in paused_tasks %}
             <tr>
                 <td>{{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.get_type_display }}, {% trans 'paused' %})</td>
+                <td>{{ task.recipients_amount }}</td>
+                <td>{{ task.est_cost }} {% trans 'UAH' %}</td>
                 <td><a href="#" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'edit' %}</a> <a href="#" title="{% trans 'Activate' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'paperclip' %} <a href="#" title="{% trans 'Archive' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'remove' %}</a></a></td>
                 <td>{{ task.next_send_time | default_if_none:_('N/A') }}</td>
                 <td>{{ task.last_time_sent | default_if_none:_('never') }}</td>

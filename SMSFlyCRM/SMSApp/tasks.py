@@ -17,7 +17,7 @@ from smsfly.errors import (
     AuthError
 )
 
-from .models import Alphaname, Task, Campaign
+from .models import Alphaname, Task, Campaign, Message
 
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -59,6 +59,7 @@ def sendTaskMessagesInstantlyTask(task_id):
     api = SMSFlyAPI(account_id=settings.SMS_FLY['login'],
                     account_pass=settings.SMS_FLY['password'])
 
+    now = datetime.now()
     task = Task.objects.get(pk=task_id)
     message = task.message_text
     send_as = task.alphaname.name
@@ -76,7 +77,7 @@ def sendTaskMessagesInstantlyTask(task_id):
 
     try:
         api_result = api.send_sms_pairs(
-            start_time=datetime.now().strftime(DATETIME_FORMAT), end_time='AUTO',
+            start_time=now.strftime(DATETIME_FORMAT), end_time='AUTO',
             lifetime=24, rate='AUTO', desc=description, source=send_as,
             message_pairs=message_pairs
         )
@@ -93,6 +94,16 @@ def sendTaskMessagesInstantlyTask(task_id):
             task=task, code=res_state.attrs['code'], state=res_state.text,
             datetime_sent=datetime.strptime(res_state.attrs['date'], DATETIME_FORMAT),
             smsfly_campaign_id=int(res_state.attrs['campaignID']))
+
+        messages = starmap(
+            lambda msg_status: Message(
+                crm_elector=recipients.get(cellphone=msg_status.recipient),
+                phone_number=msg_status.recipient, status_text=msg_status.status,
+                datetime_scheduled=now, datetime_sent=now if msg_status.status == 'SENT' else None,
+                campaign=campaign),
+            api_result.message.to)
+        Message.objects.bulk_create(messages)
+
         logger.info('Campaign {camp} (smsfly_campaign_id={api_id}) has been accepted by SMS-Fly '
                     'for sending to recipients, defined in task {task} (task_id={task_id})'.
                     format(camp=campaign, api_id=campaign.smsfly_campaign_id, task=task, task_id=task_id))

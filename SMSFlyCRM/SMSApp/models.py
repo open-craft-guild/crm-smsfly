@@ -647,7 +647,7 @@ class Message(models.Model):
         (11, 'ACCEPTED'),
     )
 
-    crm_elector = models.ForeignKey('Follower', to_field='follower_id',
+    crm_elector = models.ForeignKey(Follower, to_field='follower_id',
                                     on_delete=models.DO_NOTHING, related_name='messages')
     phone_number = models.CharField(max_length=12)
     message_text = models.CharField(max_length=402)
@@ -655,6 +655,10 @@ class Message(models.Model):
     datetime_sent = models.DateTimeField(null=True)
     status = models.IntegerField(choices=STATUS_LIST)
     campaign = models.ForeignKey('Campaign')
+
+    @property
+    def msg_cost(self):
+        return calculate_price_for(1, len(self.message_text))
 
     @property
     def status_text(self):
@@ -672,7 +676,7 @@ class Message(models.Model):
         raise KeyError
 
     def __str__(self):
-        return '{} к {}  ({})'.format(self.message_text, self.phone_number, self.status[1])
+        return '{} к {}  ({})'.format(self.message_text, self.phone_number, self.status_text)
 
     class Meta:
         db_route = 'internal_app'

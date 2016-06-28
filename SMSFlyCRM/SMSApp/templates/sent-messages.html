@@ -1,41 +1,58 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
 {% block content %}
 {% include 'under-construction.html' %}
 <section id="sent-messages" class="panel panel-default">
   <form>
-    <input type="text" id="full-name" placeholder="{% trans 'Поиск по ФИО' %}" />
-    <input type="text" id="" placeholder="{% trans 'Поиск по номеру' %}" />
-    <button type="button" id="filters-button">{% trans 'Расширенные фильтры' %}</button>
+    <div class="col-md-4">
+      <input class="form-control" type="text" id="full-name" placeholder="{% trans 'Поиск по ФИО' %}" />
+    </div>
+    <div class="col-md-4">
+      <input class="form-control" type="text" id="" placeholder="{% trans 'Поиск по номеру' %}" />
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-primary" type="submit" id="sbm-button">{% trans 'Apply filters' %}</button>
+    </div>
+    <div class="col-md-4">
+      <button class="btn" type="button" id="filters-button">{% trans 'Расширенные фильтры' %}</button>
+    </div>
   </form>
   <table class="table">
     <thead>
       <tr>
-        <td>{% trans 'Шаблон' %}</td>
-        <td>{% trans 'Фильтры' %}</td>
-        <td>{% trans 'Дата отправки' %}</td>
-        <td>{% trans 'Время отправки' %}</td>
-        <td>{% trans 'Получатель' %}</td>
-        <td>{% trans 'Номер телефона' %}</td>
-        <td>{% trans 'Статус' %}</td>
-        <td>{% trans 'Стоимость' %}</td>
-        <td>{% trans 'Ошибка' %}</td>
+        <th>{% trans 'Шаблон' %}</th>
+        <th>{% trans 'Фильтры' %}</th>
+        <th>{% trans 'Sent at' %}</th>
+        <th>{% trans 'Получатель' %}</th>
+        <th>{% trans 'Номер телефона' %}</th>
+        <th>{% trans 'Статус' %}</th>
+        <th>{% trans 'Стоимость' %}</th>
       </tr>
     </thead>
 
-    <tbody>
+    <tfoot>
       <tr>
-        <td>Шаблон1</td>
-        <td>ABC</td>
-        <td>10.10.10</td>
-        <td>11:11:11</td>
-        <td>Иванов Иван Иванович</td>
-        <td>050 111 11 11</td>
-        <td>Доставлено</td>
-        <td>0.25</td>
-        <td> </td>
+        <td colspan="7">
+          {% bootstrap_pagination page_obj %}
+        </td>
       </tr>
+    </tfoot>
+
+    <tbody>
+      {% for message in messages %}
+        {% with message.campaign.task as task %}
+        <tr>
+          <td>{{ task.title | default:_('Noname') }}</td>
+          <td>{{ task.recipients_filter_json }}</td>
+          <td>{{ message.datetime_sent | default_if_none:message.datetime_scheduled }}</td>
+          <td>{{ message.crm_elector.name }}</td>
+          <td>{{ message.phone_number }}</td>
+          <td>{{ message.status_text }}</td>
+          <td>{{ message.msg_cost }}</td>
+        </tr>
+        {% endwith %}
+      {% endfor %}
     </tbody>
   </table>
 </section>

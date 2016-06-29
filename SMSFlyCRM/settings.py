@@ -240,4 +240,5 @@ BOWER_COMPONENTS_ROOT = BASE_DIR()
 BOWER_INSTALLED_APPS = (
     'jquery#1.9',
     'underscore',
+    'twbs-pagination',
 )

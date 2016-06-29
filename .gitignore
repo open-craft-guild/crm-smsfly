@@ -71,4 +71,4 @@ db.sqlite3
 src/
 /.config/
 /.ipython/
-
+/components/

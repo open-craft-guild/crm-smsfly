@@ -100,7 +100,7 @@ class Task(models.Model):
                     'address_street', 'address_building',
                     'regaddress_region', 'regaddress_area', 'regaddress_locality',
                     'regaddress_street', 'regaddress_building',
-                    'polplace', 'last_contact', 'last_status',
+                    'poll_place', 'contact', 'status',
                 )
 
         return qs

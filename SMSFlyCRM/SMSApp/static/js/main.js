@@ -110,7 +110,14 @@
         concat(
           $('*[id^="id_regaddress"]').toArray(),
           $('*[id^="id_address"]').toArray(),
-          $('*[id^="id_age_"]').toArray()
+          $('*[id^="id_age_"]').toArray(),
+          $('*[id="id_family_status"]').toArray(),
+          $('*[id="id_education"]').toArray(),
+          $('*[id="id_social_category"]').toArray(),
+          $('*[id="id_polplace"]').toArray(),
+          $('*[id="id_contact"]').toArray(),
+          $('*[id="id_candidate"]').toArray(),
+          $('*[id^="id_status"]').toArray()
         ).
         map(function(el) {
           return {
@@ -158,5 +165,14 @@
         });
         })
       })
+
+      $('#pagination-demo').twbsPagination({
+        totalPages: 35,
+        visiblePages: 7,
+        onPageClick: function (event, page) {
+            $('#page-content').text('Page ' + page);
+        }
+    });
+
     });
   })(jQuery);

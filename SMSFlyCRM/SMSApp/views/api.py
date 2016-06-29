@@ -31,9 +31,9 @@ def preview_recipients_list(request):
     rec_list = []
     for el in rec_qs[offset:until]:
         rec = {}
-        for attr in ('name', 'cellphone', 'sex', 'age', 'polplace',
+        for attr in ('name', 'cellphone', 'sex', 'age', 'poll_place',
                      'family_status', 'social_category',
-                     'education', ('last_status', 'status'),
+                     'education', 'status',
                      ('address_full', 'address'),
                      ('regaddress_full', 'regaddress')):
             if isinstance(attr, str):
@@ -55,7 +55,7 @@ def preview_recipients_list(request):
     result = {
         'amount': amount,
         'attrs': [
-            'name', 'cellphone', 'sex', 'age', 'regaddress', 'address', 'polplace',
+            'name', 'cellphone', 'sex', 'age', 'regaddress', 'address', 'poll_place',
             'social_category', 'family_status',
             'education', 'status'
             ],

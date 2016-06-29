@@ -3,7 +3,7 @@ from datetime import date
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from ..models import Alphaname
+from ..models.alphaname import Alphaname
 
 
 class AlphanameForm(forms.ModelForm):

@@ -1,10 +1,14 @@
 from django.contrib import admin
 
-from .models import (
+from .models.crm import (
     Area, Building, Region, Locality, Street, Project, ProjectContact, FollowerContact, Candidate, FollowerCandidate,
     PollPlace, FamilyStatus, Education, SocialCategory, Sex, FollowerStatus, Follower,
-    Campaign, Task, Alphaname, Message
 )
+
+from .models.campaign import Campaign
+from .models.task import Task
+from .models.alphaname import Alphaname
+from .models.message import Message
 
 # External CRM views
 admin.site.register(Area)

@@ -2,7 +2,8 @@ import logging
 
 from django.views.generic import ListView
 
-from ..models import Follower, Message
+from ..models.crm import Follower
+from ..models.message import Message
 
 
 logger = logging.getLogger(__name__)

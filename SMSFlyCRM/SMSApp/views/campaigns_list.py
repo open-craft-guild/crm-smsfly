@@ -6,7 +6,7 @@ from django.views.generic import ListView
 
 from django.utils.translation import ugettext_lazy as _
 
-from ..models import Task
+from ..models.task import Task
 
 
 logger = logging.getLogger(__name__)

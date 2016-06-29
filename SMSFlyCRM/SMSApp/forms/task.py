@@ -3,9 +3,13 @@ from django.utils.translation import ugettext_lazy as _
 from datetimewidget.widgets import DateTimeWidget, DateWidget
 
 
-from ..models import (Task, ProjectContact, FollowerStatus, Follower,
-                      Candidate, Area, Building, Region, Locality, Street,
-                      Project, PollPlace, FamilyStatus, Education, SocialCategory, Sex)
+from ..models.crm import (
+    ProjectContact, FollowerStatus, Follower,
+    Candidate, Area, Building, Region, Locality, Street,
+    Project, PollPlace, FamilyStatus, Education, SocialCategory, Sex,
+)
+
+from ..models.task import Task
 
 
 class TaskForm(forms.ModelForm):

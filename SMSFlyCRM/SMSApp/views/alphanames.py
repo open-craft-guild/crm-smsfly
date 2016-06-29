@@ -6,7 +6,7 @@ from django.views.generic import ListView
 
 from django.views.generic.edit import CreateView
 
-from ..models import Alphaname
+from ..models.alphaname import Alphaname
 from ..forms.alphaname import AlphanameForm
 
 from ..tasks import submitAlphanameInstantly

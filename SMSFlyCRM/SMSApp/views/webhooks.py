@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django_rq import get_scheduler
 
-from ..models import Task
+from ..models.task import Task
 
 from ..tasks import sendTaskMessagesInstantlyTask
 

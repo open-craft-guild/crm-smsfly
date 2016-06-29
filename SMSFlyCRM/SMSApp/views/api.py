@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
-from ..models import Task
+from ..models.task import Task
 
 from ..utils import calculate_price_for, get_price_for
 

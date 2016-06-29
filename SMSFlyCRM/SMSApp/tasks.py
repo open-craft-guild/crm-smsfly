@@ -17,7 +17,10 @@ from smsfly.errors import (
     AuthError
 )
 
-from .models import Alphaname, Task, Campaign, Message
+from .models.campaign import Campaign
+from .models.task import Task
+from .models.alphaname import Alphaname
+from .models.message import Message
 
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'

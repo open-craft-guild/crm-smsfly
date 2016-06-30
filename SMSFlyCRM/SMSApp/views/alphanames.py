@@ -17,14 +17,14 @@ logger = logging.getLogger(__name__)
 
 class AlphanameIndexView(ListView):
     """Shows all alphaname list available along with registrar and registration date"""
-    template_name = 'alphanames-list.html'
+    template_name = 'alphaname/list.html'
     context_object_name = 'alphanames'
     model = Alphaname
 
 
 class AlphanameRegisterView(CreateView):
     """Sends new alphaname register request"""
-    template_name = 'alphaname-new.html'
+    template_name = 'alphaname/new.html'
     form_class = AlphanameForm
     success_url = reverse_lazy('alphanames-root')
 

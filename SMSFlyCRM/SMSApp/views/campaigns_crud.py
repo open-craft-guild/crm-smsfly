@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class CampaignNewView(CreateView):
     """Helps schedule a new campaign or send new one instantly"""
-    template_name = 'campaign-edit.html'
+    template_name = 'campaign/edit.html'
     form_class = OneTimeTaskForm
     success_url = reverse_lazy('campaigns-root')
 
@@ -53,7 +53,7 @@ class CampaignNewEventDrivenView(CampaignNewView):
 
 class CampaignEditView(FormView):
     """Makes modifications on an active campaign"""
-    template_name = 'campaign-edit.html'
+    template_name = 'campaign/edit.html'
     form_class = OneTimeTaskForm
     success_url = ''
 

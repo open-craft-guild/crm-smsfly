@@ -71,13 +71,13 @@ class CampaignBaseView(ListView):
 
 class CampaignIndexView(CampaignBaseView):
     """Lists all active campaigns currently in progress (scheduled)"""
-    template_name = 'campaigns-list.html'
+    template_name = 'campaign/list-active.html'
     active_menu_item = 0
     exclude_state = 2  # active/paused (not complete)
 
 
 class CampaignArchiveView(CampaignBaseView):
     """Keeps a history of campaigns, which are inactive"""
-    template_name = 'campaigns-archive-list.html'
+    template_name = 'campaign/list-archived.html'
     active_menu_item = 1
     exclude_state = 0  # complete/paused (not active)

@@ -30,7 +30,7 @@ class CampaignNewView(CreateView):
 
 class CampaignNewRecurringView(CampaignNewView):
     form_class = RecurringTaskForm
-    template_name = 'campaign-recurring-edit.html'
+    template_name = 'campaign/edit-recurring.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -48,7 +48,7 @@ class CampaignNewRecurringView(CampaignNewView):
 
 class CampaignNewEventDrivenView(CampaignNewView):
     form_class = EventDrivenTaskForm
-    template_name = 'campaign-event-driven-edit.html'
+    template_name = 'campaign/edit-event-driven.html'
 
 
 class CampaignEditView(FormView):

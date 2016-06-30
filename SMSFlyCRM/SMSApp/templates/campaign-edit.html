@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'components/base.html' %}
 {% load i18n bootstrap3 %}
 
 {% block content %}
-{% include 'under-construction.html' %}
+{% include 'components/under-construction.html' %}
 <section id="campaign-edit">
   <form method="post">
     {% bootstrap_form_errors form %}
@@ -18,7 +18,7 @@
         <formgroup class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div>
             {% bootstrap_field form.message_text %}
-            {% include 'text-buttons.html'%}
+            {% include 'components/text-buttons.html'%}
             <span class="help-block" id="characters"></span>
           </div>
         </formgroup>
@@ -31,7 +31,7 @@
         </div>
         </formgroup>
     </div>
-    {% include 'filters.html' %}
+    {% include 'components/filters.html' %}
 
     <div class="row">
         {% bootstrap_button _('Отправить рассылку') button_type="submit" button_class="btn-primary btn-lg" %}

@@ -8,5 +8,5 @@ logger = logging.getLogger(__name__)
 
 class CampaignStatsView(ListView):
     """Shows stats on campaigns"""
-    template_name = 'campaigns-stats.html'
+    template_name = 'campaign/stats.html'
     queryset = []  # TODO: replace fake queryset with an existing model

@@ -4,17 +4,12 @@
 {% block content %}
 {% include 'components/under-construction.html' %}
 <section id="sent-messages" class="panel panel-default">
-  <form>
-    <div class="col-md-4">
-      <input class="form-control" type="text" id="full-name" placeholder="{% trans 'Поиск по ФИО' %}" />
-    </div>
-    <div class="col-md-4">
-      <input class="form-control" type="text" id="" placeholder="{% trans 'Поиск по номеру' %}" />
-    </div>
-    <div class="col-md-4">
-      <button class="btn btn-primary" type="submit" id="sbm-button">{% trans 'Apply filters' %}</button>
-    </div>
+  <form role="form" method="post">
+      {% csrf_token %}
+      {% bootstrap_form form layout='inline' field_class='col-md-2' show_label=False %}
+      {% buttons submit=_('Apply filters') reset=_('Clear') %}{% endbuttons %}
   </form>
+
   <table class="table">
     <thead>
       <tr>

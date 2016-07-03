@@ -26,15 +26,36 @@ class CampaignMessagesView(FormMixin, ListView):
         qs = super().get_queryset()
         fqs = Follower.objects.for_user(self.request.session['crm_user_id'])
         form = self.get_form()
-        if form.is_valid():
-            elector_name = form.cleaned_data['crm_elector__name']  # TODO: split into three fields
-            if elector_name:
-                fqs = fqs.filter(name_icontains=elector_name)
+        phone_number = None
 
-        # hack to send user-specific query to external db
-        # pre-fetch followers, so they'll be retrieved from cache next time:
-        fqs = fqs.filter(
-            follower_id__in=map(lambda m: m.crm_elector_id, qs)
-        )
+        flwr_filters = {}
+        if form.is_valid():
+            phone_number = form.cleaned_data['phone_number']
+            for field_name in ('lastname', 'firstname', 'middlename'):
+                fld = form.cleaned_data['crm_elector__{}'.format(field_name)]
+                if fld:
+                    flwr_filters['{}__icontains'.format(field_name)] = fld
+
+        if phone_number:
+            logger.debug('Applying phone number filter')
+            qs = qs.filter(phone_number=phone_number)
+
+        if flwr_filters:
+            logger.debug('Pre-fetching followers with filters applied')
+            fqs = fqs.filter(**flwr_filters)
+            qs = qs.filter(
+                crm_elector_id__in=map(lambda f: f.follower_id, fqs)
+            )
+        else:
+            logger.debug('Pre-fetching followers for non-filtered view')
+            # hack for sending user-specific query to external db
+            # pre-fetch followers, so they'll be retrieved from cache next time:
+            fqs = fqs.filter(
+                follower_id__in=map(lambda m: m.crm_elector_id, qs)
+            )
+
         qs = qs.prefetch_related('crm_elector')
         return qs
+
+    def get_form(self):
+        return self.form_class(self.request.GET)

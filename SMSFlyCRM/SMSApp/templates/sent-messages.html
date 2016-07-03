@@ -4,8 +4,7 @@
 {% block content %}
 {% include 'components/under-construction.html' %}
 <section id="sent-messages" class="panel panel-default">
-  <form role="form" method="post">
-      {% csrf_token %}
+  <form role="form" action="{{ request.path }}">
       {% bootstrap_form form layout='inline' field_class='col-md-2' show_label=False %}
       {% buttons submit=_('Apply filters') reset=_('Clear') %}{% endbuttons %}
   </form>
@@ -26,7 +25,7 @@
     <tfoot>
       <tr>
         <td colspan="7">
-          {% bootstrap_pagination page_obj %}
+          {% bootstrap_pagination page_obj url=request.get_full_path %}
         </td>
       </tr>
     </tfoot>

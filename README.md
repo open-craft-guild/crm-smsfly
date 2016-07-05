@@ -18,7 +18,7 @@ $ vagga run-cached
 ```
 N.B. in case of non-linux installation, prepend that with `vagrant`.
 
-Now you should be able to [open the app in browser](http://localhost:8000/app)
+Now you should be able to [open the /app in browser](http://localhost:8000/app)
 
 # Production
 Just check `deploy/` folder and run corresponding playbook with [ansible](http://docs.ansible.com/ansible/intro_installation.html). Store environment variables in `deploy/roles/smsapp/templates/smsapp.env` first (see `smsapp.env.example`).

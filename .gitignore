@@ -73,3 +73,4 @@ target/
 /.ipython/
 /components/
 /.mysql_history
+/.vagrant/

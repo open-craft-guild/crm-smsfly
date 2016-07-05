@@ -129,6 +129,7 @@ commands:
           HOME: /work
           CACHE_URL: memcached://127.0.0.1:11211
         run: |
+            python3 manage.py migrate --pythonpath=$HOME
             echo "from npm.finders import npm_install; npm_install()" | python3 ./manage.py shell --pythonpath=$HOME
             python3 ./manage.py bower --pythonpath=$HOME install -- --allow-root
             python3 manage.py runserver_plus --pythonpath=$HOME --traceback

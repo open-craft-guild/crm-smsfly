@@ -61,14 +61,15 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
-.vagga/
+/.vagga/
 /$HOME/
-db.sqlite3
+/db.sqlite3
 .DS_Store
-.python-version
-.env
+/.python-version
+/.env
 /static/
-src/
+/src/
 /.config/
 /.ipython/
 /components/
+/.mysql_history

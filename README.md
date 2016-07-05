@@ -5,9 +5,10 @@ Embedded integration of some CRM with SMS-Fly gateway via iframe.
 # Development
 
 ## Prerequisites
-- If you use OS X or Windows, first install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and [vagrant](https://www.vagrantup.com/docs/installation/) and then install `vargant-vagga` plugin (`vagrant plugin install vagrant-vagga`)
+- If you use OS X or Windows, first install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and [vagrant](https://www.vagrantup.com/docs/installation/) and then install `vargant-vagga` plugin (`vagrant plugin install vagrant-vagga`). After that run `vagrant up` to populate VM image.
 - If you use GNU/Linux based OS, just install [vagga](https://vagga.readthedocs.io/en/latest/installation.html)
 - Populate `.env` file with environment variables, such as `DEBUG`, `DATABASE_URL`, `CRM_DB_URL`, `SMSFLY_ID`, `SMSFLY_PASS`, `DJANGO_DEBUG_LOG`, `DJANGO_LOG_LEVEL`
+- Install `pre-commit` with `pip intall pre-commit; pre-commit install` in your environment to make sure your code conforms basic rules
 
 
 ## Running the app

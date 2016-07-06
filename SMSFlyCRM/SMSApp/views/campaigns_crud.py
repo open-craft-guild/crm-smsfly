@@ -13,7 +13,13 @@ from ..forms.task import (
 logger = logging.getLogger(__name__)
 
 
-class CampaignFormViewMixin(object):
+class CampaignEditViewMixin:
+    """Retrieves model class from form binded"""
+    def get_queryset(self):
+        return self.get_form_class().Meta.model.objects.all()
+
+
+class CampaignFormViewMixin:
     """Defines base success_url"""
     success_url = reverse_lazy('campaigns-root')
 
@@ -52,13 +58,19 @@ class CampaignNewEventDrivenView(EventDrivenCampaignMixin, RequestAwareFormMixin
     pass
 
 
-class CampaignEditView(OneTimeCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, UpdateView):
+class CampaignEditView(OneTimeCampaignMixin, CampaignEditViewMixin,
+                       RequestAwareFormMixin, CampaignFormViewMixin,
+                       UpdateView):
     pass
 
 
-class CampaignEditRecurringView(RecurringCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, UpdateView):
+class CampaignEditRecurringView(RecurringCampaignMixin, CampaignEditViewMixin,
+                                RequestAwareFormMixin, CampaignFormViewMixin,
+                                UpdateView):
     pass
 
 
-class CampaignEditEventDrivenView(EventDrivenCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, UpdateView):
+class CampaignEditEventDrivenView(EventDrivenCampaignMixin, CampaignEditViewMixin,
+                                  RequestAwareFormMixin, CampaignFormViewMixin,
+                                  UpdateView):
     pass

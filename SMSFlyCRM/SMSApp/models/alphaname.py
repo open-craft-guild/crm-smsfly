@@ -21,7 +21,7 @@ class Alphaname(models.Model):
         return self.save(commit=commit)
 
     def __str__(self):
-        return _('{} ({}). Зарегистрировано {} пользователем {}').format(
+        return _('{} ({}). Registered on {} by {}').format(
             self.name, self.status, self.registration_date, self.created_by_crm_user_id)
 
     @property

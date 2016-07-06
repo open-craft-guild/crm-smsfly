@@ -11,7 +11,7 @@
   <formgroup id="regaddress-filters" class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
     <div>
       <legend>
-        {% trans 'Адрес прописки' %}
+        {% trans 'Registration address' %}
       </legend>
       {% bootstrap_field form.regaddress_region %}
       {% bootstrap_field form.regaddress_area %}
@@ -27,7 +27,7 @@
   <formgroup id="address-filters"class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
     <div>
       <legend>
-        {% trans 'Адрес проживания' %}
+        {% trans 'Actual address' %}
       </legend>
       {% bootstrap_field form.address_region %}
       {% bootstrap_field form.address_area %}
@@ -46,13 +46,13 @@
   <table class="table">
     <tr>
       <td>
-        {% trans 'Всего получателей:' %} <span id="recipients-amount"></span>
+        {% trans 'Recipients:' %} <span id="recipients-amount"></span>
       </td>
       <td>
-        {% trans 'Cтоимость рассылки:' %} <span id="campaign-cost"></span>
+        {% trans 'Campaign cost:' %} <span id="campaign-cost"></span>
       </td>
       <td>
-        {% trans 'Стоимость сообщения:' %} <span id="sms-price"></span>
+        {% trans 'SMS price:' %} <span id="sms-price"></span>
       </td>
     </tr>
   </table>
@@ -61,13 +61,13 @@
 <div class="row" id="recipients-list">
   <formgroup>
     <div class="col-md-4">
-      <input type="text" id="name_filter" name="name_filter" class="form-control" placeholder="{% trans 'Поиск по ФИО' %}">
+      <input type="text" id="name_filter" name="name_filter" class="form-control" placeholder="{% trans 'Search by full name' %}">
     </div>
     <div class="col-md-4">
-      <input type="phone_number" id="phone_filter" name="phone_filter" class="col-md-3 form-control" placeholder="{% trans 'Поиск по тел.номеру' %}">
+      <input type="phone_number" id="phone_filter" name="phone_filter" class="col-md-3 form-control" placeholder="{% trans 'Search by phone number' %}">
     </div>
     <div class="col-md-4">
-      <button type="button" id="btn_preview_recipients" class="btn btn-primary">{% trans 'Просмотреть получателей' %}</button>
+      <button type="button" id="btn_preview_recipients" class="btn btn-primary">{% trans 'Preview recipients' %}</button>
     </div>
   </formgroup>
 

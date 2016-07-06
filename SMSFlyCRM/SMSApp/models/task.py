@@ -20,10 +20,10 @@ class Task(models.Model):
     )
 
     TRIGGERS_LIST = (
-        ('onElectorBirthday', _('День рождения избирателя')),
-        ('onElectorAdded', _('Внесение анкеты избирателя в базу')),
-        ('onElectorTouched', _('Внесение касания с избирателем в базу')),
-        ('onElectorStatusChanged', _('Смена статуса избирателя')),
+        ('onElectorBirthday', _('On elector\'s birthday')),
+        ('onElectorAdded', _('On adding elector to the database')),
+        ('onElectorTouched', _('Elector touched')),
+        ('onElectorStatusChanged', _('On elector status change')),
     )
 
     STATE_LIST = (

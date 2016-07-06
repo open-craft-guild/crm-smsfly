@@ -24,11 +24,11 @@ class CampaignBaseView(ListView):
         menu = (
             {
                 'url': reverse_lazy('campaigns-root'),
-                'title': _('Актуальные'),
+                'title': _('Active'),
             },
             {
                 'url': reverse_lazy('campaigns-archive'),
-                'title': _('Архив'),
+                'title': _('Archive'),
             },
         )
 

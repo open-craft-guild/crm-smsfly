@@ -21,7 +21,7 @@ class AlphanameForm(forms.ModelForm):
         model = Alphaname
         fields = ['name', 'created_by_crm_user_id', 'registration_date', 'status']
         labels = {
-            'name': _('Альфаимя'),
+            'name': _('Alphaname'),
         }
         widgets = {
             'created_by_crm_user_id': forms.HiddenInput(),

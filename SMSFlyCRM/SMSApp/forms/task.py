@@ -36,7 +36,7 @@ class TaskForm(forms.ModelForm):
     }
 
     start_datetime = forms.DateTimeField(
-        label=_('Дата начала'),
+        label=_('Start date'),
         input_formats=DATETIME_INPUTS,
         widget=DateTimeWidget(usel10n=False, options=dateTimeOptions,
                               bootstrap_version=3))
@@ -50,56 +50,56 @@ class TaskForm(forms.ModelForm):
         self.initial['state'] = 0
 
         self.fields['to_everyone'] = forms.BooleanField(
-            label=_('Отправить всем избирателям'), required=False)
+            label=_('Send to all electors'), required=False)
         self.fields['age_from'] = forms.IntegerField(
-            label=_('От'), min_value=0, required=False)
+            label=_('Age from'), min_value=0, required=False)
         self.fields['age_to'] = forms.IntegerField(
-            label=_('До'), min_value=0, required=False)
+            label=_('Age to'), min_value=0, required=False)
         self.fields['regaddress_region'] = forms.ModelChoiceField(
-            label=_('Область'), queryset=Region.objects.for_user(user_id).all(), required=False)
+            label=_('Region'), queryset=Region.objects.for_user(user_id).all(), required=False)
         self.fields['regaddress_area'] = Follower.regaddress_area.field.formfield(
-            label=_('Район'), queryset=Area.objects.for_user(user_id).all(),
+            label=_('Area'), queryset=Area.objects.for_user(user_id).all(),
             required=False
         )
         self.fields['regaddress_locality'] = Follower.regaddress_locality.field.formfield(
-            label=_('Населенный пункт'), queryset=Locality.objects.for_user(user_id).all(),
+            label=_('Locality'), queryset=Locality.objects.for_user(user_id).all(),
             required=False)
         self.fields['regaddress_street'] = Follower.regaddress_street.field.formfield(
-            label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
+            label=_('Street'), queryset=Street.objects.for_user(user_id).all(), required=False)
         self.fields['regaddress_building'] = Follower.regaddress_building.field.formfield(
-            label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
+            label=_('Building'), queryset=Building.objects.for_user(user_id).all(), required=False)
         self.fields['address_region'] = forms.ModelChoiceField(
-            label=_('Область'), queryset=Region.objects.for_user(user_id).all(), required=False)
+            label=_('Region'), queryset=Region.objects.for_user(user_id).all(), required=False)
         self.fields['address_area'] = Follower.address_area.field.formfield(
-            label=_('Район'), queryset=Area.objects.for_user(user_id).all(), required=False)
+            label=_('Area'), queryset=Area.objects.for_user(user_id).all(), required=False)
         self.fields['address_locality'] = Follower.address_locality.field.formfield(
-            label=_('Населенный пункт'), queryset=Locality.objects.for_user(user_id).all(),
+            label=_('Locality'), queryset=Locality.objects.for_user(user_id).all(),
             required=False)
         self.fields['address_street'] = Follower.address_street.field.formfield(
-            label=_('Улица'), queryset=Street.objects.for_user(user_id).all(), required=False)
+            label=_('Street'), queryset=Street.objects.for_user(user_id).all(), required=False)
         self.fields['address_building'] = Follower.address_building.field.formfield(
-            label=_('Дом'), queryset=Building.objects.for_user(user_id).all(), required=False)
+            label=_('Building'), queryset=Building.objects.for_user(user_id).all(), required=False)
         self.fields['sex'] = forms.ModelChoiceField(
-            label=_('Пол'), queryset=Sex.objects.for_user(user_id).all(), required=False)
+            label=_('Gender'), queryset=Sex.objects.for_user(user_id).all(), required=False)
         self.fields['family_status'] = forms.ModelChoiceField(
-            label=_('Семейное положение'), queryset=FamilyStatus.objects.for_user(user_id).all(),
+            label=_('Family status'), queryset=FamilyStatus.objects.for_user(user_id).all(),
             required=False)
         self.fields['education'] = forms.ModelChoiceField(
-            label=_('Образование'), queryset=Education.objects.for_user(user_id).all(), required=False)
+            label=_('Education'), queryset=Education.objects.for_user(user_id).all(), required=False)
         self.fields['social_category'] = forms.ModelChoiceField(
-            label=_('Социальная категория'), queryset=SocialCategory.objects.for_user(user_id).all(),
+            label=_('Social Category'), queryset=SocialCategory.objects.for_user(user_id).all(),
             required=False)
         self.fields['poll_place'] = forms.ModelChoiceField(
-            label=_('Избирательный участок'), queryset=PollPlace.objects.for_user(user_id).all(),
+            label=_('Poll place'), queryset=PollPlace.objects.for_user(user_id).all(),
             required=False)
         self.fields['contact'] = forms.ModelChoiceField(
-            label=_('Контакт'), queryset=ProjectContact.objects.for_user(user_id).all(),
+            label=_('Contact'), queryset=ProjectContact.objects.for_user(user_id).all(),
             required=False)
         self.fields['candidate'] = forms.ModelChoiceField(
-            label=_('Кандидат'), queryset=Candidate.objects.for_user(user_id).all(),
+            label=_('Candidate'), queryset=Candidate.objects.for_user(user_id).all(),
             required=False)
         self.fields['status'] = forms.ModelChoiceField(
-            label=_('Статус'), queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
+            label=_('Status'), queryset=FollowerStatus.objects.for_user(user_id).all(), required=False)
 
         for field in self.fields.values():
             field.error_messages.update({
@@ -141,18 +141,18 @@ class TaskForm(forms.ModelForm):
         fields = ['alphaname', 'title', 'message_text', 'start_datetime', 'type',
                   'created_by_crm_user_id', 'state']
         labels = {
-            'alphaname': _('Альфаимя'),
-            'title': _('Название шаблона'),
-            'type': _('Тип'),
-            'message_text': _('Текст сообщения'),
+            'alphaname': _('Alphaname'),
+            'title': _('Template title'),
+            'type': _('Type'),
+            'message_text': _('Message text'),
             'created_by_crm_user_id': 'CRM User Id',
 
-            'triggered_by': _('Тип даты отправки'),
-            'touch_project': _('Проект'),
-            'touch_status': _('Статус'),
-            'touch_contact': _('Контакт'),
-            'touch_candidate': _('Кандидат'),
-            'trigger_status': _('Статус'),
+            'triggered_by': _('Mailing type'),
+            'touch_project': _('Project'),
+            'touch_status': _('Status'),
+            'touch_contact': _('Contact'),
+            'touch_candidate': _('Candidate'),
+            'trigger_status': _('Status'),
         }
 
         widgets = {
@@ -201,7 +201,7 @@ class EventDrivenTaskForm(TaskForm):
     )
 
     end_date = forms.DateField(
-        label=_('Дата окончания'),
+        label=_('End date'),
         input_formats=TaskForm.DATETIME_INPUTS,
         widget=DateWidget(usel10n=False,
                           options=TaskForm.dateOptions, bootstrap_version=3))

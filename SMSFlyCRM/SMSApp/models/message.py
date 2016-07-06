@@ -50,7 +50,7 @@ class Message(models.Model):
         raise KeyError
 
     def __str__(self):
-        return _('{} к {}  ({})').format(self.message_text, self.phone_number, self.status_text)
+        return _('{} to {}  ({})').format(self.message_text, self.phone_number, self.status_text)
 
     class Meta:
         db_route = 'internal_app'

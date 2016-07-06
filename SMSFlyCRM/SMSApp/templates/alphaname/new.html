@@ -7,7 +7,7 @@
   <form action="" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
-    {% trans 'Создать альфаимя' as create_alphaname_btn %}
+    {% trans 'Create an alphaname' as create_alphaname_btn %}
     {% bootstrap_button create_alphaname_btn button_type="submit" button_class="btn-primary" %}
 
   </form>

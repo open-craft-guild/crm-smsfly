@@ -4,9 +4,9 @@
 {% block content %}
 {% include 'components/under-construction.html' %}
 <nav id="campaigns-nav">
-  <a href="{% url 'add-campaign' %}" class="btn btn-primary btn-lg">{% trans 'Новый шаблон (одноразовая отправка)' %}</a>
-  <a href="{% url 'add-recurring-campaign' %}" class="btn btn-primary btn-lg">{% trans 'Новый шаблон (повторяющаяся отправка)' %}</a>
-  <a href="{% url 'add-event-driven-campaign' %}" class="btn btn-primary btn-lg">{% trans 'Новый шаблон (отправка по событию)' %}</a>
+  <a href="{% url 'add-campaign' %}" class="btn btn-primary btn-lg">{% trans 'New template (one-time)' %}</a>
+  <a href="{% url 'add-recurring-campaign' %}" class="btn btn-primary btn-lg">{% trans 'New template (recurring)' %}</a>
+  <a href="{% url 'add-event-driven-campaign' %}" class="btn btn-primary btn-lg">{% trans 'New template (event-driven)' %}</a>
   <ul class="nav nav-pills nav-justified">
     {% for item in tab_menu %}
     <li role="presentation" class="{{ item.class }}"><a href="{{ item.url }}">{{ item.title }}</a></li>

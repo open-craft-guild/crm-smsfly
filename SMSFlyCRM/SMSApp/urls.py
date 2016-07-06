@@ -11,14 +11,16 @@ urlpatterns = (
     # Active campaigns list:
     url('^sms-campaigns$', campaigns_list.CampaignIndexView.as_view(), name='campaigns-root'),
     # Campaign adding/scheduling form:
-    url('^sms-campaigns/new/one-time$', campaigns_crud.CampaignNewView.as_view(), name='add-campaign'),
+    url('^sms-campaigns/new/one-time$', campaigns_crud.CampaignNewView.as_view(),
+        name='add-one-time-campaign'),
     url('^sms-campaigns/new/recurring$',
         campaigns_crud.CampaignNewRecurringView.as_view(),
         name='add-recurring-campaign'),
     url('^sms-campaigns/new/event-driven$', campaigns_crud.CampaignNewEventDrivenView.as_view(),
         name='add-event-driven-campaign'),
     # One-time campaign editing form:
-    url('^sms-campaigns/edit/one-time/(?P<pk>\d+)$', campaigns_crud.CampaignEditView.as_view(), name='edit-campaign'),
+    url('^sms-campaigns/edit/one-time/(?P<pk>\d+)$', campaigns_crud.CampaignEditView.as_view(),
+        name='edit-one-time-campaign'),
     # Recurring campaign editing form:
     url('^sms-campaigns/edit/recurring/(?P<pk>\d+)$', campaigns_crud.CampaignEditView.as_view(),
         name='edit-recurring-campaign'),

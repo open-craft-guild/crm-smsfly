@@ -4,7 +4,7 @@
 {% block content %}
 {% include 'components/under-construction.html' %}
 <nav id="campaigns-nav">
-  <a href="{% url 'add-campaign' %}" class="btn btn-primary btn-lg">{% trans 'New template (one-time)' %}</a>
+  <a href="{% url 'add-one-time-campaign' %}" class="btn btn-primary btn-lg">{% trans 'New template (one-time)' %}</a>
   <a href="{% url 'add-recurring-campaign' %}" class="btn btn-primary btn-lg">{% trans 'New template (recurring)' %}</a>
   <a href="{% url 'add-event-driven-campaign' %}" class="btn btn-primary btn-lg">{% trans 'New template (event-driven)' %}</a>
   <ul class="nav nav-pills nav-justified">

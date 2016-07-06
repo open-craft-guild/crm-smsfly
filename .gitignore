@@ -75,3 +75,4 @@ target/
 /.mysql_history
 /.vagrant/
 node_modules/
+/.npm/

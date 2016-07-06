@@ -2,7 +2,7 @@ import logging
 
 from django.core.urlresolvers import reverse_lazy
 
-from django.views.generic.edit import FormView, CreateView
+from django.views.generic.edit import CreateView, UpdateView
 
 from ..forms.task import (
     OneTimeTaskForm,
@@ -13,50 +13,52 @@ from ..forms.task import (
 logger = logging.getLogger(__name__)
 
 
-class CampaignNewView(CreateView):
-    """Helps schedule a new campaign or send new one instantly"""
-    template_name = 'campaign/edit.html'
-    form_class = OneTimeTaskForm
+class CampaignFormViewMixin(object):
+    """Defines base success_url"""
     success_url = reverse_lazy('campaigns-root')
+
+
+class RequestAwareFormMixin:
+    """Passes request as a first param into form initializer"""
 
     def get_form(self, form_class=None):
         return (form_class or self.form_class)(self.request, **self.get_form_kwargs())
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['range30'] = range(1, 31)
-        return context
+
+class OneTimeCampaignMixin:
+    form_class = OneTimeTaskForm
+    template_name = 'campaign/edit.html'
 
 
-class CampaignNewRecurringView(CampaignNewView):
+class RecurringCampaignMixin:
     form_class = RecurringTaskForm
     template_name = 'campaign/edit-recurring.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['weekdays'] = (
-            (1, 'пн'),
-            (2, 'вт'),
-            (3, 'ср'),
-            (4, 'чт'),
-            (5, 'пт'),
-            (6, 'сб'),
-            (7, 'нд'),
-        )
-        return context
 
-
-class CampaignNewEventDrivenView(CampaignNewView):
+class EventDrivenCampaignMixin:
     form_class = EventDrivenTaskForm
     template_name = 'campaign/edit-event-driven.html'
 
 
-class CampaignEditView(FormView):
-    """Makes modifications on an active campaign"""
-    template_name = 'campaign/edit.html'
-    form_class = OneTimeTaskForm
-    success_url = ''
+class CampaignNewView(OneTimeCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, CreateView):
+    pass
 
-    def form_valid(self, form):
-        # Change campaign settings and notify everyone about its change, which involves changing DB and rescheduling job
-        return super().form_valid(form)
+
+class CampaignNewRecurringView(RecurringCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, CreateView):
+    pass
+
+
+class CampaignNewEventDrivenView(EventDrivenCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, CreateView):
+    pass
+
+
+class CampaignEditView(OneTimeCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, UpdateView):
+    pass
+
+
+class CampaignEditRecurringView(RecurringCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, UpdateView):
+    pass
+
+
+class CampaignEditEventDrivenView(EventDrivenCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, UpdateView):
+    pass

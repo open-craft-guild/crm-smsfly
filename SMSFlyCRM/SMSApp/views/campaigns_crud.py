@@ -46,31 +46,33 @@ class EventDrivenCampaignMixin:
     template_name = 'campaign/edit-event-driven.html'
 
 
-class CampaignNewView(OneTimeCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, CreateView):
+class CampaignCreateViewBase(RequestAwareFormMixin, CampaignFormViewMixin, CreateView):
     pass
 
 
-class CampaignNewRecurringView(RecurringCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, CreateView):
+class CampaignUpdateViewBase(CampaignEditViewMixin, RequestAwareFormMixin, CampaignFormViewMixin, UpdateView):
     pass
 
 
-class CampaignNewEventDrivenView(EventDrivenCampaignMixin, RequestAwareFormMixin, CampaignFormViewMixin, CreateView):
+class CampaignNewView(OneTimeCampaignMixin, CampaignCreateViewBase):
     pass
 
 
-class CampaignEditView(OneTimeCampaignMixin, CampaignEditViewMixin,
-                       RequestAwareFormMixin, CampaignFormViewMixin,
-                       UpdateView):
+class CampaignNewRecurringView(RecurringCampaignMixin, CampaignCreateViewBase):
     pass
 
 
-class CampaignEditRecurringView(RecurringCampaignMixin, CampaignEditViewMixin,
-                                RequestAwareFormMixin, CampaignFormViewMixin,
-                                UpdateView):
+class CampaignNewEventDrivenView(EventDrivenCampaignMixin, CampaignCreateViewBase):
     pass
 
 
-class CampaignEditEventDrivenView(EventDrivenCampaignMixin, CampaignEditViewMixin,
-                                  RequestAwareFormMixin, CampaignFormViewMixin,
-                                  UpdateView):
+class CampaignEditView(OneTimeCampaignMixin, CampaignUpdateViewBase):
+    pass
+
+
+class CampaignEditRecurringView(RecurringCampaignMixin, CampaignUpdateViewBase):
+    pass
+
+
+class CampaignEditEventDrivenView(EventDrivenCampaignMixin, CampaignUpdateViewBase):
     pass

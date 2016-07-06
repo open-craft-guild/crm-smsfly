@@ -34,6 +34,8 @@
     var CELLPHONE = ' {cellphone}';
     var ADDRESS = ' {address}';
 
+    var recipients_amount = 0;
+
     $('#id_recurrence_weekdays').parent().parent().hide();
     $('#id_recurrence_month_type').parent().parent().hide();
 
@@ -99,57 +101,71 @@
        }
     });
 
-    $("#id_message_text").keyup(function() {
-      var msg_len = $(this).val().length;
+    function countMsgs() {
+      var msg_len = $("#id_message_text").val().length;
       var msgs = (msg_len > 70) ? Math.ceil(msg_len/67) : 1;
-      $('#characters').text(msg_len + ' символов (' + msgs + ' сообщений)');
+      return { msg_length: msg_len, messages: msgs };
+    }
+
+    $("#id_message_text").keyup(function() {
+      var msgs = countMsgs();
+      $('#characters').text(msgs.msg_length + ' символов (' + msgs.messages + ' сообщений)');
     });
 
-    $("#btn_preview_recipients").click(function() {
+    function getRecipients(pageNumber) {
+      var messages_num = countMsgs().messages;
+      var limit = 100;
+      var offset = (pageNumber-1)*limit;
+
       var data_dict = [].
-        concat(
-          $('*[id^="id_regaddress"]').toArray(),
-          $('*[id^="id_address"]').toArray(),
-          $('*[id^="id_age_"]').toArray(),
-          $('*[id="id_family_status"]').toArray(),
-          $('*[id="id_education"]').toArray(),
-          $('*[id="id_social_category"]').toArray(),
-          $('*[id="id_polplace"]').toArray(),
-          $('*[id="id_contact"]').toArray(),
-          $('*[id="id_candidate"]').toArray(),
-          $('*[id^="id_status"]').toArray()
-        ).
-        map(function(el) {
-          return {
-            name: el.name,
-            val: $(el).is("select") ? +$(el).find(':selected').val() : +$(el).val()
-          }
-        }).
-        filter(function(el) {
-          return el.val
-        }).
-        reduce(function(acc, el) {
-          acc[el.name] = el.val
-          return acc
-        }, {})
+      concat(
+        $('*[id^="id_regaddress"]').toArray(),
+        $('*[id^="id_address"]').toArray(),
+        $('*[id^="id_age_"]').toArray(),
+        $('*[id="id_family_status"]').toArray(),
+        $('*[id="id_education"]').toArray(),
+        $('*[id="id_social_category"]').toArray(),
+        $('*[id="id_polplace"]').toArray(),
+        $('*[id="id_contact"]').toArray(),
+        $('*[id="id_candidate"]').toArray(),
+        $('*[id^="id_status"]').toArray()
+      ).
+      map(function(el) {
+        return {
+          name: el.name,
+          val: $(el).is("select") ? +$(el).find(':selected').val() : +$(el).val()
+        }
+      }).
+      filter(function(el) {
+        return el.val
+      }).
+      reduce(function(acc, el) {
+        acc[el.name] = el.val
+        return acc
+      }, {})
 
       var tbody = $("#recipients-table > tbody:last-child")
       var rec_amount = $('#recipients-amount')
       var camp_cost = $('#campaign-cost')
       var sms_price = $('#sms-price')
+
       tbody.empty()
       rec_amount.empty()
       camp_cost.empty()
       sms_price.empty()
       tbody.append('Загрузка...')
+
       $.ajax({
         method: "POST",
         url: "/api/preview_recipients/",
-        data: JSON.stringify({"recipients_filter": data_dict}),
+        data: JSON.stringify({"recipients_filter": data_dict, "msg_length": messages_num, "offset": offset, "limit": limit}),
         dataType: "json",
         contentType: "application/json; charset=utf-8"
       }).then(function(data) {
+        recipients_amount = data.amount;
+
         var tbody = $("#recipients-table > tbody:last-child")
+
         tbody.empty()
         rec_amount.append(data.amount)
         camp_cost.append(data.campaign_cost + " грн")
@@ -163,16 +179,9 @@
             $(tr).append($('<td>').text(ins_val));
           }
         });
-        })
       })
+    }
 
-      $('#pagination-demo').twbsPagination({
-        totalPages: 35,
-        visiblePages: 7,
-        onPageClick: function (event, page) {
-            $('#page-content').text('Page ' + page);
-        }
-    });
 
     });
   })(jQuery);

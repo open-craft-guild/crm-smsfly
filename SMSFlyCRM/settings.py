@@ -224,6 +224,8 @@ RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
 USE_DJANGO_JQUERY = False
 JQUERY_URL = '//about:blank'  # hack around loading jquery to prevent it from breaking datepicker
 
+NPM_ROOT_PATH = BASE_DIR()
+
 NPM_FILE_PATTERNS = {
     # 'angular2': ['*.js', '*.map'],
     # 'es6-shim': ['es6-shim.min.js', 'es6-shim.map'],
@@ -232,9 +234,9 @@ NPM_FILE_PATTERNS = {
     # 'ng2-material': ['*.css', '*.js', '*.map', '*.ts']
 }
 
-NPM_DESTINATION_PREFIX = 'js/lib'
+NPM_STATIC_FILES_PREFIX = 'js/lib'
 
-# BOWER_COMPONENTS_ROOT = STATIC_ROOT_DIR('js/lib/components')
+# BOWER_COMPONENTS_ROOT = STATIC_ROOT_DIR('js/lib')
 BOWER_COMPONENTS_ROOT = BASE_DIR()
 
 BOWER_INSTALLED_APPS = (

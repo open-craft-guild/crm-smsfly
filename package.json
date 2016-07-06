@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/wk-tech/crm-smsfly/issues"
   },
-  "homepage": "https://github.com/wk-tech/crm-smsfly#readme"
+  "homepage": "https://github.com/wk-tech/crm-smsfly#readme",
+  "dependencies": [
+    "bootpag"
+  ]
 }

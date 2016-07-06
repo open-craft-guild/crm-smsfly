@@ -74,3 +74,4 @@ target/
 /components/
 /.mysql_history
 /.vagrant/
+node_modules/

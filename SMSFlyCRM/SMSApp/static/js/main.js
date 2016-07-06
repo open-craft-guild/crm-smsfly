@@ -155,7 +155,7 @@
       sms_price.empty()
       tbody.append('Загрузка...')
 
-      $.ajax({
+      var amount = $.ajax({
         method: "POST",
         url: "/api/preview_recipients/",
         data: JSON.stringify({"recipients_filter": data_dict, "msg_length": messages_num, "offset": offset, "limit": limit}),
@@ -179,9 +179,22 @@
             $(tr).append($('<td>').text(ins_val));
           }
         });
+        return data.amount;
       })
+      return amount;
     }
 
+    $("#btn_preview_recipients").click(function() {
+        getRecipients(1).then(function(amount) {
+          $('#pagination').bootpag({
+            total: (amount > 0) ? Math.ceil(amount / 100) : 1,
+            maxVisible: 10,
+            page: 1
+          }).on("page", function(event, num) {
+            getRecipients(num);
+          })
+        });
+    });
 
     });
   })(jQuery);

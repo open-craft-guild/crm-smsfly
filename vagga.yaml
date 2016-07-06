@@ -70,6 +70,7 @@ containers:
       - git
       - gcc
       - gettext
+    - !EnsureDir /root/.npm
     - !PipConfig
       dependencies: true
     - !Py3Requirements requirements.txt
@@ -77,6 +78,8 @@ containers:
     environ:
       HOME: /work
       DATABASE_URL: sqlite:///db.sqlite3
+    volumes:
+      /root/.npm: !BindRW /work/.npm
   redis:
     setup:
     - !Alpine v3.3
@@ -132,7 +135,7 @@ commands:
         run: |
             python3 manage.py migrate --pythonpath=$HOME
             echo "from npm.finders import npm_install; npm_install()" | python3 ./manage.py shell --pythonpath=$HOME
-            python3 ./manage.py bower --pythonpath=$HOME install -- --allow-root
+            python3 manage.py bower --pythonpath=$HOME install -- --allow-root
             python3 manage.py runserver_plus --pythonpath=$HOME --traceback
       rq: !Command
         container: django

@@ -132,7 +132,7 @@ class TaskForm(forms.ModelForm):
 
         task.recipients_filter_json = self.cleaned_data['recipients_filter_json']
 
-        task.activate(commit=commit)
+        task.activate()
 
         return task
 

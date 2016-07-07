@@ -52,20 +52,20 @@ class Task(models.Model):
     trigger_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', related_name='+',
                                        on_delete=models.DO_NOTHING, null=True)
 
-    def activate(self, commit=True):
+    def activate(self, *args, **kwargs):
         if datetime.now().date() > (self.start_datetime.date()
                                     if self.type == 0
                                     else self.end_date):
             raise ValueError(_('Cannot activate an out-of-date task'))
 
         self.state = 0
-        return self.save(commit=commit)
+        return self.save(*args, **kwargs)
 
-    def archive(self, commit=True):
+    def archive(self, *args, **kwargs):
         self.end_date = datetime.now().date()
-        return self.save(commit=commit)
+        return self.save(*args, **kwargs)
 
-    def pause(self, commit=True):
+    def pause(self, *args, **kwargs):
         if self.type == 0:
             raise ValueError(_('Cannot pause a one-time task'))
 
@@ -73,7 +73,7 @@ class Task(models.Model):
             raise ValueError(_('Cannot pause an out-of-date task'))
 
         self.state = 1
-        return self.save(commit=commit)
+        return self.save(*args, **kwargs)
 
     @staticmethod
     def get_recipients_queryset_by_filter(recipients_filter, user_id=None, prefetch=True):

@@ -53,7 +53,9 @@ class Task(models.Model):
                                        on_delete=models.DO_NOTHING, null=True)
 
     def activate(self, commit=True):
-        if datetime.now().date() > self.end_date:
+        if datetime.now().date() > (self.start_datetime.date()
+                                    if self.type == 0
+                                    else self.end_date):
             raise ValueError(_('Cannot activate an out-of-date task'))
 
         self.state = 0

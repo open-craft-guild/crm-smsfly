@@ -112,7 +112,8 @@
       $('#characters').text(msgs.msg_length + ' символов (' + msgs.messages + ' сообщений)');
     });
 
-    function getRecipients(pageNumber) {
+
+    function getRecipients(pageNumber, updateCounters) {
       var messages_num = countMsgs().messages;
       var limit = 100;
       var offset = (pageNumber-1)*limit;
@@ -149,11 +150,13 @@
       var camp_cost = $('#campaign-cost')
       var sms_price = $('#sms-price')
 
+      if (updateCounters) {
+        rec_amount.empty()
+        camp_cost.empty()
+        sms_price.empty()
+      }
       tbody.empty()
-      rec_amount.empty()
-      camp_cost.empty()
-      sms_price.empty()
-      tbody.append('Загрузка...')
+      tbody.append('Завантаження...')
 
       var amount = $.ajax({
         method: "POST",
@@ -167,9 +170,11 @@
         var tbody = $("#recipients-table > tbody:last-child")
 
         tbody.empty()
-        rec_amount.append(data.amount)
-        camp_cost.append(data.campaign_cost + " грн")
-        sms_price.append(data.sms_price + " грн")
+        if (updateCounters) {
+          rec_amount.append(data.amount)
+          camp_cost.append(data.campaign_cost + " грн")
+          sms_price.append(data.sms_price + " грн")
+        }
         $(data.recipients).each(function(obj_id, obj) {
           var tr = $('<tr>')
           tbody.append(tr)
@@ -185,13 +190,13 @@
     }
 
     $("#btn_preview_recipients").click(function() {
-        getRecipients(1).then(function(amount) {
+        getRecipients(1, true).then(function(amount) {
           $('#pagination').bootpag({
             total: (amount > 0) ? Math.ceil(amount / 100) : 1,
             maxVisible: 10,
             page: 1
           }).on("page", function(event, num) {
-            getRecipients(num);
+            getRecipients(num, false);
           })
         });
     });

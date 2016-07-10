@@ -76,3 +76,4 @@ target/
 /.vagrant/
 node_modules/
 /.npm/
+dump.rdb

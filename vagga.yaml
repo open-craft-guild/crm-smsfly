@@ -65,6 +65,7 @@ containers:
       - libpq
       - mariadb-client
       - mariadb-dev
+      - postgresql-dev  # needed to build psycopg2 python package
       - nodejs
       - sqlite
       - git

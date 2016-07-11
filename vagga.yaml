@@ -59,6 +59,7 @@ containers:
     - !Alpine v3.3
     - !Install
       - libmemcached
+      - libmemcached-dev  # needed to build pylibmc python package
       - zlib
       - libxslt-dev
       - libsasl

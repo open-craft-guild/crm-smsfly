@@ -145,14 +145,12 @@ class ProjectContact(models.Model):
 
 class FollowerContact(models.Model):
     """Describes the contact with elector"""
-    id = models.IntegerField(db_column='follower_contact_id', unique=True, primary_key=True)
-    contact_date = models.DateField(db_column='follower_contact_date', null=True)
+    id = models.IntegerField(unique=True, primary_key=True)
+    contact_date = models.DateField(null=True)
     follower = models.ForeignKey('Follower', to_field='follower_id', on_delete=models.DO_NOTHING)
-    contact = models.ForeignKey('ProjectContact', to_field='contact_id',
-                                db_column='FOLLOWER_CONTACT_PROJECT_CONTACT_ID',
-                                on_delete=models.DO_NOTHING, null=True)
+    contact = models.ForeignKey('ProjectContact', to_field='contact_id', on_delete=models.DO_NOTHING, null=True)
     follower_status = models.ForeignKey('FollowerStatus', to_field='follower_status_id', on_delete=models.DO_NOTHING,
-                                        null=True, db_column='FOLLOWER_CONTACT_STATUS_ID')
+                                        null=True)
 
     def __str__(self):
         return '{} {}, контакт {} {}'.format(self.follower.lastname, self.follower.firstname, self.contact_date,

@@ -37,7 +37,7 @@ class Area(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DIR_AREAS'
+        db_table = 'sms_view_areas'
 
 
 class Building(models.Model):
@@ -54,7 +54,7 @@ class Building(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DIR_BUILDINGS'
+        db_table = 'sms_view_buildings'
 
 
 class Region(models.Model):
@@ -87,7 +87,7 @@ class Locality(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DIR_LOCALITIES'
+        db_table = 'sms_view_localities'
         # unique_together = ('area_id', 'locality_id')
 
 
@@ -105,7 +105,7 @@ class Street(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DIR_STREETS'
+        db_table = 'sms_view_streets'
         # unique_together = ('street_id', 'locality_id')
 
 
@@ -122,14 +122,14 @@ class Project(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DB_PROJECTS'
+        db_table = 'sms_view_projects'
 
 
 class ProjectContact(models.Model):
     """Describes the contacts in project"""
     contact_id = models.IntegerField(unique=True, primary_key=True)
     contact_name = models.CharField(max_length=255)
-    contact_project = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING)
+    project = models.ForeignKey('Project', to_field='project_id', on_delete=models.DO_NOTHING)
 
     objects = ExternalCRMManager()
 
@@ -139,7 +139,7 @@ class ProjectContact(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DB_CONTACTS'
+        db_table = 'sms_view_project_contacts'
         # unique_together = ('contact_id', 'project_id')
 
 
@@ -161,7 +161,7 @@ class FollowerContact(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DB_FOLLOWER_CONTACTS'
+        db_table = 'sms_view_follower_contacts'
         # unique_together = ('id', 'contact_date', 'follower_id', 'contact_id')
 
 
@@ -229,7 +229,7 @@ class FamilyStatus(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DIR_FAMILY_STATUSES'
+        db_table = 'sms_view_family_status'
 
 
 class Education(models.Model):
@@ -245,7 +245,7 @@ class Education(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DIR_EDUCATIONS'
+        db_table = 'sms_view_education'
 
 
 class SocialCategory(models.Model):
@@ -261,7 +261,7 @@ class SocialCategory(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DIR_SOCIAL_CATEGORIES'
+        db_table = 'sms_view_social_category'
 
 
 class Sex(models.Model):
@@ -277,7 +277,7 @@ class Sex(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DIR_SEX'
+        db_table = 'sms_view_sex'
 
 
 class FollowerStatus(models.Model):
@@ -293,7 +293,7 @@ class FollowerStatus(models.Model):
     class Meta:
         db_route = 'external_app'
         managed = False
-        db_table = 'DIR_FOLLOWER_STATUS'
+        db_table = 'sms_view_follower_status'
 
 
 class Follower(models.Model):

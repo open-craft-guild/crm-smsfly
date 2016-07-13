@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from django.db import models
 
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from recurrence.fields import RecurrenceField
@@ -39,7 +40,7 @@ class Task(models.Model):
     recipients_filter = models.TextField()
     state = models.IntegerField(choices=STATE_LIST)
     code = models.CharField(max_length=20)
-    start_datetime = models.DateTimeField(default=datetime.now)
+    start_datetime = models.DateTimeField(default=timezone.now)
     type = models.IntegerField(choices=TYPE_LIST)
     end_date = models.DateField(null=True)
     recurrence_rule = RecurrenceField()
@@ -53,21 +54,25 @@ class Task(models.Model):
                                        on_delete=models.DO_NOTHING, null=True)
 
     def activate(self, *args, **kwargs):
-        if datetime.now().date() > (self.start_datetime.date()
-                                    if self.type == 0
-                                    else self.end_date):
+        now = timezone.now()
+        today = now.date()
+        if (self.type == 0 and now > self.start_datetime or
+                (self.end_date and today > self.end_date)):
             raise ValueError(_('Cannot activate an out-of-date task'))
 
         self.state = 0
         return self.save(*args, **kwargs)
 
     def archive(self, *args, **kwargs):
-        self.end_date = datetime.now().date()
+        self.end_date = timezone.now().date()
         self.state = 2
         return self.save(*args, **kwargs)
 
     def pause(self, *args, **kwargs):
-        if self.end_date and datetime.now().date() > self.end_date:
+        now = timezone.now()
+        today = now.date()
+        if (self.type == 0 and now > self.start_datetime or
+                (self.end_date and today > self.end_date)):
             raise ValueError(_('Cannot pause an out-of-date task'))
 
         self.state = 1
@@ -88,10 +93,10 @@ class Task(models.Model):
             qs = qs.filter(**_filter)
 
             if age_from:
-                qs = qs.filter(datebirth__lte=datetime.now().date() - timedelta(days=age_from*365))
+                qs = qs.filter(datebirth__lte=timezone.now().date() - timedelta(days=age_from*365))
 
             if age_to:
-                qs = qs.filter(datebirth__gte=datetime.now().date()-timedelta(days=age_to*365))
+                qs = qs.filter(datebirth__gte=timezone.now().date()-timedelta(days=age_to*365))
 
             if prefetch:
                 qs = qs.select_related(
@@ -162,7 +167,7 @@ class Task(models.Model):
     def get_next_send_time(self):
         TASK_OUT_OF_DATE_ERROR = 'Task {task} is out of date'.format(task=self)
 
-        now = datetime.now()
+        now = timezone.now()
 
         if self.end_date and now.date() > self.end_date:
             raise ValueError(TASK_OUT_OF_DATE_ERROR)

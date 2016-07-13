@@ -47,4 +47,14 @@ urlpatterns = (
     # Event-driven campaign put-on-hold form:
     url('^event-driven/pause/(?P<pk>\d+)$', campaigns_crud.CampaignPauseEventDrivenView.as_view(),
         name='pause-event-driven-campaign'),
+
+    # One-time campaign activate form:
+    url('^one-time/activate/(?P<pk>\d+)$', campaigns_crud.CampaignActivateView.as_view(),
+        name='activate-one-time-campaign'),
+    # Recurring campaign activate form:
+    url('^recurring/activate/(?P<pk>\d+)$', campaigns_crud.CampaignActivateRecurringView.as_view(),
+        name='activate-recurring-campaign'),
+    # Event-driven campaign activate form:
+    url('^event-driven/activate/(?P<pk>\d+)$', campaigns_crud.CampaignActivateEventDrivenView.as_view(),
+        name='activate-event-driven-campaign'),
 )

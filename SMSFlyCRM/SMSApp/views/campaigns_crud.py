@@ -60,6 +60,10 @@ class CampaignPauseActionMixin(CampaignActionMixin):
     object_action = 'pause'
 
 
+class CampaignActivateActionMixin(CampaignActionMixin):
+    object_action = 'activate'
+
+
 class OneTimeCampaignMixin:
     form_class = OneTimeTaskForm
     template_name = 'campaign/edit.html'
@@ -128,4 +132,16 @@ class CampaignPauseRecurringView(CampaignPauseActionMixin, CampaignEditRecurring
 
 
 class CampaignPauseEventDrivenView(CampaignPauseActionMixin, CampaignEditEventDrivenView):
+    pass
+
+
+class CampaignActivateView(CampaignActivateActionMixin, CampaignEditView):
+    pass
+
+
+class CampaignActivateRecurringView(CampaignActivateActionMixin, CampaignEditRecurringView):
+    pass
+
+
+class CampaignActivateEventDrivenView(CampaignActivateActionMixin, CampaignEditEventDrivenView):
     pass

@@ -39,7 +39,7 @@ def scheduleCampaignTasksFor(min_interval):
             Q(type=0) | Q(type=1)
         ) &
         (
-            Q(end_date=None) | Q(end_date__le=now.date())
+            Q(end_date=None) | Q(end_date__lte=now.date())
         )
     ).all()
 

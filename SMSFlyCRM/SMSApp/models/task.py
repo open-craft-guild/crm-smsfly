@@ -67,10 +67,7 @@ class Task(models.Model):
         return self.save(*args, **kwargs)
 
     def pause(self, *args, **kwargs):
-        if self.type == 0:
-            raise ValueError(_('Cannot pause a one-time task'))
-
-        if datetime.now().date() > self.end_date:
+        if self.end_date and datetime.now().date() > self.end_date:
             raise ValueError(_('Cannot pause an out-of-date task'))
 
         self.state = 1

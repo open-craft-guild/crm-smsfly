@@ -56,6 +56,10 @@ class CampaignArchiveActionMixin(CampaignActionMixin):
     object_action = 'archive'
 
 
+class CampaignPauseActionMixin(CampaignActionMixin):
+    object_action = 'pause'
+
+
 class OneTimeCampaignMixin:
     form_class = OneTimeTaskForm
     template_name = 'campaign/edit.html'
@@ -112,4 +116,16 @@ class CampaignArchiveRecurringView(CampaignArchiveActionMixin, CampaignEditRecur
 
 
 class CampaignArchiveEventDrivenView(CampaignArchiveActionMixin, CampaignEditEventDrivenView):
+    pass
+
+
+class CampaignPauseView(CampaignPauseActionMixin, CampaignEditView):
+    pass
+
+
+class CampaignPauseRecurringView(CampaignPauseActionMixin, CampaignEditRecurringView):
+    pass
+
+
+class CampaignPauseEventDrivenView(CampaignPauseActionMixin, CampaignEditEventDrivenView):
     pass

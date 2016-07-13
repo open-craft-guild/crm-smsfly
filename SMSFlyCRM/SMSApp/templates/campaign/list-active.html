@@ -23,7 +23,7 @@
                     <td>{{ task.title | default:_('Noname') | truncatechars:20 }} ({{ task.get_type_display }})</td>
                     <td>{{ task.recipients_amount }}</td>
                     <td>{{ task.est_cost }} {% trans 'UAH' %}</td>
-                    <td><a href="{% url 'edit-'|add:task.get_type_display|add:'-campaign' task.pk %}" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'edit' %}</a> <a href="#" title="{% trans 'Pause' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'pushpin' %}</a> <a href="{% url 'archive-'|add:task.get_type_display|add:'-campaign' task.pk %}" title="{% trans 'Archive' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'remove' %}</a></td>
+                    <td><a href="{% url 'edit-'|add:task.get_type_display|add:'-campaign' task.pk %}" title="{% trans 'Edit' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'edit' %}</a> <a href="{% url 'pause-'|add:task.get_type_display|add:'-campaign' task.pk %}" title="{% trans 'Pause' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'pushpin' %}</a> <a href="{% url 'archive-'|add:task.get_type_display|add:'-campaign' task.pk %}" title="{% trans 'Archive' %} {{ task.title | default:_('Noname') }}">{% bootstrap_icon 'remove' %}</a></td>
                     <td>{{ task.next_send_time | default_if_none:_('N/A') }}</td>
                     <td>{{ task.last_time_sent | default_if_none:_('never') }}</td>
                     <td>{{ task.start_datetime }}</td>

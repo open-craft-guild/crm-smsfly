@@ -1,4 +1,5 @@
-from ..SMSApp.urls import url
+from django.conf.urls import url
+
 from .views import filterchain, filterchain_all
 
 

@@ -27,6 +27,15 @@ urlpatterns = (
     # Event-driven campaign editing form:
     url('^sms-campaigns/edit/event-driven/(?P<pk>\d+)$', campaigns_crud.CampaignEditEventDrivenView.as_view(),
         name='edit-event-driven-campaign'),
+    # One-time campaign deleting form:
+    url('^sms-campaigns/one-time/archive/(?P<pk>\d+)$', campaigns_crud.CampaignArchiveView.as_view(),
+        name='archive-one-time-campaign'),
+    # Recurring campaign deleting form:
+    url('^sms-campaigns/recurring/archive/(?P<pk>\d+)$', campaigns_crud.CampaignArchiveRecurringView.as_view(),
+        name='archive-recurring-campaign'),
+    # Event-driven campaign deleting form:
+    url('^sms-campaigns/event-driven/archive/(?P<pk>\d+)$', campaigns_crud.CampaignArchiveEventDrivenView.as_view(),
+        name='archive-event-driven-campaign'),
     # Archive of inactive/sent campaigns:
     url('^sms-campaigns/archive$', campaigns_list.CampaignArchiveView.as_view(), name='campaigns-archive'),
     # List of all sent messages:

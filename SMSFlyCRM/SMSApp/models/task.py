@@ -63,6 +63,7 @@ class Task(models.Model):
 
     def archive(self, *args, **kwargs):
         self.end_date = datetime.now().date()
+        self.state = 2
         return self.save(*args, **kwargs)
 
     def pause(self, *args, **kwargs):

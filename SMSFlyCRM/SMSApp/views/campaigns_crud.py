@@ -2,6 +2,8 @@ import logging
 
 from django.core.urlresolvers import reverse_lazy
 
+from django.http import HttpResponseRedirect
+
 from django.views.generic.edit import CreateView, UpdateView
 
 from ..forms.task import (
@@ -29,6 +31,29 @@ class RequestAwareFormMixin:
 
     def get_form(self, form_class=None):
         return (form_class or self.form_class)(self.request, **self.get_form_kwargs())
+
+
+class CampaignActionMixin:
+    object_action = 'save'
+
+    def get_object_action(self):
+        return self.object_action or 'save'
+
+    def run_object_action(self):
+        obj = self.get_object()
+        object_action = self.get_object_action()
+
+        obj_action_clbl = getattr(obj, object_action)
+        obj_action_clbl()
+
+    def get(self, *args, **kwargs):
+        self.object = self.get_object()
+        self.run_object_action()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class CampaignArchiveActionMixin(CampaignActionMixin):
+    object_action = 'archive'
 
 
 class OneTimeCampaignMixin:
@@ -75,4 +100,16 @@ class CampaignEditRecurringView(RecurringCampaignMixin, CampaignUpdateViewBase):
 
 
 class CampaignEditEventDrivenView(EventDrivenCampaignMixin, CampaignUpdateViewBase):
+    pass
+
+
+class CampaignArchiveView(CampaignArchiveActionMixin, CampaignEditView):
+    pass
+
+
+class CampaignArchiveRecurringView(CampaignArchiveActionMixin, CampaignEditRecurringView):
+    pass
+
+
+class CampaignArchiveEventDrivenView(CampaignArchiveActionMixin, CampaignEditEventDrivenView):
     pass

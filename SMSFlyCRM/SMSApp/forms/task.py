@@ -61,7 +61,7 @@ class TaskForm(forms.ModelForm):
                     setattr(kwargs['instance'], 'y', v)
                     key = k[:-3] if k.endswith('_id') else k
                     self.data[key] = v
-        except KeyError:
+        except (KeyError, AttributeError):
             pass
 
         self.initialize_filter_fields()

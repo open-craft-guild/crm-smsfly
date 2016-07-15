@@ -12,7 +12,7 @@ urlpatterns = (
     # Campaign adding/scheduling form:
     url('^new/one-time$', campaigns_crud.CampaignNewView.as_view(),
         name='add-one-time-campaign'),
-    url('^snew/recurring$',
+    url('^new/recurring$',
         campaigns_crud.CampaignNewRecurringView.as_view(),
         name='add-recurring-campaign'),
     url('^new/event-driven$', campaigns_crud.CampaignNewEventDrivenView.as_view(),

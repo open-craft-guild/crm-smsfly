@@ -34,6 +34,7 @@ class RequestAwareFormMixin:
 
 
 class CampaignActionMixin:
+    http_method_names = ('head', 'get', )
     object_action = 'save'
 
     def get_object_action(self):

@@ -25,4 +25,4 @@ rq-scheduler==0.6.1
 six==1.10.0
 watchdog==0.8.3
 Werkzeug==0.11.10
--e git+https://github.com/wk-tech/python-smsfly@v0.1.2#egg=smsfly
+-e git+https://github.com/wk-tech/python-smsfly@v0.1.3#egg=smsfly

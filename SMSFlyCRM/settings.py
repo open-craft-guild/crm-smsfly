@@ -212,6 +212,11 @@ LOGGING = {
             'level': env('DJANGO_LOG_LEVEL', default='ERROR'),
             'propagate': False,
         },
+        'smsfly': {
+            'handlers': ['console', 'file'],
+            'level': env('DJANGO_LOG_LEVEL', default='ERROR'),
+            'propagate': False,
+        },
         'werkzeug': {
             'handlers': ['console', 'file'],
             'level': env('DJANGO_LOG_LEVEL', default='ERROR'),

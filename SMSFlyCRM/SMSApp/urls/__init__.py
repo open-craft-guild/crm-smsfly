@@ -4,6 +4,7 @@ from ..views import stats, messages, IndexView
 
 from . import alphaname as alphaname_urls
 from . import campaign as campaign_urls
+from .third_party import urlpatterns as third_party_urlpatterns
 
 
 urlpatterns = (
@@ -23,4 +24,4 @@ urlpatterns = (
 
     # Stats on campaigns:
     url('^sms-campaigns/stats$', stats.CampaignStatsView.as_view(), name='campaigns-stats'),
-)
+) + third_party_urlpatterns

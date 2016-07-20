@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'recurrence',
     'smart_selects',
     'djangobower',
+    'rosetta',
 ]
 
 MIDDLEWARE_CLASSES = [

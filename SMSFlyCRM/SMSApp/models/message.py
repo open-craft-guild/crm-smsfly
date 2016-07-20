@@ -23,7 +23,7 @@ class Message(models.Model):
 
     crm_elector = models.ForeignKey('Follower', to_field='follower_id',
                                     on_delete=models.DO_NOTHING, related_name='messages')
-    phone_number = models.CharField(max_length=12)
+    phone_number = models.CharField(max_length=15)
     message_text = models.CharField(max_length=402)
     datetime_scheduled = models.DateTimeField()
     datetime_sent = models.DateTimeField(null=True)

@@ -24,8 +24,7 @@ containers:
       - six
       - 'Django >=1.9,<1.10'
       - 'django-extensions >=1.6.7,<1.7'
-      - 'django-debug-toolbar >=1.4,<2.0'
-      - 'sqlparse <0.2.0'
+      - 'django-debug-toolbar >=1.5,<2.0'
       - 'django-environ >=0.4,<0.5'
       - 'pylibmc >=1.5,<1.6'
       - 'django-cache-url >=1.0,<1.1'
